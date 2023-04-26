@@ -1,7 +1,6 @@
 package Modele;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
 
@@ -9,30 +8,31 @@ public class Deck {
 	ArrayList<Carte> deck; //16 cartes
 	
 	Deck(){
-		this.deck = new ArrayList<Carte>();
+		this.deck = new ArrayList<>();
 		initDeck();
+		melangerDeck();
 	}
 	
 	void initDeck(){
-		this.deck.add(new Carte(1, "violet", "anneau"));
-		this.deck.add(new Carte(2, "bleu", "anneau"));
-		this.deck.add(new Carte(3, "orange", "anneau"));
-		this.deck.add(new Carte(4, "vert", "anneau"));
+		this.deck.add(new Carte(1, Couleur.VIOLET, Symbole.ANNEAU));
+		this.deck.add(new Carte(2, Couleur.BLEU, Symbole.ANNEAU));
+		this.deck.add(new Carte(3, Couleur.ORANGE, Symbole.ANNEAU));
+		this.deck.add(new Carte(4, Couleur.VERT, Symbole.ANNEAU));
 		
-		this.deck.add(new Carte(1, "vert", "plume"));
-		this.deck.add(new Carte(2, "violet", "plume"));
-		this.deck.add(new Carte(3, "bleu", "plume"));
-		this.deck.add(new Carte(4, "orange", "plume"));
+		this.deck.add(new Carte(1, Couleur.VERT, Symbole.PLUME));
+		this.deck.add(new Carte(2, Couleur.VIOLET, Symbole.PLUME));
+		this.deck.add(new Carte(3, Couleur.BLEU, Symbole.PLUME));
+		this.deck.add(new Carte(4, Couleur.ORANGE, Symbole.PLUME));
 		
-		this.deck.add(new Carte(1, "orange", "clef"));
-		this.deck.add(new Carte(2, "vert", "clef"));
-		this.deck.add(new Carte(3, "violet", "clef"));
-		this.deck.add(new Carte(4, "bleu", "clef"));
+		this.deck.add(new Carte(1, Couleur.ORANGE, Symbole.CLEF));
+		this.deck.add(new Carte(2, Couleur.VERT, Symbole.CLEF));
+		this.deck.add(new Carte(3, Couleur.VIOLET, Symbole.CLEF));
+		this.deck.add(new Carte(4, Couleur.BLEU, Symbole.CLEF));
 		
-		this.deck.add(new Carte(1, "bleu", "crane"));
-		this.deck.add(new Carte(2, "orange", "crane"));
-		this.deck.add(new Carte(3, "vert", "crane"));
-		this.deck.add(new Carte(4, "violet", "crane"));
+		this.deck.add(new Carte(1, Couleur.BLEU, Symbole.CRANE));
+		this.deck.add(new Carte(2, Couleur.ORANGE, Symbole.CRANE));
+		this.deck.add(new Carte(3, Couleur.VERT, Symbole.CRANE));
+		this.deck.add(new Carte(4, Couleur.VIOLET, Symbole.CRANE));
 	}
 	
 	

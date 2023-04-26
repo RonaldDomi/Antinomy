@@ -4,9 +4,9 @@ public class Codex {
 	private Carte carte;
 	private Couleur couleurInterdite;
 
-	public Codex(Carte carte, Couleur couleurInterdite){
+	public Codex(Carte carte){
 		this.carte = carte;
-		this.couleurInterdite = couleurInterdite;
+		this.couleurInterdite = Couleur.VERT;
 	}
 
 	Carte getCarte(){
