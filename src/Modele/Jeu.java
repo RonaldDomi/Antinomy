@@ -29,9 +29,21 @@ package Modele;
 import Patterns.Observable;
 
 public class Jeu extends Observable {
+	//To delete
 	Niveau n;
+	///////////
 	LecteurNiveaux l;
+	
 
+	int tour; //0 à +inf
+	Continuum continuum;
+	Joueur[] joueurs; //2 joueurs
+	Codex codex;
+	int joueurCourant; //0 ou 1
+	int joueurGagnant; //0 ou 1
+	
+	
+	
 	public Jeu(LecteurNiveaux lect) {
 		l = lect;
 //		prochainNiveau();
