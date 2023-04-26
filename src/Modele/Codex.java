@@ -2,7 +2,13 @@ package Modele;
 
 public class Codex {
 	Carte carte;
-	Couleur couleurInterdite; //1 à 4
+	int couleurInterdite; //1 à 4
+	
+	
+	Codex(Carte carte){
+		this.carte = carte;
+		this.couleurInterdite=1;
+	}
 	
 	
 	Carte getCarte(){
@@ -10,7 +16,7 @@ public class Codex {
 	}
 	
 	
-	Couleur getCouleurInterdite(){
+	int getCouleurInterdite(){
 		return this.couleurInterdite;
 	}
 	
