@@ -14,4 +14,18 @@ public class Continuum {
 	}
 
 	void setCarteContinuum(int index, Carte carte){ this.continuum.set(index, carte);}
+
+	int[][] calculeOptions(List<Carte> cartes, int indiceSorcier){
+		// todo
+		// prend comme argument les 3 cartes du main
+		// envoie 3 listes d'options, ou
+		// int[0] c'est un list de int de options possibles a partir de cartes[0]
+		return new int[0][0];
+	}
+
+	void echangeAvecMain(List<Carte> main, int indiceSorcier){
+		// todo
+		// prend comme argument les 3 cartes du main
+		// renvoie les 3 cartes echanges
+	}
 }

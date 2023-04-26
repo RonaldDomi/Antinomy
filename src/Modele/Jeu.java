@@ -37,7 +37,7 @@ public class Jeu extends Observable {
 
 	int tour; //0 à +inf
 	Continuum continuum;
-	Joueur[] joueurs; //2 joueurs
+	InfoJoueur[] infoJoueurs; //2 joueurs
 	Codex codex;
 	int joueurCourant; //0 ou 1
 	int joueurGagnant; //0 ou 1
@@ -80,5 +80,47 @@ public class Jeu extends Observable {
 
 	public int colonnePousseur() {
 		return n.colonnePousseur();
+	}
+
+	public boolean jouer_coup(int ligne, int colonne){
+//		if (ligne == 0 && colonne == 0){
+//			gagnant = joueur_courant;
+//		}
+//		Coup nouveau_coup =  plateau.placer_coup(joueur_courant, ligne, colonne, tour);
+//		historique.ajouter_coup(nouveau_coup);
+//		tour++;
+//		joueur_courant = (1 - (joueur_courant - 1)) + 1;
+//		metAJour();
+//		return true;
+
+		//TODO
+		// calcule les options pour chaque carte(aide a IA et anti-idiot si l'utilisateur change la carte beacoup beacoup // todo dans continum
+
+		// ETAPE 1
+		// prend input, la carte choisis de l'utilisateur // todo dans infoJoueur
+		// prend input, la position ou on veux aller et la carte change //todo dans infojoueur?
+
+		// ETAPE 2
+		// echange cartes // todo dans jeu.java
+		// moveSorcier // todo dans infojoueur
+
+		// ETAPE 3
+		// si existe paradox // todo infojoueur
+		// si active paradox, traitement // todo pas specifiee
+
+		// ETAPE 4
+		// clash() // todo dans jeu
+
+		// VERIF GAGNE // en place
+		// TRAITEMENTE GAGNE // todo continuum, infojoueur, codex
+
+		return true;
+	}
+
+	void prendrePlacerCarte(int carteMainIndice, int carteContinuumIndice){
+		//todo
+		//change le carte du main donne par l'utilisateur avec la carte dans le continuum
+		//renvoie rien
+
 	}
 }
