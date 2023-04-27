@@ -127,20 +127,4 @@ public class Jeu extends Observable {
 	}
 	
 	
-	public LinkedList<Integer> getCoupsPossibles(Carte carte_jouee, int num_sorcier, int direction){
-		LinkedList<Integer> index_coups_possibles = new LinkedList<Integer>();
-		
-		for (int i = infoJoueurs[num_sorcier].getSorcierIndice()-direction; i >= 0 && i < continuum.getContinuumSize(); i-= direction){
-				if(continuum.getCarteContinuum(i).getSymbole() == carte_jouee.getSymbole() ||
-						continuum.getCarteContinuum(i).getCouleur() == carte_jouee.getCouleur()){
-					index_coups_possibles.add(i);
-				}
-			}
-		
-		if (((infoJoueurs[num_sorcier].getSorcierIndice() + (carte_jouee.getNumero() * direction)) < continuum.getContinuumSize()) ||
-				(infoJoueurs[num_sorcier].getSorcierIndice() + (carte_jouee.getNumero() * direction)) >= 0){
-			index_coups_possibles.add(infoJoueurs[num_sorcier].getSorcierIndice() + (carte_jouee.getNumero() * direction));
-		}
-		return index_coups_possibles;
-	}
 }
