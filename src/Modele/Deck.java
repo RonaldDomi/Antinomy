@@ -13,6 +13,10 @@ public class Deck {
 		melangerDeck();
 	}
 	
+	/** <P>TODO: Refaire proprement</P>
+	 *
+	 * Ajoute les 16 cartes différentes dans le Deck.
+	 */
 	void initDeck(){
 		this.deck.add(new Carte(1, Couleur.VIOLET, Symbole.ANNEAU));
 		this.deck.add(new Carte(2, Couleur.BLEU, Symbole.ANNEAU));
@@ -35,11 +39,23 @@ public class Deck {
 		this.deck.add(new Carte(4, Couleur.VIOLET, Symbole.CRANE));
 	}
 	
-	
+	/** Mélange en place le Deck
+	*/
 	void melangerDeck(){
 		Collections.shuffle(this.deck);
 	}
 	
+	/**
+	 * Renvoie un sous tableau de nbCartes cartes. Les retire du Deck.
+	 * <P>
+	 * @param nbCartes le nombre de cartes à prendre du Deck
+	 *
+	 * <P>
+	 * @return un tableau de Cartes de taille nbCartes
+	 * <p>
+	 * null si le Deck ne contient pas assez de cartes
+	 *
+	*/
 	Carte[] distribuer(int nbCartes){
 		if (this.deck.size() < nbCartes){
 			System.err.println("Le deck est vide on ne peut pas distribuer !");
@@ -47,9 +63,14 @@ public class Deck {
 		}
 		
 		Carte[] carte_tab = new Carte[nbCartes];
-		Random randomIndex = new Random();
+		Random random_index = new Random();
 		for (int i = 0; i < nbCartes; i++) {
-			carte_tab[i] = this.deck.remove(randomIndex.nextInt(this.deck.size()-1));
+			if (this.deck.size()==1){
+				carte_tab[i] = this.deck.remove(0);
+			}else{
+				carte_tab[i] = this.deck.remove(random_index.nextInt(this.deck.size()-1));
+			}
+			
 		}
 		return carte_tab;
 	}
