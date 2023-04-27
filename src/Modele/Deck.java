@@ -41,7 +41,7 @@ public class Deck {
 	}
 	
 	Carte[] distribuer(int nbCartes){
-		if (this.deck.size()==0){
+		if (this.deck.size() < nbCartes){
 			System.err.println("Le deck est vide on ne peut pas distribuer !");
 			return null;
 		}

@@ -10,7 +10,7 @@ package Modele;
  *
  * Ce programme est distribué car potentiellement utile, mais SANS
  * AUCUNE GARANTIE, ni explicite ni implicite, y compris les garanties de
- * commercialisation ou d'adaptation dans un but spécifique. Reportez-vous à la
+ * commercialisation ou d'adaptation dindex_coups_possibles un but spécifique. Reportez-vous à la
  * Licence Publique Générale GNU pour plus de détails.
  *
  * Vous devez avoir reçu une copie de la Licence Publique Générale
@@ -28,6 +28,8 @@ package Modele;
 
 import Patterns.Observable;
 
+import java.util.LinkedList;
+
 public class Jeu extends Observable {
 	//To delete
 	Niveau n;
@@ -37,7 +39,7 @@ public class Jeu extends Observable {
 
 	int tour; //0 à +inf
 	Continuum continuum;
-	InfoJoueur[] infoJoueurs; //2 joueurs
+	InfoJoueur[] infoJoueurs; //2 infoJoueurs
 	Codex codex;
 	int joueurCourant; //0 ou 1
 	int joueurGagnant; //0 ou 1
@@ -122,5 +124,23 @@ public class Jeu extends Observable {
 		//change le carte du main donne par l'utilisateur avec la carte dans le continuum
 		//renvoie rien
 
+	}
+	
+	
+	public LinkedList<Integer> getCoupsPossibles(Carte carte_jouee, int num_sorcier, int direction){
+		LinkedList<Integer> index_coups_possibles = new LinkedList<Integer>();
+		
+		for (int i = infoJoueurs[num_sorcier].getSorcierIndice()-direction; i >= 0 && i < continuum.getContinuumSize(); i-= direction){
+				if(continuum.getCarteContinuum(i).getSymbole() == carte_jouee.getSymbole() ||
+						continuum.getCarteContinuum(i).getCouleur() == carte_jouee.getCouleur()){
+					index_coups_possibles.add(i);
+				}
+			}
+		
+		if (((infoJoueurs[num_sorcier].getSorcierIndice() + (carte_jouee.getNumero() * direction)) < continuum.getContinuumSize()) ||
+				(infoJoueurs[num_sorcier].getSorcierIndice() + (carte_jouee.getNumero() * direction)) >= 0){
+			index_coups_possibles.add(infoJoueurs[num_sorcier].getSorcierIndice() + (carte_jouee.getNumero() * direction));
+		}
+		return index_coups_possibles;
 	}
 }

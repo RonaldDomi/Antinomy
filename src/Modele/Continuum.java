@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Continuum {
 	private List<Carte> continuum; //9 cartes
+	
 	Continuum(List<Carte> continuum){
 		this.continuum = continuum;
 	}
@@ -13,7 +14,14 @@ public class Continuum {
 		return this.continuum.get(index);
 	}
 
-	void setCarteContinuum(int index, Carte carte){ this.continuum.set(index, carte);}
+	void setCarteContinuum(int index, Carte carte){
+		this.continuum.set(index, carte);
+	}
+	
+	int getContinuumSize(){
+		return continuum.size();
+	}
+	
 
 	int[][] calculeOptions(List<Carte> cartes, int indiceSorcier){
 		// todo
