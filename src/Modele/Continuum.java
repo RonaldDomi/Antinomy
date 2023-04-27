@@ -1,6 +1,7 @@
 package Modele;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Continuum {
@@ -35,5 +36,19 @@ public class Continuum {
 		// todo
 		// prend comme argument les 3 cartes du main
 		// renvoie les 3 cartes echanges
+	}
+
+	public static List<Carte> mockContinuum(){
+		List<Carte> res = new LinkedList<>();
+		res.add(new Carte(1, Couleur.ROUGE, Symbole.CLEF));
+		res.add(new Carte(2, Couleur.VERT, Symbole.PAPIER));
+		res.add(new Carte(3, Couleur.BLEU, Symbole.CRANE));
+		res.add(new Carte(2, Couleur.VERT, Symbole.CRANE));
+		res.add(new Carte(1, Couleur.VIOLET, Symbole.PAPIER));
+		res.add(new Carte(3, Couleur.VERT, Symbole.CHAMPIGNON));
+		res.add(new Carte(3, Couleur.ROUGE, Symbole.CHAMPIGNON));
+		res.add(new Carte(2, Couleur.VERT, Symbole.CLEF));
+		res.add(new Carte(1, Couleur.BLEU, Symbole.PAPIER));
+		return res;
 	}
 }

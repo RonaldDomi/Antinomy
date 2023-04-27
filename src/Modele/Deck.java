@@ -14,23 +14,23 @@ public class Deck {
 	}
 	
 	void initDeck(){
-		this.deck.add(new Carte(1, Couleur.VIOLET, Symbole.ANNEAU));
-		this.deck.add(new Carte(2, Couleur.BLEU, Symbole.ANNEAU));
-		this.deck.add(new Carte(3, Couleur.ORANGE, Symbole.ANNEAU));
-		this.deck.add(new Carte(4, Couleur.VERT, Symbole.ANNEAU));
+		this.deck.add(new Carte(1, Couleur.VIOLET, Symbole.CHAMPIGNON));
+		this.deck.add(new Carte(2, Couleur.BLEU, Symbole.CHAMPIGNON));
+		this.deck.add(new Carte(3, Couleur.ROUGE, Symbole.CHAMPIGNON));
+		this.deck.add(new Carte(4, Couleur.VERT, Symbole.CHAMPIGNON));
 		
-		this.deck.add(new Carte(1, Couleur.VERT, Symbole.PLUME));
-		this.deck.add(new Carte(2, Couleur.VIOLET, Symbole.PLUME));
-		this.deck.add(new Carte(3, Couleur.BLEU, Symbole.PLUME));
-		this.deck.add(new Carte(4, Couleur.ORANGE, Symbole.PLUME));
+		this.deck.add(new Carte(1, Couleur.VERT, Symbole.PAPIER));
+		this.deck.add(new Carte(2, Couleur.VIOLET, Symbole.PAPIER));
+		this.deck.add(new Carte(3, Couleur.BLEU, Symbole.PAPIER));
+		this.deck.add(new Carte(4, Couleur.ROUGE, Symbole.PAPIER));
 		
-		this.deck.add(new Carte(1, Couleur.ORANGE, Symbole.CLEF));
+		this.deck.add(new Carte(1, Couleur.ROUGE, Symbole.CLEF));
 		this.deck.add(new Carte(2, Couleur.VERT, Symbole.CLEF));
 		this.deck.add(new Carte(3, Couleur.VIOLET, Symbole.CLEF));
 		this.deck.add(new Carte(4, Couleur.BLEU, Symbole.CLEF));
 		
 		this.deck.add(new Carte(1, Couleur.BLEU, Symbole.CRANE));
-		this.deck.add(new Carte(2, Couleur.ORANGE, Symbole.CRANE));
+		this.deck.add(new Carte(2, Couleur.ROUGE, Symbole.CRANE));
 		this.deck.add(new Carte(3, Couleur.VERT, Symbole.CRANE));
 		this.deck.add(new Carte(4, Couleur.VIOLET, Symbole.CRANE));
 	}

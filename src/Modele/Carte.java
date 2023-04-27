@@ -13,15 +13,15 @@ public class Carte {
 	}
 
 	
-	int getNumero(){
+	public int getNumero(){
 		return this.numero;
 	}
 	
-	Couleur getCouleur(){
+	public Couleur getCouleur(){
 		return this.couleur;
 	}
 	
-	Symbole getSymbole(){
+	public Symbole getSymbole(){
 		return this.symbole;
 	}
 
@@ -32,16 +32,16 @@ public class Carte {
 	public void cycleCouleur() {
 		switch (couleur) {
 			case VERT:
-				couleur = Couleur.ORANGE;
+				couleur = Couleur.ROUGE;
 				break;
-			case ORANGE:
+			case ROUGE:
 				couleur = Couleur.BLEU;
 				break;
 			case BLEU:
 				couleur = Couleur.VIOLET;
 				break;
 			case VIOLET:
-				couleur = Couleur.ORANGE;
+				couleur = Couleur.VERT;
 				break;
 			default:
 				// Handle any unexpected cases

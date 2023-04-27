@@ -1,5 +1,6 @@
 package Modele;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class InfoJoueur {
@@ -65,4 +66,11 @@ public class InfoJoueur {
 		return false;
 	}
 
+	public static List<Carte> mockMain(){
+		List<Carte> res = new LinkedList<>();
+		res.add(new Carte(1, Couleur.ROUGE, Symbole.CLEF));
+		res.add(new Carte(2, Couleur.VERT, Symbole.PAPIER));
+		res.add(new Carte(3, Couleur.BLEU, Symbole.PAPIER));
+		return res;
+	}
 }
