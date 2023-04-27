@@ -58,6 +58,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	Image [][] pousseurs;
 	int direction, etape;
 
+	Font h1, fontCarte;
+
 	NiveauGraphique(Jeu jeu) {
 		j = jeu;
 		j.ajouteObservateur(this);
@@ -100,7 +102,6 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	public void paintComponent(Graphics g) {
 		Graphics2D drawable = (Graphics2D) g;
 
-
 		largeur = getSize().width;
 		hauteur = getSize().height;
 
@@ -110,6 +111,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 		centre_largeur = largeur / 2;
 		centre_hauteur = hauteur / 2;
+
+		h1 = new Font("Medieval English", Font.PLAIN, min(largeur/25, hauteur/12));
+		fontCarte = new Font("Medieval English", Font.PLAIN, min(largeur/62, hauteur/30));
 
 		int x;
 
@@ -158,7 +162,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 
 //		g.setFont(new Font("TimesRoman", Font.PLAIN, min(largeur/25, hauteur/12)));
-		g.setFont(new Font("Medieval English", Font.PLAIN, min(largeur/25, hauteur/12)));
+		g.setFont(h1);
 //		g.setFont( medievalFont);
 
 
@@ -180,6 +184,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 	private void dessinerCarte(Graphics2D g, int x, int y, Couleur couleur, Symbole symbole, int numero){
 		tracer(g, carteVide, x, y, largeurCarte, hauteurCarte);
+		g.setFont(fontCarte);
+		FontMetrics m = g.getFontMetrics();
+		g.drawString(numero+"", x+padding/2, y+m.getHeight()); //haut
+		//g.drawString(numero+"", x+largeurCarte-padding/2-m.stringWidth(numero+""), y+hauteurCarte-padding/2); //bas
+		y = y + padding/4;
 		switch (couleur){
 			case ROUGE:
 				tracer(g, rouge, x, y, largeurCarte, hauteurCarte);
