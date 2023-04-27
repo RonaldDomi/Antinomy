@@ -32,13 +32,15 @@ import Patterns.Observateur;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import static java.lang.Math.min;
 
 public class NiveauGraphique extends JComponent implements Observateur {
-	Image carteVide, carteDos, carteDosR, bleu, rouge, violet, vert, clef, crane, papier, champignon;
+	Image carteVide, carteDos, carteDosR, bleu, rouge, violet, vert, clef, crane, papier, champignon, diamant;
 	Jeu j;
 	int largeurCarte;
 	int hauteurCarte;
@@ -49,7 +51,6 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	int largeur, hauteur;
 
 	int centre_largeur, centre_hauteur;
-
 
 	// Décalage des éléments (pour pouvoir les animer)
 	Vecteur [][] decalages;
@@ -71,6 +72,17 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		clef = lisImage("Clef");
 		papier = lisImage("Papier");
 		champignon = lisImage("Champignon");
+		diamant = lisImage("Diamant");
+
+		try {
+			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT, new File("res/Fonts/Medieval-English.ttf"));
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(medievalFont);
+		} catch (FontFormatException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private Image lisImage(String nom) {
@@ -87,6 +99,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 	public void paintComponent(Graphics g) {
 		Graphics2D drawable = (Graphics2D) g;
+
 
 		largeur = getSize().width;
 		hauteur = getSize().height;
@@ -138,8 +151,27 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		tracer(drawable, carteDosR, x, centre_hauteur-largeurCarte / 2, hauteurCarte, largeurCarte);
 
 		//Positions Joueurs
-		g.fillOval(centre_largeur, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
-		g.fillOval(centre_largeur, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
+		x = centre_largeur + (0-2) * (largeurCarte + padding);
+		g.fillOval(x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
+		x = centre_largeur + (3-2) * (largeurCarte + padding);
+		g.fillOval(x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
+
+
+//		g.setFont(new Font("TimesRoman", Font.PLAIN, min(largeur/25, hauteur/12)));
+		g.setFont(new Font("Medieval English", Font.PLAIN, min(largeur/25, hauteur/12)));
+//		g.setFont( medievalFont);
+
+
+		FontMetrics m = g.getFontMetrics();
+		String s_j1 = "Joueur 1   " + 2 + "/5";
+		String s_j2 = "Joueur 2   " + 3 + "/5";
+		//Texte joueur 1
+		g.drawString(s_j1, padding, hauteur-padding);
+		tracer(drawable, diamant, m.stringWidth(s_j2) + 2*padding, hauteur-padding-largeurCarte/2, largeurCarte/2, largeurCarte/2);
+
+		//Texte joueur 2
+		g.drawString(s_j2, largeur - m.stringWidth(s_j2) - 2*padding - largeurCarte/2, 0 + m.getHeight());
+		tracer(drawable, diamant, largeur - padding - largeurCarte/2, 0 + m.getHeight() - largeurCarte/2, largeurCarte/2, largeurCarte/2);
 	}
 
 	protected void tracer(Graphics2D g, Image i, int x, int y, int l, int h) {
