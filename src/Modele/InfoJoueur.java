@@ -27,7 +27,7 @@ public class InfoJoueur {
 	int getDirectionMouvement(){return this.directionMouvement;}
 	Carte getCarteMain(int index){return this.main[index];}
 	Carte getCarteAleatoire(){
-		return this.main[r.nextInt(2)];
+		return this.main[r.nextInt(main.length)];
 	}
 	Carte[] getMain(){return this.main;}
 
