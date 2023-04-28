@@ -5,24 +5,23 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Continuum {
-	private List<Carte> continuum; //9 cartes
+	private Carte[] continuum; //9 cartes
 	
-	Continuum(List<Carte> continuum){
+	Continuum(Carte[] continuum){
 		this.continuum = continuum;
 	}
 
 	Carte getCarteContinuum(int index){
-		return this.continuum.get(index);
+		return this.continuum[index];
 	}
 
 	void setCarteContinuum(int index, Carte carte){
-		this.continuum.set(index, carte);
+		this.continuum[index] = carte;
 	}
 	
 	int getContinuumSize(){
-		return continuum.size();
+		return continuum.length;
 	}
-	
 
 	
 	/**
@@ -39,10 +38,10 @@ public class Continuum {
 	* à partir de cartes[0]
 	*
 	*/
-	int[][] calculeOptions(List<Carte> cartes, int indice_sorcier){
-		int[][] tab_options = new int[cartes.size()][];
-		for (int i = 0; i < cartes.size(); i++) {
-			List<Integer> coups_possibles = this.getCoupsPossibles(cartes.get(i), indice_sorcier, 0);
+	int[][] calculeOptions(Carte[] cartes, int indice_sorcier){
+		int[][] tab_options = new int[cartes.length][];
+		for (int i = 0; i < cartes.length; i++) {
+			List<Integer> coups_possibles = this.getCoupsPossibles(cartes[i], indice_sorcier, 0);
 			tab_options[i] = new int[coups_possibles.size()];
 			for (int j = 0; j < coups_possibles.size(); j++) {
 				tab_options[i][j] = coups_possibles.get(j);
@@ -68,7 +67,7 @@ public class Continuum {
 	* </P>
 	*/
 	public LinkedList<Integer> getCoupsPossibles(Carte carte_jouee, int num_sorcier, int direction){
-		LinkedList<Integer> index_coups_possibles = new LinkedList<Integer>();
+		LinkedList<Integer> index_coups_possibles = new LinkedList<>();
 		
 		for (int i = num_sorcier-direction; i >= 0 && i < this.getContinuumSize(); i-= direction){
 			if(this.getCarteContinuum(i).getSymbole() == carte_jouee.getSymbole() ||
@@ -91,17 +90,17 @@ public class Continuum {
 		// renvoie les 3 cartes echanges
 	}
 
-	public static List<Carte> mockContinuum(){
-		List<Carte> res = new LinkedList<>();
-		res.add(new Carte(1, Couleur.ROUGE, Symbole.CLEF));
-		res.add(new Carte(2, Couleur.VERT, Symbole.PAPIER));
-		res.add(new Carte(3, Couleur.BLEU, Symbole.CRANE));
-		res.add(new Carte(2, Couleur.VERT, Symbole.CRANE));
-		res.add(new Carte(1, Couleur.VIOLET, Symbole.PAPIER));
-		res.add(new Carte(3, Couleur.VERT, Symbole.CHAMPIGNON));
-		res.add(new Carte(3, Couleur.ROUGE, Symbole.CHAMPIGNON));
-		res.add(new Carte(2, Couleur.VERT, Symbole.CLEF));
-		res.add(new Carte(1, Couleur.BLEU, Symbole.PAPIER));
+	public static Carte[] mockContinuum(){
+		Carte[] res = new Carte[3];
+		res[0] = new Carte(1, Couleur.ROUGE, Symbole.CLEF);
+		res[1] = new Carte(2, Couleur.VERT, Symbole.PAPIER);
+		res[2] = new Carte(3, Couleur.BLEU, Symbole.CRANE);
+		res[3] = new Carte(2, Couleur.VERT, Symbole.CRANE);
+		res[4] = new Carte(1, Couleur.VIOLET, Symbole.PAPIER);
+		res[5] = new Carte(3, Couleur.VERT, Symbole.CHAMPIGNON);
+		res[6] = new Carte(3, Couleur.ROUGE, Symbole.CHAMPIGNON);
+		res[7] = new Carte(2, Couleur.VERT, Symbole.CLEF);
+		res[8] = new Carte(1, Couleur.BLEU, Symbole.PAPIER);
 		return res;
 	}
 }

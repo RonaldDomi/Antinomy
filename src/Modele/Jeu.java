@@ -29,13 +29,15 @@ package Modele;
 import Patterns.Observable;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 public class Jeu extends Observable {
 	//To delete
 	Niveau n;
 	///////////
 	LecteurNiveaux l;
-	
+
+	Random r;
 
 	int tour; //0 à +inf
 	Continuum continuum;
@@ -48,6 +50,7 @@ public class Jeu extends Observable {
 	
 	public Jeu(LecteurNiveaux lect) {
 		l = lect;
+		r = new Random();
 //		prochainNiveau();
 	}
 
@@ -84,7 +87,8 @@ public class Jeu extends Observable {
 		return n.colonnePousseur();
 	}
 
-	public boolean jouer_coup(int ligne, int colonne){
+	public boolean jouer_coup(int indexCarte, int indexContinuum, int direction_paradox){
+
 //		if (ligne == 0 && colonne == 0){
 //			gagnant = joueur_courant;
 //		}
@@ -95,6 +99,8 @@ public class Jeu extends Observable {
 //		metAJour();
 //		return true;
 
+		InfoJoueur info_joueur_courant = infoJoueurs[joueurCourant];
+
 		//TODO
 		// calcule les options pour chaque carte(aide a IA et anti-idiot si l'utilisateur change la carte beacoup beacoup // todo dans continum
 
@@ -104,10 +110,11 @@ public class Jeu extends Observable {
 
 		// ETAPE 2
 		// echange cartes // todo dans jeu.java
+		echangerCarteMainContinuum(indexCarte, indexContinuum);
 		// moveSorcier // todo dans infojoueur
+		info_joueur_courant.moveSorcier(indexContinuum);
 
 		// ETAPE 3
-		// si existe paradox // todo infojoueur
 		// si active paradox, traitement // todo pas specifiee
 
 		// ETAPE 4
@@ -119,12 +126,34 @@ public class Jeu extends Observable {
 		return true;
 	}
 
-	void prendrePlacerCarte(int carteMainIndice, int carteContinuumIndice){
+	void echangerCarteMainContinuum(int carteMainIndice, int carteContinuumIndice){
 		//todo
 		//change le carte du main donne par l'utilisateur avec la carte dans le continuum
+		continuum.setCarteContinuum(carteContinuumIndice, infoJoueurs[joueurCourant].changeCarte(carteMainIndice, continuum.getCarteContinuum(carteContinuumIndice)));
 		//renvoie rien
-
 	}
 	
-	
+	boolean clash(){
+		int gagnantClash()
+	}
+
+	int gagnantClash(){
+		//-1 si égalité sinon index du gagnant
+		if (infoJoueurs[0].sommeMain() > infoJoueurs[1].sommeMain()){
+			return 0;
+		} else if (infoJoueurs[0].sommeMain() < infoJoueurs[1].sommeMain()) {
+			return 1;
+		}
+		else{
+//			if (infoJoueurs[0].getCarteMain(r.nextInt(2));
+		}
+	}
+
+	boolean existeParadoxSuperieur(){
+		return infoJoueurs[joueurCourant].getSorcierIndice() < 3;
+	}
+
+	boolean existeParadoxInferieur(){
+		return infoJoueurs[joueurCourant].getSorcierIndice() > continuum.getContinuumSize() - 3;
+	}
 }

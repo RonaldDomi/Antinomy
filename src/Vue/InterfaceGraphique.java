@@ -33,6 +33,8 @@ import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 
 // L'interface runnable déclare une méthode run
@@ -48,10 +50,22 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 
 	static Font h1;
 	static Font h2 = new Font("TimesRoman", Font.PLAIN, 15);
+	Font h2MenuJeu;
 
 	InterfaceGraphique(Jeu jeu, CollecteurEvenements c) {
 		j = jeu;
 		control = c;
+
+
+		try {
+			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT, new File("res/Fonts/Medieval-English.ttf"));
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(medievalFont);
+		} catch (FontFormatException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static void demarrer(Jeu j, CollecteurEvenements c) {
@@ -73,18 +87,37 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	}
 
 	public void run() {
+
 		menuPrincipale = new JFrame("Antinomy");
 		enJeu = new JFrame("Antinomy");
 
-		niv = new NiveauGraphique(j);
+		enJeu.setSize(500, 300);
+		menuPrincipale.setSize(500, 300);
+//		h2MenuJeu = new Font("Medieval English", Font.PLAIN, enJeu.getWidth()/10);
+
+
+		niv = new NiveauGraphique(j, h2MenuJeu);
 		niv.addMouseListener(new AdaptateurSouris(niv, control));
 
 //		menuPrincipale.addKeyListener(new AdaptateurClavier(control));
 		enJeu.addKeyListener(new AdaptateurClavier(control));
 
+		h1 = new Font("Medieval English", Font.PLAIN, menuPrincipale.getWidth()/2);
+
+//		Box enJeuListe = Box.createVerticalBox();
+//
+//		Box menuJeu = Box.createHorizontalBox();
+//		JLabel name = new JLabel("Antinomy");
+//		name.setFont(h2MenuJeu);
+
+
+//		menuJeu.add(name);
+
+//		enJeuListe.add(menuJeu);
+//		enJeuListe.add(niv);
+
 		setMenuPrincipale();
 
-		h1 = new Font("TimesRoman", Font.PLAIN, menuPrincipale.getWidth()/2);
 
 		Timer chrono = new Timer(16, new AdaptateurTemps(control));
 		chrono.start();
@@ -92,10 +125,8 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		enJeu.add(niv);
 
 		enJeu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		enJeu.setSize(500, 300);
 		menuPrincipale.setVisible(false);
 		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		menuPrincipale.setSize(500, 300);
 		enJeu.setVisible(true);
 		courant = enJeu;
 	}

@@ -58,9 +58,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	Image [][] pousseurs;
 	int direction, etape;
 
-	Font h1, fontCarte;
+	Font h1, fontCarte, h2;
 
-	NiveauGraphique(Jeu jeu) {
+	NiveauGraphique(Jeu jeu, Font h2) {
 		j = jeu;
 		j.ajouteObservateur(this);
 		carteDos = lisImage("Carte_dos");
@@ -75,16 +75,6 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		papier = lisImage("Papier");
 		champignon = lisImage("Champignon");
 		diamant = lisImage("Diamant");
-
-		try {
-			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT, new File("res/Fonts/Medieval-English.ttf"));
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(medievalFont);
-		} catch (FontFormatException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	private Image lisImage(String nom) {
@@ -114,6 +104,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 		h1 = new Font("Medieval English", Font.PLAIN, min(largeur/25, hauteur/12));
 		fontCarte = new Font("Medieval English", Font.PLAIN, min(largeur/62, hauteur/30));
+		h2 = new Font("Medieval English", Font.PLAIN, min(largeur/12, hauteur/6));
 
 		int x;
 
@@ -122,17 +113,17 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		Couleur couleur;
 		Symbole symbole;
 		int numero;
-		List<Carte> main = InfoJoueur.mockMain();
-		List<Carte> continuum = Continuum.mockContinuum();
+		Carte[] main = InfoJoueur.mockMain();
+		Carte[] continuum = Continuum.mockContinuum();
 
 		//Joueurs
 		deb_joueur = centre_largeur + -1 * (largeurCarte + padding) - largeurCarte / 2;
 		for (i = -1; i < 2; i++) {
 			x = centre_largeur + i * (largeurCarte + padding) - largeurCarte / 2;
 
-			couleur = main.get(i+1).getCouleur();
-			symbole = main.get(i+1).getSymbole();
-			numero = main.get(i+1).getNumero();
+			couleur = main[i+1].getCouleur();
+			symbole = main[i+1].getSymbole();
+			numero = main[i+1].getNumero();
 
 			tracer(drawable, carteDos, x, 0, largeurCarte, hauteurCarte);
 			dessinerCarte(drawable, x, hauteur - hauteurCarte, couleur, symbole, numero);
@@ -143,9 +134,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		for (i = -5; i < 4; i++) {
 			x = centre_largeur + i * (largeurCarte + padding);
 
-			couleur = continuum.get(i+5).getCouleur();
-			symbole = continuum.get(i+5).getSymbole();
-			numero = continuum.get(i+5).getNumero();
+			couleur = continuum[i+5].getCouleur();
+			symbole = continuum[i+5].getSymbole();
+			numero = continuum[i+5].getNumero();
 
 			dessinerCarte(drawable, x, centre_hauteur-hauteurCarte / 2, couleur, symbole, numero);
 		}
