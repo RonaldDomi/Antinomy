@@ -70,10 +70,7 @@ public class Deck {
 			}else{
 				carte_tab[i] = this.deck.remove(random_index.nextInt(this.deck.size()-1));
 			}
-			
 		}
 		return carte_tab;
 	}
-	
-	
 }

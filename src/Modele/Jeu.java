@@ -31,6 +31,8 @@ import Patterns.Observable;
 import java.util.LinkedList;
 import java.util.Random;
 
+import static java.lang.Math.abs;
+
 public class Jeu extends Observable {
 	//To delete
 	Niveau n;
@@ -51,7 +53,17 @@ public class Jeu extends Observable {
 	public Jeu(LecteurNiveaux lect) {
 		l = lect;
 		r = new Random();
-//		prochainNiveau();
+
+		Deck d = new Deck();
+		continuum = new Continuum(d.distribuer(9));
+		infoJoueurs = new InfoJoueur[2];
+		infoJoueurs[0] = new InfoJoueur(1,r);
+		infoJoueurs[0].setMain(d.distribuer(3));
+		infoJoueurs[1] = new InfoJoueur(-1,r);
+		infoJoueurs[1].setMain(d.distribuer(3));
+
+		joueurCourant = 0;
+		joueurGagnant = -1;
 	}
 
 	public Niveau niveau() {
@@ -88,24 +100,53 @@ public class Jeu extends Observable {
 	}
 
 	void echangerCarteMainContinuum(int carteMainIndice, int carteContinuumIndice){
-		//todo
-		//change le carte du main donne par l'utilisateur avec la carte dans le continuum
+		//change la carte de la main donnée par l'utilisateur avec la carte dans le continuum
 		continuum.setCarteContinuum(carteContinuumIndice, infoJoueurs[joueurCourant].changeCarte(carteMainIndice, continuum.getCarteContinuum(carteContinuumIndice)));
 		//renvoie rien
 	}
 
 	public void coupEchangeCarteMainContinium(int indexCarte, int indexContinuum){
-		echangerCarteMainContinuum(indexCarte, indexContinuum);
 		infoJoueurs[joueurCourant].moveSorcier(indexContinuum);
+		echangerCarteMainContinuum(indexCarte, indexContinuum);
+		metAJour();
 	}
 
 	public void coupParadox(boolean faireParadox, int direction){
+		if (faireParadox){
+			//todo melanger main
+			int x;
+			if(direction == -1)
+				x = -3;
+			else if (direction == 1)
+				x = 0;
+			else{
+				System.out.println("Erreur Paradox sans direction");
+				return;
+			}
 
+			for (int i = 0; i < 3; i++){
+				echangerCarteMainContinuum(i, 0+i);
+			}
+
+			infoJoueurs[joueurCourant].addPoint();
+			jeuGagnant();
+		}
+		metAJour();
 	}
 
 	boolean coupClash(){
-		gagnantClash();
-		return true;
+		int res = gagnantClash();
+		if (res != -1){
+			if (infoJoueurs[1-res].getPoints() > 0){
+				infoJoueurs[1-res].remPoint();
+				infoJoueurs[res].addPoint();
+				jeuGagnant();
+				metAJour();
+				return true;
+			}
+			return false;
+		}
+		return false;
 	}
 
 	int gagnantClash(){
@@ -128,11 +169,38 @@ public class Jeu extends Observable {
 		}
 	}
 
+	void jeuGagnant(){
+		if (infoJoueurs[0].getPoints() >= 5)
+			joueurGagnant = 0;
+		else if (infoJoueurs[1].getPoints() >= 5)
+			joueurGagnant = 1;
+	}
+
 	boolean existeParadoxSuperieur(){
 		return infoJoueurs[joueurCourant].getSorcierIndice() < 3;
 	}
 
 	boolean existeParadoxInferieur(){
 		return infoJoueurs[joueurCourant].getSorcierIndice() > continuum.getContinuumSize() - 3;
+	}
+
+	public Carte[] getMainJoueurCourant(){
+		return infoJoueurs[joueurCourant].getMain();
+	}
+
+	public InfoJoueur[] getInfoJoueurs(){
+		return infoJoueurs;
+	}
+
+	public Carte[] getContinuumCarte(){
+		return continuum.getContinuum();
+	}
+
+	public Continuum getContinuum(){
+		return continuum;
+	}
+
+	public int getJoueurCourant(){
+		return joueurCourant;
 	}
 }

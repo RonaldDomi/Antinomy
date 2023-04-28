@@ -18,6 +18,10 @@ public class Continuum {
 	void setCarteContinuum(int index, Carte carte){
 		this.continuum[index] = carte;
 	}
+
+	Carte[] getContinuum(){
+		return continuum;
+	}
 	
 	int getContinuumSize(){
 		return continuum.length;
@@ -91,7 +95,7 @@ public class Continuum {
 	}
 
 	public static Carte[] mockContinuum(){
-		Carte[] res = new Carte[3];
+		Carte[] res = new Carte[9];
 		res[0] = new Carte(1, Couleur.ROUGE, Symbole.CLEF);
 		res[1] = new Carte(2, Couleur.VERT, Symbole.PAPIER);
 		res[2] = new Carte(3, Couleur.BLEU, Symbole.CRANE);

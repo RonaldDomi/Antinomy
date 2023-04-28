@@ -16,14 +16,14 @@ public class InfoJoueur {
 		this.r = r;
 	}
 
-	public InfoJoueur(int directionMouvement){
+	public InfoJoueur(int directionMouvement, Random r){
 		this.directionMouvement = directionMouvement;
 		this.r = r;
 	}
 
 	// GETTERS
-	int getPoints(){return this.points;}
-	int getSorcierIndice(){return this.sorcierIndice;}
+	public int getPoints(){return this.points;}
+	public int getSorcierIndice(){return this.sorcierIndice;}
 	int getDirectionMouvement(){return this.directionMouvement;}
 	Carte getCarteMain(int index){return this.main[index];}
 	Carte getCarteAleatoire(){
@@ -39,6 +39,7 @@ public class InfoJoueur {
 
 	// UTILS
 	void addPoint(){this.points += 1;}
+	void remPoint(){this.points -= 1;}
 	boolean moveSorcier(int deplacement){
 		//TODO
 		// deplace l'indice de le sourcier avec le deplacement
@@ -73,9 +74,9 @@ public class InfoJoueur {
 		return 0;
 	}
 
-	boolean existeParadox(){
+	boolean existeParadox(Couleur couleur_interdite){
 		//regarde la main et voit si il y a des triplets
-		boolean couleur = main[0].getCouleur() == main[1].getCouleur() && main[1].getCouleur() == main[2].getCouleur();
+		boolean couleur = main[0].getCouleur() != couleur_interdite && main[0].getCouleur() == main[1].getCouleur() && main[1].getCouleur() == main[2].getCouleur();
 		boolean symbole = main[0].getSymbole() == main[1].getSymbole() && main[1].getSymbole() == main[2].getSymbole();
 		boolean nombre = main[0].getNumero() == main[1].getNumero() && main[1].getNumero() == main[2].getNumero();
 		return couleur || symbole || nombre;
