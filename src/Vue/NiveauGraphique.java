@@ -146,9 +146,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		tracer(drawable, carteDosR, x, centre_hauteur-largeurCarte / 2, hauteurCarte, largeurCarte);
 
 		//Positions Joueurs
-		x = centre_largeur + (j.getInfoJoueurs()[j.getJoueurCourant()].getSorcierIndice()-2) * (largeurCarte + padding);
+		x = centre_largeur + (j.getInfoJoueurs()[j.getJoueurCourant()].getSorcierIndice()-5) * (largeurCarte + padding);
 		g.fillOval(x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
-		x = centre_largeur + (j.getInfoJoueurs()[1-j.getJoueurCourant()].getSorcierIndice()-2) * (largeurCarte + padding);
+		x = centre_largeur + (j.getInfoJoueurs()[1-j.getJoueurCourant()].getSorcierIndice()-5) * (largeurCarte + padding);
 		g.fillOval(x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
 
 

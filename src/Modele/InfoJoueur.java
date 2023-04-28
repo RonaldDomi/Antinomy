@@ -8,7 +8,7 @@ public class InfoJoueur {
 	private Carte[] main; //3 cartes
 	private int points; //0 à 5
 	private int directionMouvement; //-1 ou +1
-	private int sorcierIndice; //index 0 ou 1
+	private int sorcierIndice = 9; //index
 
 	private Random r;
 
@@ -32,10 +32,10 @@ public class InfoJoueur {
 	Carte[] getMain(){return this.main;}
 
 	// SETTEERS
-	void setMain(Carte[] main){this.main = main;}
-	void setPoints(int points){this.points = points;}
+	public void setMain(Carte[] main){this.main = main;}
+	public void setPoints(int points){this.points = points;}
 	// no setter in directionMouvement, it is supposed to never change
-	void setSorcierIndice(int indice){this.sorcierIndice = indice;}
+	public void setSorcierIndice(int indice){this.sorcierIndice = indice;}
 
 	// UTILS
 	void addPoint(){this.points += 1;}

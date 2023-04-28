@@ -44,6 +44,7 @@ public class AdaptateurSouris extends MouseAdapter {
 			for (int i = 0; i < 3; i++) {
 				if (e.getX() >= n.deb_joueur + i*n.largeurCarte + i*n.padding && e.getX() < n.deb_joueur + (i+1)*n.largeurCarte + i*n.padding){
 					System.out.println("Joueur Clicked : " + i);
+					control.clicSouris(1, i);
 					break;
 				}
 			}
@@ -51,10 +52,10 @@ public class AdaptateurSouris extends MouseAdapter {
 			for (int i = 0; i < 9; i++) {
 				if (e.getX() >= n.deb_continuum + i*n.largeurCarte + i*n.padding && e.getX() < n.deb_continuum + (i+1)*n.largeurCarte + i*n.padding){
 					System.out.println("Continium Clicked : " + i);
+					control.clicSouris(2, i);
 					break;
 				}
 			}
 		}
-//		control.clicSouris(l, c);
 	}
 }

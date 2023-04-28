@@ -64,6 +64,8 @@ public class Jeu extends Observable {
 
 		joueurCourant = 0;
 		joueurGagnant = -1;
+
+		tour = 0;
 	}
 
 	public Niveau niveau() {
@@ -103,6 +105,11 @@ public class Jeu extends Observable {
 		//change la carte de la main donnée par l'utilisateur avec la carte dans le continuum
 		continuum.setCarteContinuum(carteContinuumIndice, infoJoueurs[joueurCourant].changeCarte(carteMainIndice, continuum.getCarteContinuum(carteContinuumIndice)));
 		//renvoie rien
+	}
+
+	public void coupChangerPositionSorcier(int indexCarte){
+		getInfoJoueurCourant().setSorcierIndice(indexCarte);
+		metAJour();
 	}
 
 	public void coupEchangeCarteMainContinium(int indexCarte, int indexContinuum){
@@ -149,6 +156,17 @@ public class Jeu extends Observable {
 		return false;
 	}
 
+	int adversaire(){
+		return 1-joueurCourant;
+	}
+
+	void finTour(){
+		joueurCourant = adversaire();
+		tour++;
+	}
+
+
+
 	int gagnantClash(){
 		//-1 si égalité sinon index du gagnant
 		int sommeJ0 = infoJoueurs[0].sommeMain();
@@ -190,6 +208,9 @@ public class Jeu extends Observable {
 
 	public InfoJoueur[] getInfoJoueurs(){
 		return infoJoueurs;
+	}
+	public InfoJoueur getInfoJoueurCourant(){
+		return infoJoueurs[joueurCourant];
 	}
 
 	public Carte[] getContinuumCarte(){
