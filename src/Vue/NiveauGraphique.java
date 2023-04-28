@@ -113,8 +113,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		Couleur couleur;
 		Symbole symbole;
 		int numero;
-		Carte[] main = InfoJoueur.mockMain();
-		Carte[] continuum = Continuum.mockContinuum();
+		Carte[] main = j.getMainJoueurCourant();
+		Carte[] continuum = j.getContinuumCarte();
 
 		//Joueurs
 		deb_joueur = centre_largeur + -1 * (largeurCarte + padding) - largeurCarte / 2;
@@ -146,9 +146,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		tracer(drawable, carteDosR, x, centre_hauteur-largeurCarte / 2, hauteurCarte, largeurCarte);
 
 		//Positions Joueurs
-		x = centre_largeur + (0-2) * (largeurCarte + padding);
+		x = centre_largeur + (j.getInfoJoueurs()[j.getJoueurCourant()].getSorcierIndice()-2) * (largeurCarte + padding);
 		g.fillOval(x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
-		x = centre_largeur + (3-2) * (largeurCarte + padding);
+		x = centre_largeur + (j.getInfoJoueurs()[1-j.getJoueurCourant()].getSorcierIndice()-2) * (largeurCarte + padding);
 		g.fillOval(x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
 
 
@@ -158,8 +158,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 
 		FontMetrics m = g.getFontMetrics();
-		String s_j1 = "Joueur 1   " + 2 + "/5";
-		String s_j2 = "Joueur 2   " + 3 + "/5";
+		String s_j1 = "Joueur 1   " + j.getInfoJoueurs()[j.getJoueurCourant()].getPoints() + "/5";
+		String s_j2 = "Joueur 2   " + j.getInfoJoueurs()[1-j.getJoueurCourant()].getPoints() + "/5";
 		//Texte joueur 1
 		g.drawString(s_j1, padding, hauteur-padding);
 		tracer(drawable, diamant, m.stringWidth(s_j2) + 2*padding, hauteur-padding-largeurCarte/2, largeurCarte/2, largeurCarte/2);
