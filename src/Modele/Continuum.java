@@ -80,7 +80,7 @@ public class Continuum {
 			}
 		}
 		
-		if (((num_sorcier + (carte_jouee.getNumero() * direction)) < this.getContinuumSize()) ||
+		if (((num_sorcier + (carte_jouee.getNumero() * direction)) < this.getContinuumSize()) &&
 				(num_sorcier + (carte_jouee.getNumero() * direction)) >= 0){
 			index_coups_possibles.add(num_sorcier + (carte_jouee.getNumero() * direction));
 		}
