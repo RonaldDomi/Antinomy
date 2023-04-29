@@ -57,9 +57,9 @@ public class Jeu extends Observable {
 		Deck d = new Deck();
 		continuum = new Continuum(d.distribuer(9));
 		infoJoueurs = new InfoJoueur[2];
-		infoJoueurs[0] = new InfoJoueur(1,r);
+		infoJoueurs[0] = new InfoJoueur(1, r);
 		infoJoueurs[0].setMain(d.distribuer(3));
-		infoJoueurs[1] = new InfoJoueur(-1,r);
+		infoJoueurs[1] = new InfoJoueur(-1, r);
 		infoJoueurs[1].setMain(d.distribuer(3));
 
 		joueurCourant = 0;

@@ -46,20 +46,21 @@ public class Continuum {
 		int[][] tab_options = new int[cartes.length][];
 		for (int i = 0; i < cartes.length; i++) {
 			List<Integer> coups_possibles = this.getCoupsPossibles(cartes[i], indice_sorcier, 0);
-			tab_options[i] = new int[coups_possibles.size()];
-			for (int j = 0; j < coups_possibles.size(); j++) {
-				tab_options[i][j] = coups_possibles.get(j);
+			if (coups_possibles.size() != 0){
+				tab_options[i] = new int[coups_possibles.size()];
+				for (int j = 0; j < coups_possibles.size(); j++) {
+					tab_options[i][j] = coups_possibles.get(j);
+				}
 			}
 		}
 		return tab_options;
 	}
 	
 	/**
-	* <P> TODO: tester fonction </P>
 	*
 	* <P> Renvoie les déplacements possibles suivant la carte jouée et l'index du sorcier. Peu importe la direction.
 	* <BR>  L'élément renvoyé est une liste chaînée d'index de cartes où le déplacement est valide.
-	* <BR> Il existe toujours au moins 1 déplacement possible. </P>
+	* <BR> Il peut n'y avoir aucun déplacement possible pour une carte donnée. </P>
 	*
 	* <P>
     * @param carte_jouee La carte jouée durant ce tour
@@ -67,7 +68,7 @@ public class Continuum {
 	* @param direction La direction où le sorcier doit se déplacer pour aller dans le Futur (-1 ou +1)
 	* </P>
 	* <P>
-	* @return Une liste chaînée d'index valides.
+	* @return Une liste chaînée d'index valides, vide ou non.
 	* </P>
 	*/
 	public LinkedList<Integer> getCoupsPossibles(Carte carte_jouee, int num_sorcier, int direction){

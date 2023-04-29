@@ -37,14 +37,13 @@ class ContinuumRandomTest {
 	}
 	
 	
-	@RepeatedTest(20)
+	@RepeatedTest(1000)
 	void testGetCoupsPossiblesJoueur1BordMax() {
 		
 		int index_sorcier = 8;
 		Carte mock_carte = new Carte(1, Couleur.BLEU, Symbole.CHAMPIGNON);
 		LinkedList<Integer> res = continuum.getCoupsPossibles(mock_carte, index_sorcier, 1);
 		
-		assertTrue(res.size() > 0);
 		assertTrue(res.size() <= 7);
 		for (Integer index: res
 		     ) {
@@ -56,14 +55,13 @@ class ContinuumRandomTest {
 	}
 	
 	
-	@RepeatedTest(20)
+	@RepeatedTest(1000)
 	void testGetCoupsPossiblesJoueur2BordMax() {
 		
 		int index_sorcier = 0;
 		Carte mock_carte = new Carte(1, Couleur.BLEU, Symbole.CHAMPIGNON);
 		LinkedList<Integer> res = continuum.getCoupsPossibles(mock_carte, index_sorcier, -1);
 		
-		assertTrue(res.size() > 0);
 		assertTrue(res.size() <= 7);
 		for (Integer index: res
 		) {
@@ -74,7 +72,7 @@ class ContinuumRandomTest {
 	}
 	
 	
-	@RepeatedTest(20)
+	@RepeatedTest(1000)
 	void testGetCoupsPossiblesJoueur1BordMilieu() {
 		
 		int index_sorcier = 4;
@@ -97,7 +95,7 @@ class ContinuumRandomTest {
 	}
 	
 	
-	@RepeatedTest(20)
+	@RepeatedTest(1000)
 	void testGetCoupsPossiblesJoueur2BordMilieu() {
 		
 		int index_sorcier = 4;
@@ -120,7 +118,7 @@ class ContinuumRandomTest {
 	}
 	
 	
-	@RepeatedTest(20)
+	@RepeatedTest(1000)
 	void testGetCoupsPossiblesJoueur1BordMin() {
 		
 		int index_sorcier = 0;
@@ -132,7 +130,7 @@ class ContinuumRandomTest {
 	}
 	
 	
-	@RepeatedTest(20)
+	@RepeatedTest(1000)
 	void testGetCoupsPossiblesJoueur2BordMin() {
 		int index_sorcier = 8;
 		Carte mock_carte = new Carte(1, Couleur.BLEU, Symbole.CHAMPIGNON);
@@ -144,7 +142,7 @@ class ContinuumRandomTest {
 	
 	
 	
-	@RepeatedTest(20)
+	@RepeatedTest(1000)
 	void calculeOptionsJoueur1BordMax() {
 		int index_sorcier = 8;
 		Carte[] main = {new Carte(1, Couleur.BLEU, Symbole.CHAMPIGNON),
@@ -153,7 +151,6 @@ class ContinuumRandomTest {
 		 
 		for (int i = 0; i < main.length; i++) {
 			LinkedList<Integer> resMain = continuum.getCoupsPossibles(main[i], index_sorcier, 1);
-			assertTrue(resMain.size() > 0);
 			assertTrue(resMain.size() <= 7);
 			
 			for (int index:resMain
@@ -169,7 +166,7 @@ class ContinuumRandomTest {
 	}
 	
 	
-	@RepeatedTest(20)
+	@RepeatedTest(1000)
 	void calculeOptionsJoueur2BordMax() {
 		int index_sorcier = 0;
 		Carte[] main = {new Carte(1, Couleur.BLEU, Symbole.CHAMPIGNON),
@@ -178,7 +175,6 @@ class ContinuumRandomTest {
 		
 		for (int i = 0; i < main.length; i++) {
 			LinkedList<Integer> resMain = continuum.getCoupsPossibles(main[i], index_sorcier, -1);
-			assertTrue(resMain.size() > 0);
 			assertTrue(resMain.size() <= 7);
 			
 			for (int index:resMain
@@ -194,7 +190,7 @@ class ContinuumRandomTest {
 	}
 	
 	
-	@RepeatedTest(20)
+	@RepeatedTest(1000)
 	void calculeOptionsJoueur1BordMilieu() {
 		int index_sorcier = 4;
 		Carte[] main = {new Carte(1, Couleur.BLEU, Symbole.CHAMPIGNON),
@@ -220,7 +216,7 @@ class ContinuumRandomTest {
 		
 	}
 	
-	@RepeatedTest(20)
+	@RepeatedTest(1000)
 	void calculeOptionsJoueur2BordMilieu() {
 		int index_sorcier = 4;
 		Carte[] main = {new Carte(1, Couleur.BLEU, Symbole.CHAMPIGNON),
@@ -244,5 +240,32 @@ class ContinuumRandomTest {
 			i++;
 		}
 		
+	}
+	
+	@RepeatedTest(1000)
+	void testGetCoupsPossiblesJoueur1DroiteImpossible() {
+		
+		int index_sorcier = 6;
+		Carte mock_carte = new Carte(4, Couleur.BLEU, Symbole.CHAMPIGNON);
+		LinkedList<Integer> res = continuum.getCoupsPossibles(mock_carte, index_sorcier, 1);
+		
+		for (int index:res
+		     ) {
+			assertTrue(index < 6);
+		}
+	}
+	
+	
+	@RepeatedTest(1000)
+	void testGetCoupsPossiblesJoueur2DroiteImpossible() {
+		
+		int index_sorcier = 3;
+		Carte mock_carte = new Carte(4, Couleur.BLEU, Symbole.CHAMPIGNON);
+		LinkedList<Integer> res = continuum.getCoupsPossibles(mock_carte, index_sorcier, -1);
+		
+		for (int index:res
+		) {
+			assertTrue(index > 3);
+		}
 	}
 }

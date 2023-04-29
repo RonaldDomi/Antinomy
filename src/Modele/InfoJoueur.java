@@ -31,7 +31,7 @@ public class InfoJoueur {
 	}
 	Carte[] getMain(){return this.main;}
 
-	// SETTEERS
+	// SETTERS
 	public void setMain(Carte[] main){this.main = main;}
 	public void setPoints(int points){this.points = points;}
 	// no setter in directionMouvement, it is supposed to never change
