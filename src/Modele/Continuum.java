@@ -26,12 +26,10 @@ public class Continuum {
 	int getContinuumSize(){
 		return continuum.length;
 	}
-
+	
 	
 	/**
-	 * TODO: tester fonction
-	 * <P>
-	* <BR> Renvoie les déplacements possibles pour toutes les cartes en main.
+	* Renvoie les déplacements possibles pour toutes les cartes en main.
 	* <BR> L'élément renvoyé est un tableau de taille 3 contenant un sous tableau de tous les
 	*  indices valides pour un déplacement.
 	*
@@ -40,7 +38,9 @@ public class Continuum {
 	* <P>
 	* @return Un tableau de 3 tableaux d'entiers où tab[0] est le tableau des déplacements possibles
 	* à partir de cartes[0]
-	*
+	* </P>
+	 * <BR> 
+	 * @see #getCoupsPossibles(Carte, int, int)
 	*/
 	int[][] calculeOptions(Carte[] cartes, int indice_sorcier){
 		int[][] tab_options = new int[cartes.length][];
@@ -56,8 +56,8 @@ public class Continuum {
 		return tab_options;
 	}
 	
+	
 	/**
-	*
 	* <P> Renvoie les déplacements possibles suivant la carte jouée et l'index du sorcier. Peu importe la direction.
 	* <BR>  L'élément renvoyé est une liste chaînée d'index de cartes où le déplacement est valide.
 	* <BR> Il peut n'y avoir aucun déplacement possible pour une carte donnée. </P>

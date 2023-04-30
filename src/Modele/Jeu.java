@@ -112,7 +112,7 @@ public class Jeu extends Observable {
 		metAJour();
 	}
 
-	public void coupEchangeCarteMainContinium(int indexCarte, int indexContinuum){
+	public void coupEchangeCarteMainContinuum(int indexCarte, int indexContinuum){
 		infoJoueurs[joueurCourant].moveSorcier(indexContinuum);
 		echangerCarteMainContinuum(indexCarte, indexContinuum);
 		metAJour();
@@ -169,8 +169,8 @@ public class Jeu extends Observable {
 
 	int gagnantClash(){
 		//-1 si égalité sinon index du gagnant
-		int sommeJ0 = infoJoueurs[0].sommeMain();
-		int sommeJ1 = infoJoueurs[1].sommeMain();
+		int sommeJ0 = infoJoueurs[0].sommeMain(codex.getCouleurInterdite());
+		int sommeJ1 = infoJoueurs[1].sommeMain(codex.getCouleurInterdite());
 
 		if (sommeJ0 == sommeJ1){
 			sommeJ0 = infoJoueurs[0].getCarteAleatoire().getNumero();

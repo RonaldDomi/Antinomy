@@ -68,7 +68,7 @@ public class Deck {
 			if (this.deck.size()==1){
 				carte_tab[i] = this.deck.remove(0);
 			}else{
-				carte_tab[i] = this.deck.remove(random_index.nextInt(this.deck.size()-1));
+				carte_tab[i] = this.deck.remove(random_index.nextInt(this.deck.size()));
 			}
 		}
 		return carte_tab;

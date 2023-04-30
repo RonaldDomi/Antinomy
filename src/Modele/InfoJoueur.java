@@ -10,7 +10,7 @@ public class InfoJoueur {
 	private int directionMouvement; //-1 ou +1
 	private int sorcierIndice = 9; //index
 
-	private Random r;
+	protected Random r;
 
 	public InfoJoueur(Random r){
 		this.r = r;
@@ -41,20 +41,20 @@ public class InfoJoueur {
 	void addPoint(){this.points += 1;}
 	void remPoint(){this.points -= 1;}
 	boolean moveSorcier(int deplacement){
-		//TODO
-		// deplace l'indice de le sourcier avec le deplacement
-		// deplacement peut etre +2, -3 +4 ....
-		// il faut tester si c'est bien possible de faire le mouvement, si
-		// c'est pas possible, on renvoie faux, sinon vrai
-		// avec vrai on change aussi this.sorcierIndice = newIndice;
-		return false;
+		int nouvelle_position = this.getSorcierIndice() + deplacement;
+		if(nouvelle_position >= 0 && nouvelle_position <= 8){
+			this.setSorcierIndice(nouvelle_position);
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	Carte changeCarte(int position, Carte new_carte){
 		// Change la carte de this.main.get(position) avec new_carte
 		// il faut tester si position est valide, et il faut retourner la carde qu'on jete de notre main
 		Carte carte = null;
-		if(position >= 0 && position <= 3){
+		if(position >= 0 && position < 3){
 			carte = main[position];
 			main[position] = new_carte;
 		}
@@ -82,8 +82,14 @@ public class InfoJoueur {
 		return couleur || symbole || nombre;
 	}
 
-	public int sommeMain(){
-		return main[0].getNumero() + main[1].getNumero() + main[2].getNumero();
+	public int sommeMain(Couleur couleur_interdite){
+		int sum = 0;
+		for (Carte carte:main) {
+			if (carte.getCouleur() != couleur_interdite){
+				sum += carte.getNumero();
+			}
+		}
+		return sum;
 	}
 
 	public static Carte[] mockMain(){

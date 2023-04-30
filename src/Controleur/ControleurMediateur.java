@@ -104,7 +104,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 				if (indexCarteMain != -1){
 					//todo verifier carte jouable
 					System.out.println("Joueur " + jeu.getJoueurCourant() + " échange la carte de ça main " + indexCarteMain + " avec la carte du continuum " + indexCarte);
-					jeu.coupEchangeCarteMainContinium(indexCarteMain, indexCarte);
+					jeu.coupEchangeCarteMainContinuum(indexCarteMain, indexCarte);
 					indexCarteMain = -1;
 					etape = 2;
 				}

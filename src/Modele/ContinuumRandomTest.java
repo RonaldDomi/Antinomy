@@ -1,6 +1,5 @@
 package Modele;
 
-
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -141,7 +140,6 @@ class ContinuumRandomTest {
 	}
 	
 	
-	
 	@RepeatedTest(1000)
 	void calculeOptionsJoueur1BordMax() {
 		int index_sorcier = 8;
@@ -153,16 +151,13 @@ class ContinuumRandomTest {
 			LinkedList<Integer> resMain = continuum.getCoupsPossibles(main[i], index_sorcier, 1);
 			assertTrue(resMain.size() <= 7);
 			
-			for (int index:resMain
-			     ) {
+			for (int index:resMain){
 				Carte carte_selectionnee = continuum.getCarteContinuum(index);
 				assertTrue(carte_selectionnee.getCouleur() == main[i].getCouleur() ||
 						carte_selectionnee.getSymbole() == main[i].getSymbole());
-				
 			}
-			i++;
+			
 		}
-		
 	}
 	
 	
@@ -177,16 +172,13 @@ class ContinuumRandomTest {
 			LinkedList<Integer> resMain = continuum.getCoupsPossibles(main[i], index_sorcier, -1);
 			assertTrue(resMain.size() <= 7);
 			
-			for (int index:resMain
-			) {
+			for (int index:resMain){
 				Carte carte_selectionnee = continuum.getCarteContinuum(index);
 				assertTrue(carte_selectionnee.getCouleur() == main[i].getCouleur() ||
 						carte_selectionnee.getSymbole() == main[i].getSymbole());
-				
 			}
-			i++;
+			
 		}
-		
 	}
 	
 	
@@ -211,10 +203,11 @@ class ContinuumRandomTest {
 					assertEquals(index, index_sorcier + main[i].getNumero());
 				}
 			}
-			i++;
+			
 		}
 		
 	}
+	
 	
 	@RepeatedTest(1000)
 	void calculeOptionsJoueur2BordMilieu() {
@@ -237,20 +230,20 @@ class ContinuumRandomTest {
 					assertEquals(index, index_sorcier - main[i].getNumero());
 				}
 			}
-			i++;
+			
 		}
 		
 	}
+	
 	
 	@RepeatedTest(1000)
 	void testGetCoupsPossiblesJoueur1DroiteImpossible() {
 		
 		int index_sorcier = 6;
-		Carte mock_carte = new Carte(4, Couleur.BLEU, Symbole.CHAMPIGNON);
+		Carte mock_carte = new Carte(3, Couleur.BLEU, Symbole.CHAMPIGNON);
 		LinkedList<Integer> res = continuum.getCoupsPossibles(mock_carte, index_sorcier, 1);
 		
-		for (int index:res
-		     ) {
+		for (int index:res) {
 			assertTrue(index < 6);
 		}
 	}
@@ -263,8 +256,7 @@ class ContinuumRandomTest {
 		Carte mock_carte = new Carte(4, Couleur.BLEU, Symbole.CHAMPIGNON);
 		LinkedList<Integer> res = continuum.getCoupsPossibles(mock_carte, index_sorcier, -1);
 		
-		for (int index:res
-		) {
+		for (int index:res) {
 			assertTrue(index > 3);
 		}
 	}
