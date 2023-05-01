@@ -35,14 +35,13 @@ public class Arbre {
                 //ici verifier quelle indice mettre
                 temp.coupChangerPositionSorcier(i);
 
-                //il faut la fonction existe paradox ici
-                if (/*temp.infoJoueurs[temp.joueurCourant].existeParadox()*/true){
+                if (temp.infoJoueurs[temp.joueurCourant].existeParadox(temp.codex.getCouleurInterdite())){
                     //pour chaque coup
                     //on joue le paradox si il existe et on le joue pas
                     //respectivement temp2 et temp3
                     if (temp.existeParadoxSuperieur()){
                         temp2 = temp.Clone();
-                        //ici on a pas besoin de continium ou carte on donne juste sens de paradox
+                        //ici  on donne juste sens de paradox
                         //peut etre a rectifier
                         temp2.coupParadox(true, 1);
                     }
@@ -51,14 +50,16 @@ public class Arbre {
                         temp3.coupParadox(true, -1);
                     }
                 }
+
                 //temp contient pas de clash et pas de paradox
                 //temp4 contient clash et pas de paradox
                 //temp3 contient paradox inferieur et pas de paradox
                 //temp2 contient paradox superieur et pas de paradox
                 //temp6 contient paradox inferieur et paradox
                 //temp5 contient paradox superieur et paradox
-                //ici il faut une fonction qui nous dit si il y a un clash
-                if (temp.gagnantClash() == 1){
+
+                //ici si les 2 sorcier on meme indice on peut avoir un clash
+                if (temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
                     temp4 = temp.Clone();
                     temp4.gagnantClash();
                     //*******************
