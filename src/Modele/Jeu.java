@@ -224,4 +224,8 @@ public class Jeu extends Observable {
 	public int getJoueurCourant(){
 		return joueurCourant;
 	}
+
+	public Jeu Clone(){
+		return new Jeu(this.l);
+	}
 }
