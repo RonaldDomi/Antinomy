@@ -1,8 +1,6 @@
 package Modele;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class InfoJoueur {
 	private Carte[] main; //3 cartes
@@ -42,8 +40,9 @@ public class InfoJoueur {
 	// UTILS
 	void addPoint(){this.points += 1;}
 	void remPoint(){this.points -= 1;}
+	
 	boolean moveSorcier(int deplacement){
-		int nouvelle_position = this.getSorcierIndice() + deplacement;
+		int nouvelle_position = this.getSorcierIndice() + (deplacement * this.getDirectionMouvement());
 		if(nouvelle_position >= 0 && nouvelle_position <= 8){
 			this.setSorcierIndice(nouvelle_position);
 			return true;
@@ -52,6 +51,8 @@ public class InfoJoueur {
 		}
 	}
 
+	
+	
 	Carte changeCarte(int position, Carte new_carte){
 		// Change la carte de this.main.get(position) avec new_carte
 		// il faut tester si position est valide, et il faut retourner la carde qu'on jete de notre main
@@ -101,6 +102,6 @@ public class InfoJoueur {
 		res[2] = new Carte(3, Couleur.BLEU, Symbole.PAPIER);
 		return res;
 	}
-
-
+	
+	
 }

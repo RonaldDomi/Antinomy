@@ -115,7 +115,7 @@ public class Jeu extends Observable {
 	}
 
 	public void coupEchangeCarteMainContinuum(int indexCarte, int indexContinuum){
-		infoJoueurs[joueurCourant].moveSorcierAbs(indexContinuum);
+		infoJoueurs[joueurCourant].setSorcierIndice(indexContinuum);
 		echangerCarteMainContinuum(indexCarte, indexContinuum);
 		metAJour();
 	}
