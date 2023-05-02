@@ -34,8 +34,6 @@ import java.util.Random;
 import static java.lang.Math.abs;
 
 public class Jeu extends Observable {
-	//To delete
-	Niveau n;
 	///////////
 	LecteurNiveaux l;
 
@@ -68,10 +66,6 @@ public class Jeu extends Observable {
 		tour = 0;
 	}
 
-	public Niveau niveau() {
-		return n;
-	}
-
 //	public Coup elaboreCoup(int x, int y) {
 //		return n.elaboreCoup(x, y);
 //	}
@@ -80,26 +74,6 @@ public class Jeu extends Observable {
 //		n.joue(c);
 //		metAJour();
 //	}
-
-	public void prochainNiveau() {
-		n = l.lisProchainNiveau();
-	}
-
-	public boolean niveauTermine() {
-		return n.estTermine();
-	}
-
-	public boolean jeuTermine() {
-		return n == null;
-	}
-
-	public int lignePousseur() {
-		return n.lignePousseur();
-	}
-
-	public int colonnePousseur() {
-		return n.colonnePousseur();
-	}
 
 	void echangerCarteMainContinuum(int carteMainIndice, int carteContinuumIndice){
 		//change la carte de la main donnée par l'utilisateur avec la carte dans le continuum
@@ -113,14 +87,15 @@ public class Jeu extends Observable {
 	}
 
 	public void coupEchangeCarteMainContinuum(int indexCarte, int indexContinuum){
-		infoJoueurs[joueurCourant].moveSorcierAbs(indexContinuum);
+		infoJoueurs[joueurCourant].setSorcierIndice(indexContinuum);
 		echangerCarteMainContinuum(indexCarte, indexContinuum);
 		metAJour();
 	}
 
 	public void coupParadox(boolean faireParadox, int direction){
 		if (faireParadox){
-			//todo melanger main
+			this.infoJoueurs[joueurCourant].melangeMain();
+
 			int x;
 			if(direction == -1)
 				x = -3;
