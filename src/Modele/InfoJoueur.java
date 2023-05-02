@@ -1,8 +1,6 @@
 package Modele;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class InfoJoueur {
 	private Carte[] main; //3 cartes
@@ -25,11 +23,13 @@ public class InfoJoueur {
 	public int getPoints(){return this.points;}
 	public int getSorcierIndice(){return this.sorcierIndice;}
 	int getDirectionMouvement(){return this.directionMouvement;}
-	Carte getCarteMain(int index){return this.main[index];}
+	public Carte getCarteMain(int index){return this.main[index];}
 	Carte getCarteAleatoire(){
 		return this.main[r.nextInt(main.length)];
 	}
-	Carte[] getMain(){return this.main;}
+	public Carte[] getMain(){return this.main;}
+
+	public int getDirection(){return this.directionMouvement;}
 
 	// SETTERS
 	public void setMain(Carte[] main){this.main = main;}
@@ -42,8 +42,9 @@ public class InfoJoueur {
 	// UTILS
 	void addPoint(){this.points += 1;}
 	void remPoint(){this.points -= 1;}
+	
 	boolean moveSorcier(int deplacement){
-		int nouvelle_position = this.getSorcierIndice() + deplacement;
+		int nouvelle_position = this.getSorcierIndice() + (deplacement * this.getDirectionMouvement());
 		if(nouvelle_position >= 0 && nouvelle_position <= 8){
 			this.setSorcierIndice(nouvelle_position);
 			return true;
@@ -52,6 +53,8 @@ public class InfoJoueur {
 		}
 	}
 
+	
+	
 	Carte changeCarte(int position, Carte new_carte){
 		// Change la carte de this.main.get(position) avec new_carte
 		// il faut tester si position est valide, et il faut retourner la carde qu'on jete de notre main
@@ -63,22 +66,12 @@ public class InfoJoueur {
 		return carte;
 	}
 
-	int choisirCarte(){
-		//todo
-		//fonction qui prend input text le choix de la carde de main
-		//...
-		return 1;
-	}
-
-	int choisirPositionDansContinuum(int[] options){
-		//todo
-		//input text un option parme les options qu'on fournit l'utilisateur
-		return 0;
-	}
-
 	boolean existeParadox(Couleur couleur_interdite){
+		if(main[0].getCouleur() == couleur_interdite || main[1].getCouleur() == couleur_interdite || main[2].getCouleur() == couleur_interdite)
+			return false;
+
 		//regarde la main et voit si il y a des triplets
-		boolean couleur = main[0].getCouleur() != couleur_interdite && main[0].getCouleur() == main[1].getCouleur() && main[1].getCouleur() == main[2].getCouleur();
+		boolean couleur = main[0].getCouleur() == main[1].getCouleur() && main[1].getCouleur() == main[2].getCouleur();
 		boolean symbole = main[0].getSymbole() == main[1].getSymbole() && main[1].getSymbole() == main[2].getSymbole();
 		boolean nombre = main[0].getNumero() == main[1].getNumero() && main[1].getNumero() == main[2].getNumero();
 		return couleur || symbole || nombre;
@@ -94,6 +87,16 @@ public class InfoJoueur {
 		return sum;
 	}
 
+	public void melangeMain(){
+		Random rand = new Random();
+		for (int i = 0; i < main.length; i++) {
+			int randomIndexToSwap = rand.nextInt(main.length);
+			Carte temp = main[randomIndexToSwap];
+			main[randomIndexToSwap] = main[i];
+			main[i] = temp;
+		}
+	}
+
 	public static Carte[] mockMain(){
 		Carte[] res = new Carte[3];
 		res[0] = new Carte(1, Couleur.ROUGE, Symbole.CLEF);
@@ -101,5 +104,6 @@ public class InfoJoueur {
 		res[2] = new Carte(3, Couleur.BLEU, Symbole.PAPIER);
 		return res;
 	}
-
+	
+	
 }

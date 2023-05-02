@@ -29,12 +29,12 @@ package Vue;
 import Modele.Jeu;
 
 import javax.swing.*;
-import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 
 
 // L'interface runnable déclare une méthode run
@@ -45,7 +45,6 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	JFrame enJeu;
 	boolean maximized;
 	NiveauGraphique niv;
-
 	JFrame courant;
 
 	static Font h1;
@@ -217,5 +216,16 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 
 	public void changeEtape() {
 //		niv.changeEtape();
+	}
+
+
+	@Override
+	public void selectionnerCarteMain(int index){
+		niv.selectionnerCarteMain(index);
+	}
+
+	@Override
+	public void selectionnerCarteContinuum(LinkedList<Integer> indices){
+		niv.selectionnerCarteContinuum(indices);
 	}
 }

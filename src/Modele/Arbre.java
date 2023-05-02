@@ -7,7 +7,7 @@ public class Arbre {
     Jeu j;
     List<Arbre> fils;
 
-    public Arbre(Jeu j){
+    Arbre(Jeu j){
         this.j = j;
         fils = new ArrayList<>();
     }
@@ -23,26 +23,23 @@ public class Arbre {
         //pour chaque carte choisie
         for (int i = 0; i < 3; i++) {
             //pour chaque coup avec chaque carte
-            List<Integer> cpPossible = j.continuum.getCoupsPossibles(j.infoJoueurs[j.joueurCourant].getMain()[i], j.infoJoueurs[j.joueurCourant].getSorcierIndice(), j.infoJoueurs[j.joueurCourant].getDirectionMouvement());
+            List<Integer> cpPossible = j.continuum.getCoupsPossibles(j.getMainJoueurCourant()[i], j.getInfoJoueurCourant().getSorcierIndice(), j.getInfoJoueurCourant().getDirectionMouvement());
             for (int c: cpPossible) {
                 //etape 2
                 Jeu temp = j.Clone();
 
                 //direction paradox ?
-                //je mets 0 pour signifier pas de paradox a cette etape
+                //je mets 0 pour signifier pas de paradox à cette etape
                 //on joue le coup
                 temp.coupEchangeCarteMainContinuum(i, c);
-                //ici verifier quelle indice mettre
-                temp.coupChangerPositionSorcier(i);
 
                 if (temp.infoJoueurs[temp.joueurCourant].existeParadox(temp.codex.getCouleurInterdite())){
                     //pour chaque coup
                     //on joue le paradox si il existe et on le joue pas
                     //respectivement temp2 et temp3
                     if (temp.existeParadoxSuperieur()){
+                        //ici, on donne juste sens de paradox
                         temp2 = temp.Clone();
-                        //ici  on donne juste sens de paradox
-                        //peut etre a rectifier
                         temp2.coupParadox(true, 1);
                     }
                     if (temp.existeParadoxInferieur()){
@@ -51,16 +48,15 @@ public class Arbre {
                     }
                 }
 
-                //temp contient pas de clash et pas de paradox
+                //temp ne contient pas de clash et pas de paradox
+                //temp2 contient paradox superieur et pas de clash
+                //temp3 contient paradox inferieur et pas de clash
                 //temp4 contient clash et pas de paradox
-                //temp3 contient paradox inferieur et pas de paradox
-                //temp2 contient paradox superieur et pas de paradox
-                //temp6 contient paradox inferieur et paradox
-                //temp5 contient paradox superieur et paradox
+                //temp5 contient paradox superieur et clash
+                //temp6 contient paradox inferieur et clash
 
                 //ici si les 2 sorcier on meme indice on peut avoir un clash
-                //il doit y avoir un clash et l adversaire doit avoir au moins une gemme
-                if (temp.infoJoueurs[(temp.joueurCourant+1)%2].getPoints() > 0 && temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
+                if (temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
                     temp4 = temp.Clone();
                     temp4.gagnantClash();
                     //*******************

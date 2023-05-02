@@ -1,5 +1,5 @@
 /*
- * Sokoban - Encore une nouvelle version (à but pédagogique) du célèbre jeu
+ * Antinomy - Encore une nouvelle version (à but pédagogique) du célèbre jeu
  * Copyright (C) 2018 Guillaume Huard
  *
  * Ce programme est libre, vous pouvez le redistribuer et/ou le
@@ -26,7 +26,6 @@
  */
 
 import Controleur.ControleurMediateur;
-import Global.Configuration;
 import Modele.Jeu;
 import Vue.InterfaceGraphique;
 import Vue.CollecteurEvenements;
@@ -35,7 +34,7 @@ import Vue.CollecteurEvenements;
 
 //import java.io.InputStream;
 
-public class Sokoban {
+public class Antinomy {
 //	final static String typeInterface = Configuration.typeInterface;
 
 	public static void main(String[] args) {

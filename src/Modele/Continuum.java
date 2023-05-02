@@ -80,19 +80,13 @@ public class Continuum {
 				index_coups_possibles.add(i);
 			}
 		}
-		
-		if (((num_sorcier + (carte_jouee.getNumero() * direction)) < this.getContinuumSize()) &&
-				(num_sorcier + (carte_jouee.getNumero() * direction)) >= 0){
-			index_coups_possibles.add(num_sorcier + (carte_jouee.getNumero() * direction));
+
+		int projection = num_sorcier + carte_jouee.getNumero() * direction;
+		if ((projection < this.getContinuumSize()) && projection >= 0){
+			index_coups_possibles.add(projection);
 		}
+
 		return index_coups_possibles;
-	}
-	
-	
-	void echangeAvecMain(List<Carte> main, int indice_sorcier){
-		// todo
-		// prend comme argument les 3 cartes du main
-		// renvoie les 3 cartes echanges
 	}
 
 	public static Carte[] mockContinuum(){
