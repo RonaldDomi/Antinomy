@@ -28,6 +28,8 @@ package Modele;
 
 import Patterns.Observable;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -119,25 +121,14 @@ public class Jeu extends Observable {
 	}
 
 	public void coupParadox(boolean faireParadox, int direction){
-		if (faireParadox){
-			//todo melanger main
-			int x;
-			if(direction == -1)
-				x = -3;
-			else if (direction == 1)
-				x = 0;
-			else{
-				System.out.println("Erreur Paradox sans direction");
-				return;
-			}
-
-			for (int i = 0; i < 3; i++){
-				echangerCarteMainContinuum(i, 0+i);
-			}
-
-			infoJoueurs[joueurCourant].addPoint();
-			jeuGagnant();
+		Collections.shuffle(Arrays.asList(getInfoJoueurCourant().getMain()));
+		
+		for (int i = 1; i <= 3; i++) {
+			echangerCarteMainContinuum(i, getInfoJoueurCourant().getSorcierIndice() + (i * direction));
 		}
+		
+		infoJoueurs[joueurCourant].addPoint();
+		jeuGagnant();
 		metAJour();
 	}
 
@@ -155,11 +146,11 @@ public class Jeu extends Observable {
 		}
 		return false;
 	}
-
+	
 	int adversaire(){
 		return 1-joueurCourant;
 	}
-
+	
 	void finTour(){
 		joueurCourant = adversaire();
 		tour++;
