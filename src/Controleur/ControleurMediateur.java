@@ -86,6 +86,8 @@ public class ControleurMediateur implements CollecteurEvenements {
 			case 1: //debut de tour
 				System.out.println("Joueur " + jeu.getJoueurCourant() + " selectionne dans ça main la carte d'index " + indexCarte);
 				indexCarteMain = indexCarte;
+				vue.selectionnerCarteMain(indexCarteMain);
+				vue.selectionnerCarteContinuum(jeu.getContinuum().getCoupsPossibles(jeu.getInfoJoueurCourant().getCarteMain(indexCarteMain), jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection()));
 				break;
 			default:
 				break;
@@ -106,7 +108,9 @@ public class ControleurMediateur implements CollecteurEvenements {
 					System.out.println("Joueur " + jeu.getJoueurCourant() + " échange la carte de ça main " + indexCarteMain + " avec la carte du continuum " + indexCarte);
 					jeu.coupEchangeCarteMainContinuum(indexCarteMain, indexCarte);
 					indexCarteMain = -1;
-					etape = 2;
+//					etape = 2;
+					vue.selectionnerCarteMain(-1);
+					vue.selectionnerCarteContinuum(null);
 				}
 				break;
 			case 2: //paradox oui/non

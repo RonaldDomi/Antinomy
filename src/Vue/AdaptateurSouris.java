@@ -40,7 +40,7 @@ public class AdaptateurSouris extends MouseAdapter {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getY() >= n.hauteur - n.hauteurCarte){
+		if (e.getY() >= n.hauteur - n.hauteurCarte - n.padding){
 			for (int i = 0; i < 3; i++) {
 				if (e.getX() >= n.deb_joueur + i*n.largeurCarte + i*n.padding && e.getX() < n.deb_joueur + (i+1)*n.largeurCarte + i*n.padding){
 					System.out.println("Joueur Clicked : " + i);

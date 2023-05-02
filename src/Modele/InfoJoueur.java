@@ -25,11 +25,13 @@ public class InfoJoueur {
 	public int getPoints(){return this.points;}
 	public int getSorcierIndice(){return this.sorcierIndice;}
 	int getDirectionMouvement(){return this.directionMouvement;}
-	Carte getCarteMain(int index){return this.main[index];}
+	public Carte getCarteMain(int index){return this.main[index];}
 	Carte getCarteAleatoire(){
 		return this.main[r.nextInt(main.length)];
 	}
-	Carte[] getMain(){return this.main;}
+	public Carte[] getMain(){return this.main;}
+
+	public int getDirection(){return this.directionMouvement;}
 
 	// SETTERS
 	public void setMain(Carte[] main){this.main = main;}
@@ -48,6 +50,11 @@ public class InfoJoueur {
 		}else{
 			return false;
 		}
+	}
+
+
+	void moveSorcierAbs(int index){
+		setSorcierIndice(index);
 	}
 
 	Carte changeCarte(int position, Carte new_carte){
