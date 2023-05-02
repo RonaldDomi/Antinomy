@@ -7,7 +7,7 @@ public class Arbre {
     Jeu j;
     List<Arbre> fils;
 
-    Arbre(Jeu j){
+    public Arbre(Jeu j){
         this.j = j;
         fils = new ArrayList<>();
     }
@@ -59,7 +59,8 @@ public class Arbre {
                 //temp5 contient paradox superieur et paradox
 
                 //ici si les 2 sorcier on meme indice on peut avoir un clash
-                if (temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
+                //il doit y avoir un clash et l adversaire doit avoir au moins une gemme
+                if (temp.infoJoueurs[(temp.joueurCourant+1)%2].getPoints() > 0 && temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
                     temp4 = temp.Clone();
                     temp4.gagnantClash();
                     //*******************

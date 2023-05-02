@@ -37,6 +37,8 @@ public class InfoJoueur {
 	// no setter in directionMouvement, it is supposed to never change
 	public void setSorcierIndice(int indice){this.sorcierIndice = indice;}
 
+	public void setDirectionMouvement(int directionMouvement){this.directionMouvement = directionMouvement;}
+
 	// UTILS
 	void addPoint(){this.points += 1;}
 	void remPoint(){this.points -= 1;}

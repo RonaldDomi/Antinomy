@@ -63,6 +63,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 		// animations soient supportées (ex. interface textuelle)
 		animationsSupportees = false;
 		animationsActives = false;
+
 	}
 
 	@Override

@@ -47,9 +47,8 @@ public class Jeu extends Observable {
 	Codex codex;
 	int joueurCourant; //0 ou 1
 	int joueurGagnant; //0 ou 1
-	
-	
-	
+
+
 	public Jeu(LecteurNiveaux lect) {
 		l = lect;
 		r = new Random();
@@ -166,7 +165,6 @@ public class Jeu extends Observable {
 	}
 
 
-
 	int gagnantClash(){
 		//-1 si égalité sinon index du gagnant
 		int sommeJ0 = infoJoueurs[0].sommeMain(codex.getCouleurInterdite());
@@ -179,8 +177,7 @@ public class Jeu extends Observable {
 
 		if (sommeJ0 == sommeJ1){
 			return -1;
-		}
-		else if (sommeJ0 > sommeJ1){
+		} else if (sommeJ0 > sommeJ1){
 			return 0;
 		} else {
 			return 1;
@@ -209,6 +206,7 @@ public class Jeu extends Observable {
 	public InfoJoueur[] getInfoJoueurs(){
 		return infoJoueurs;
 	}
+
 	public InfoJoueur getInfoJoueurCourant(){
 		return infoJoueurs[joueurCourant];
 	}
@@ -226,6 +224,43 @@ public class Jeu extends Observable {
 	}
 
 	public Jeu Clone(){
-		return new Jeu(this.l);
+		Jeu temp = new Jeu(this.l);
+		temp.n = n.clone();
+		temp.r = r;
+
+		/*--------info joueur--------*/
+		int ji = 0;
+		for (InfoJoueur j:infoJoueurs) {
+			Carte[] m = new Carte[3];
+			int i = 0;
+			for (Carte c:j.getMain()) {
+				m[i] = c;
+				i++;
+			}
+			temp.infoJoueurs[ji].setMain(m);
+			temp.infoJoueurs[ji].setPoints(j.getPoints());
+			temp.infoJoueurs[ji].setSorcierIndice(j.getSorcierIndice());
+			temp.infoJoueurs[ji].setDirectionMouvement(j.getDirectionMouvement());
+			temp.infoJoueurs[ji].r = j.r;
+			ji++;
+		}
+		/*-------------------------*/
+
+		/*------Contnium-----------*/
+		for (int i = 0; i < 9; i++) {
+			temp.continuum.getContinuum()[i] = continuum.getCarteContinuum(i);
+		}
+		/*-------------------------*/
+
+		/*------codex---------*/
+		temp.codex.setCarte(codex.getCarte());
+		temp.codex.setCouleurInterdite(codex.getCouleurInterdite());
+		/*--------------------*/
+
+		temp.tour = tour;
+		temp.joueurCourant = joueurCourant;
+		temp.joueurGagnant = joueurGagnant;
+
+		return temp;
 	}
 }
