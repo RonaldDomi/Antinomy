@@ -33,7 +33,7 @@ import java.util.Random;
 
 import static java.lang.Math.abs;
 
-public class Jeu extends Observable {
+public class Jeu extends Observable implements Cloneable {
 	//To delete
 	Niveau n;
 	///////////
@@ -47,9 +47,8 @@ public class Jeu extends Observable {
 	Codex codex;
 	int joueurCourant; //0 ou 1
 	int joueurGagnant; //0 ou 1
-	
-	
-	
+
+
 	public Jeu(LecteurNiveaux lect) {
 		l = lect;
 		r = new Random();
@@ -166,7 +165,6 @@ public class Jeu extends Observable {
 	}
 
 
-
 	int gagnantClash(){
 		//-1 si égalité sinon index du gagnant
 		int sommeJ0 = infoJoueurs[0].sommeMain(codex.getCouleurInterdite());
@@ -179,8 +177,7 @@ public class Jeu extends Observable {
 
 		if (sommeJ0 == sommeJ1){
 			return -1;
-		}
-		else if (sommeJ0 > sommeJ1){
+		} else if (sommeJ0 > sommeJ1){
 			return 0;
 		} else {
 			return 1;
@@ -209,6 +206,7 @@ public class Jeu extends Observable {
 	public InfoJoueur[] getInfoJoueurs(){
 		return infoJoueurs;
 	}
+
 	public InfoJoueur getInfoJoueurCourant(){
 		return infoJoueurs[joueurCourant];
 	}
@@ -225,7 +223,19 @@ public class Jeu extends Observable {
 		return joueurCourant;
 	}
 
-	public Jeu Clone(){
-		return new Jeu(this.l);
+	public Jeu clone() throws CloneNotSupportedException{
+		Jeu j = (Jeu) super.clone();
+		j.l = l;
+		j.n = n.clone();
+		j.r = r;
+		j.joueurCourant = joueurCourant;
+		j.joueurGagnant = joueurGagnant;
+		j.tour = tour;
+		for (int i = 0; i < 2; i++) {
+			j.infoJoueurs[i] = infoJoueurs[i].clone();
+		}
+		j.codex = codex.clone();
+		j.continuum = continuum.clone();
+		return j;
 	}
 }

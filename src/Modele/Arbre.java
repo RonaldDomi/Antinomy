@@ -12,7 +12,7 @@ public class Arbre {
         fils = new ArrayList<>();
     }
 
-    public void create(){
+    public void create() throws CloneNotSupportedException {
         //condition arret
         //ici ce jeu est une feuille
         if (this.j.joueurGagnant == 1)
@@ -26,7 +26,7 @@ public class Arbre {
             List<Integer> cpPossible = j.continuum.getCoupsPossibles(j.getMainJoueurCourant()[i], j.getInfoJoueurCourant().getSorcierIndice(), j.getInfoJoueurCourant().getDirectionMouvement());
             for (int c: cpPossible) {
                 //etape 2
-                Jeu temp = j.Clone();
+                Jeu temp = j.clone();
 
                 //direction paradox ?
                 //je mets 0 pour signifier pas de paradox à cette etape
@@ -39,11 +39,11 @@ public class Arbre {
                     //respectivement temp2 et temp3
                     if (temp.existeParadoxSuperieur()){
                         //ici, on donne juste sens de paradox
-                        temp2 = temp.Clone();
+                        temp2 = temp.clone();
                         temp2.coupParadox(true, 1);
                     }
                     if (temp.existeParadoxInferieur()){
-                        temp3 = temp.Clone();
+                        temp3 = temp.clone();
                         temp3.coupParadox(true, -1);
                     }
                 }
@@ -56,14 +56,15 @@ public class Arbre {
                 //temp6 contient paradox inferieur et clash
 
                 //ici si les 2 sorcier on meme indice on peut avoir un clash
-                if (temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
-                    temp4 = temp.Clone();
+                //et le joueur advairse doit avoir au moins une gemmes
+                if (temp.infoJoueurs[temp.joueurCourant].getPoints() > 0 && temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
+                    temp4 = temp.clone();
                     temp4.gagnantClash();
                     //*******************
                     //echanger les gemmes
                     //*******************
                     if (temp2 != null){
-                        temp5 = temp2.Clone();
+                        temp5 = temp2.clone();
                         temp5.gagnantClash();
                         //*******************
                         //echanger les gemmes
@@ -74,14 +75,14 @@ public class Arbre {
                         }
                     }
                     if (temp3 != null){
-                        temp6 = temp3.Clone();
+                        temp6 = temp3.clone();
                         temp6.gagnantClash();
                         //*******************
                         //echanger les gemmes
                         //*******************
-                        if (temp5.infoJoueurs[(temp5.joueurCourant+1)%2].getPoints() > 0){
-                            temp5.infoJoueurs[temp5.joueurCourant].addPoint();
-                            temp5.infoJoueurs[(temp5.joueurCourant+1)%2].setPoints(temp5.infoJoueurs[(temp5.joueurCourant+1)%2].getPoints() - 1);
+                        if (temp6.infoJoueurs[(temp6.joueurCourant+1)%2].getPoints() > 0){
+                            temp6.infoJoueurs[temp6.joueurCourant].addPoint();
+                            temp6.infoJoueurs[(temp6.joueurCourant+1)%2].setPoints(temp6.infoJoueurs[(temp6.joueurCourant+1)%2].getPoints() - 1);
                         }
                     }
                 }

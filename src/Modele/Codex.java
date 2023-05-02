@@ -1,6 +1,6 @@
 package Modele;
 
-public class Codex {
+public class Codex implements Cloneable{
 	private Carte carte;
 	private Couleur couleurInterdite;
 
@@ -17,6 +17,13 @@ public class Codex {
 	}
 	void setCarte(Carte carte){ this.carte = carte;}
 	void setCouleurInterdite(Couleur couleurInterdite){this.couleurInterdite = couleurInterdite;}
+
+	public Codex clone() throws CloneNotSupportedException {
+		Codex c = (Codex) super.clone();
+		c.setCouleurInterdite(couleurInterdite);
+		c.setCarte(carte);
+		return c;
+	}
 }
 
 

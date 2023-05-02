@@ -2,7 +2,7 @@ package Modele;
 
 import java.util.*;
 
-public class InfoJoueur {
+public class InfoJoueur implements Cloneable{
 	private Carte[] main; //3 cartes
 	private int points; //0 à 5
 	private int directionMouvement; //-1 ou +1
@@ -21,19 +21,26 @@ public class InfoJoueur {
 
 	// GETTERS
 	public int getPoints(){return this.points;}
+
 	public int getSorcierIndice(){return this.sorcierIndice;}
+
 	int getDirectionMouvement(){return this.directionMouvement;}
+
 	public Carte getCarteMain(int index){return this.main[index];}
+
 	Carte getCarteAleatoire(){
 		return this.main[r.nextInt(main.length)];
 	}
+
 	public Carte[] getMain(){return this.main;}
 
 	public int getDirection(){return this.directionMouvement;}
 
 	// SETTERS
 	public void setMain(Carte[] main){this.main = main;}
+
 	public void setPoints(int points){this.points = points;}
+
 	// no setter in directionMouvement, it is supposed to never change
 	public void setSorcierIndice(int indice){this.sorcierIndice = indice;}
 
@@ -41,8 +48,9 @@ public class InfoJoueur {
 
 	// UTILS
 	void addPoint(){this.points += 1;}
+
 	void remPoint(){this.points -= 1;}
-	
+
 	boolean moveSorcier(int deplacement){
 		int nouvelle_position = this.getSorcierIndice() + (deplacement * this.getDirectionMouvement());
 		if(nouvelle_position >= 0 && nouvelle_position <= 8){
@@ -53,8 +61,7 @@ public class InfoJoueur {
 		}
 	}
 
-	
-	
+
 	Carte changeCarte(int position, Carte new_carte){
 		// Change la carte de this.main.get(position) avec new_carte
 		// il faut tester si position est valide, et il faut retourner la carde qu'on jete de notre main
@@ -104,6 +111,17 @@ public class InfoJoueur {
 		res[2] = new Carte(3, Couleur.BLEU, Symbole.PAPIER);
 		return res;
 	}
-	
-	
+
+	public InfoJoueur clone() throws CloneNotSupportedException{
+		InfoJoueur j = (InfoJoueur) super.clone();
+		for (int i = 0; i < 3; i++) {
+			j.main[i] = main[i].clone();
+		}
+		j.points = points;
+		j.directionMouvement = directionMouvement;
+		j.sorcierIndice = sorcierIndice;
+		j.r = r;
+		return j;
+	}
+
 }
