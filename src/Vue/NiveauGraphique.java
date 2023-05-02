@@ -1,6 +1,6 @@
 package Vue;
 /*
- * Sokoban - Encore une nouvelle version (à but pédagogique) du célèbre jeu
+ * Antinomy - Encore une nouvelle version (à but pédagogique) du célèbre jeu
  * Copyright (C) 2018 Guillaume Huard
  *
  * Ce programme est libre, vous pouvez le redistribuer et/ou le
@@ -35,6 +35,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.lang.Math.min;
@@ -45,10 +46,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	int largeurCarte;
 	int hauteurCarte;
 	int padding;
-
 	int deb_joueur;
 	int deb_continuum;
 	int largeur, hauteur;
+
+	int indexCarteSelectionneeMain = -1;
 
 	int centre_largeur, centre_hauteur;
 
@@ -59,6 +61,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	int direction, etape;
 
 	Font h1, fontCarte, h2;
+	LinkedList<Integer> indexCarteSelectionneeContinuum;
 
 	NiveauGraphique(Jeu jeu, Font h2) {
 		j = jeu;
@@ -113,37 +116,16 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		Couleur couleur;
 		Symbole symbole;
 		int numero;
-		Carte[] main = j.getMainJoueurCourant();
-		Carte[] continuum = j.getContinuumCarte();
 
 		//Joueurs
+		Carte[] main = j.getMainJoueurCourant();
 		deb_joueur = centre_largeur + -1 * (largeurCarte + padding) - largeurCarte / 2;
-		for (i = -1; i < 2; i++) {
-			x = centre_largeur + i * (largeurCarte + padding) - largeurCarte / 2;
+		carteMain(drawable, main);
 
-			couleur = main[i+1].getCouleur();
-			symbole = main[i+1].getSymbole();
-			numero = main[i+1].getNumero();
-
-			tracer(drawable, carteDos, x, 0, largeurCarte, hauteurCarte);
-			dessinerCarte(drawable, x, hauteur - hauteurCarte, couleur, symbole, numero);
-		}
-
+		//Continuum + codex
+		Carte[] continuum = j.getContinuumCarte();
 		deb_continuum = centre_largeur + -5 * (largeurCarte + padding);
-		//Continuum
-		for (i = -5; i < 4; i++) {
-			x = centre_largeur + i * (largeurCarte + padding);
-
-			couleur = continuum[i+5].getCouleur();
-			symbole = continuum[i+5].getSymbole();
-			numero = continuum[i+5].getNumero();
-
-			dessinerCarte(drawable, x, centre_hauteur-hauteurCarte / 2, couleur, symbole, numero);
-		}
-
-		//Codex
-		x = centre_largeur + i * (largeurCarte + padding);
-		tracer(drawable, carteDosR, x, centre_hauteur-largeurCarte / 2, hauteurCarte, largeurCarte);
+		carteContinuum(drawable, continuum);
 
 		//Positions Joueurs
 		x = centre_largeur + (j.getInfoJoueurs()[j.getJoueurCourant()].getSorcierIndice()-5) * (largeurCarte + padding);
@@ -162,19 +144,73 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		String s_j2 = "Joueur 2   " + j.getInfoJoueurs()[1-j.getJoueurCourant()].getPoints() + "/5";
 		//Texte joueur 1
 		g.drawString(s_j1, padding, hauteur-padding);
-		tracer(drawable, diamant, m.stringWidth(s_j2) + 2*padding, hauteur-padding-largeurCarte/2, largeurCarte/2, largeurCarte/2);
+		tracer(drawable, diamant, m.stringWidth(s_j2) + padding, hauteur-padding-largeurCarte/2, largeurCarte/2, largeurCarte/2);
 
 		//Texte joueur 2
-		g.drawString(s_j2, largeur - m.stringWidth(s_j2) - 2*padding - largeurCarte/2, 0 + m.getHeight());
+		g.drawString(s_j2, largeur - m.stringWidth(s_j2) - padding - largeurCarte/2, 0 + m.getHeight());
 		tracer(drawable, diamant, largeur - padding - largeurCarte/2, 0 + m.getHeight() - largeurCarte/2, largeurCarte/2, largeurCarte/2);
+
+		//texte aide en bas à gauche
+//		g.setColor(Color.darkGray);
+//		g.fillRect(largeur-5*largeurCarte-padding,hauteur-hauteurCarte-padding, 5*largeurCarte, hauteurCarte);
+//		g.setColor(Color.red);
+//		g.fillRect(largeur-5*largeurCarte/4-largeurCarte*4/3,hauteur-2*padding-hauteurCarte/3, largeurCarte*4/3, hauteurCarte/3);
+//		g.setColor(Color.green);
+//		g.fillRect(largeur-5*largeurCarte*3/4-largeurCarte*4/3,hauteur-2*padding-hauteurCarte/3, largeurCarte*4/3, hauteurCarte/3);
+//		g.fillRect(largeur-4*largeurCarte-padding,hauteur-hauteurCarte-padding, 5*largeurCarte, hauteurCarte);
+	}
+
+	protected void carteMain(Graphics2D g, Carte[] main){
+		for (int i = -1; i < 2; i++) {
+			int x = centre_largeur + i * (largeurCarte + padding) - largeurCarte / 2;
+
+			Couleur couleur = main[i+1].getCouleur();
+			Symbole symbole = main[i+1].getSymbole();
+			int numero = main[i+1].getNumero();
+
+			tracer(g, carteDos, x, padding, largeurCarte, hauteurCarte);
+			if (i+1 == indexCarteSelectionneeMain)
+				dessinerCarte(g, x - padding/2, hauteur - hauteurCarte - padding*3/2, largeurCarte+padding, hauteurCarte+padding, couleur, symbole, numero);
+			else
+				dessinerCarte(g, x, hauteur - hauteurCarte - padding, largeurCarte, hauteurCarte, couleur, symbole, numero);
+		}
+	}
+
+	protected void carteContinuum(Graphics2D g, Carte[] continuum){
+		int x, i;
+		if (indexCarteSelectionneeContinuum != null){
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+		}
+			for (i = -5; i < 4; i++) {
+				x = centre_largeur + i * (largeurCarte + padding);
+
+				Couleur couleur = continuum[i+5].getCouleur();
+				Symbole symbole = continuum[i+5].getSymbole();
+				int numero = continuum[i+5].getNumero();
+
+				dessinerCarte(g, x, centre_hauteur-hauteurCarte / 2, largeurCarte, hauteurCarte, couleur, symbole, numero);
+
+			}
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+		if (indexCarteSelectionneeContinuum != null){
+			for (Integer elem : indexCarteSelectionneeContinuum){
+				x = centre_largeur + (elem-5) * (largeurCarte + padding);
+				Couleur couleur = continuum[elem].getCouleur();
+				Symbole symbole = continuum[elem].getSymbole();
+				int numero = continuum[elem].getNumero();
+				dessinerCarte(g, x, centre_hauteur-hauteurCarte / 2, largeurCarte, hauteurCarte, couleur, symbole, numero);
+			}
+		}
+		x = centre_largeur + i * (largeurCarte + padding);
+		tracer(g, carteDosR, x, centre_hauteur-largeurCarte / 2, hauteurCarte, largeurCarte);
 	}
 
 	protected void tracer(Graphics2D g, Image i, int x, int y, int l, int h) {
 		g.drawImage(i, x, y, l, h, null);
 	}
 
-	private void dessinerCarte(Graphics2D g, int x, int y, Couleur couleur, Symbole symbole, int numero){
-		tracer(g, carteVide, x, y, largeurCarte, hauteurCarte);
+	private void dessinerCarte(Graphics2D g, int x, int y, int l, int h, Couleur couleur, Symbole symbole, int numero){
+		tracer(g, carteVide, x, y, l, h);
 		g.setFont(fontCarte);
 		FontMetrics m = g.getFontMetrics();
 		g.drawString(numero+"", x+padding/2, y+m.getHeight()); //haut
@@ -182,30 +218,30 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		y = y + padding/4;
 		switch (couleur){
 			case ROUGE:
-				tracer(g, rouge, x, y, largeurCarte, hauteurCarte);
+				tracer(g, rouge, x, y, l, h);
 				break;
 			case VERT:
-				tracer(g, vert, x, y, largeurCarte, hauteurCarte);
+				tracer(g, vert, x, y, l, h);
 				break;
 			case VIOLET:
-				tracer(g, violet, x, y, largeurCarte, hauteurCarte);
+				tracer(g, violet, x, y, l, h);
 				break;
 			case BLEU:
-				tracer(g, bleu, x, y, largeurCarte, hauteurCarte);
+				tracer(g, bleu, x, y, l, h);
 				break;
 		}
 		switch (symbole){
 			case CRANE:
-				tracer(g, crane, x, y, largeurCarte, hauteurCarte);
+				tracer(g, crane, x, y, l, h);
 				break;
 			case CLEF:
-				tracer(g, clef, x, y, largeurCarte, hauteurCarte);
+				tracer(g, clef, x, y, l, h);
 				break;
 			case CHAMPIGNON:
-				tracer(g, champignon, x, y, largeurCarte, hauteurCarte);
+				tracer(g, champignon, x, y, l, h);
 				break;
 			case PAPIER:
-				tracer(g, papier, x, y, largeurCarte, hauteurCarte);
+				tracer(g, papier, x, y, l, h);
 				break;
 		}
 	}
@@ -261,6 +297,16 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	public void changeEtape() {
 		etape = (etape + 1) % pousseurs[direction].length;
 		metAJourPousseur();
+		miseAJour();
+	}
+
+	void selectionnerCarteMain(int index){
+		indexCarteSelectionneeMain = index;
+		miseAJour();
+	}
+
+	void selectionnerCarteContinuum(LinkedList<Integer> indices){
+		indexCarteSelectionneeContinuum = indices;
 		miseAJour();
 	}
 }

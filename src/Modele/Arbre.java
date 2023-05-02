@@ -23,26 +23,23 @@ public class Arbre {
         //pour chaque carte choisie
         for (int i = 0; i < 3; i++) {
             //pour chaque coup avec chaque carte
-            List<Integer> cpPossible = j.continuum.getCoupsPossibles(j.infoJoueurs[j.joueurCourant].getMain()[i], j.infoJoueurs[j.joueurCourant].getSorcierIndice(), j.infoJoueurs[j.joueurCourant].getDirectionMouvement());
+            List<Integer> cpPossible = j.continuum.getCoupsPossibles(j.getMainJoueurCourant()[i], j.getInfoJoueurCourant().getSorcierIndice(), j.getInfoJoueurCourant().getDirectionMouvement());
             for (int c: cpPossible) {
                 //etape 2
                 Jeu temp = j.Clone();
 
                 //direction paradox ?
-                //je mets 0 pour signifier pas de paradox a cette etape
+                //je mets 0 pour signifier pas de paradox à cette etape
                 //on joue le coup
                 temp.coupEchangeCarteMainContinuum(i, c);
-                //ici verifier quelle indice mettre
-                temp.coupChangerPositionSorcier(i);
 
                 if (temp.infoJoueurs[temp.joueurCourant].existeParadox(temp.codex.getCouleurInterdite())){
                     //pour chaque coup
                     //on joue le paradox si il existe et on le joue pas
                     //respectivement temp2 et temp3
                     if (temp.existeParadoxSuperieur()){
+                        //ici, on donne juste sens de paradox
                         temp2 = temp.Clone();
-                        //ici  on donne juste sens de paradox
-                        //peut etre a rectifier
                         temp2.coupParadox(true, 1);
                     }
                     if (temp.existeParadoxInferieur()){
@@ -51,63 +48,53 @@ public class Arbre {
                     }
                 }
 
-                //temp contient pas de clash et pas de paradox
+                //temp ne contient pas de clash et pas de paradox
+                //temp2 contient paradox superieur et pas de clash
+                //temp3 contient paradox inferieur et pas de clash
                 //temp4 contient clash et pas de paradox
-                //temp3 contient paradox inferieur et pas de paradox
-                //temp2 contient paradox superieur et pas de paradox
-                //temp6 contient paradox inferieur et paradox
-                //temp5 contient paradox superieur et paradox
+                //temp5 contient paradox superieur et clash
+                //temp6 contient paradox inferieur et clash
 
-                //ici si les 2 sorcier on meme indice on peut avoir un clash
+                //ici, si les 2 sorciers on le même indice on peut avoir un clash
                 if (temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
                     temp4 = temp.Clone();
-                    temp4.gagnantClash();
-                    //*******************
-                    //echanger les gemmes
-                    //*******************
+                    temp4.coupClash();
+
                     if (temp2 != null){
                         temp5 = temp2.Clone();
-                        temp5.gagnantClash();
-                        //*******************
-                        //echanger les gemmes
-                        //*******************
-                        if (temp5.infoJoueurs[(temp5.joueurCourant+1)%2].getPoints() > 0){
-                            temp5.infoJoueurs[temp5.joueurCourant].addPoint();
-                            temp5.infoJoueurs[(temp5.joueurCourant+1)%2].setPoints(temp5.infoJoueurs[(temp5.joueurCourant+1)%2].getPoints() - 1);
-                        }
+                        temp5.coupClash();
                     }
                     if (temp3 != null){
                         temp6 = temp3.Clone();
-                        temp6.gagnantClash();
-                        //*******************
-                        //echanger les gemmes
-                        //*******************
-                        if (temp5.infoJoueurs[(temp5.joueurCourant+1)%2].getPoints() > 0){
-                            temp5.infoJoueurs[temp5.joueurCourant].addPoint();
-                            temp5.infoJoueurs[(temp5.joueurCourant+1)%2].setPoints(temp5.infoJoueurs[(temp5.joueurCourant+1)%2].getPoints() - 1);
-                        }
+                        temp6.coupClash();
                     }
                 }
-                //ici on insere dans fils que les jeu existant
-                //si pas de pas de paradox alors temp2,3,5 et 6 n existe pas (etc...)
+
+                //ici, on insère dans fils que les jeux existants
+                //si pas de paradox alors temp2,3,5 et 6 n existe pas (etc...)
                 if (temp2 != null){
+                    temp2.finTour();
                     fils.add(new Arbre(temp2));
                     if (temp5 != null){
+                        temp5.finTour();
                         fils.add(new Arbre(temp5));
                     }
                 }
                 if (temp3 != null){
+                    temp3.finTour();
                     fils.add(new Arbre(temp3));
                     if (temp6 != null){
+                        temp6.finTour();
                         fils.add(new Arbre(temp6));
                     }
                 }
                 if (temp4 != null) {
+                    temp4.finTour();
                     fils.add(new Arbre(temp4));
                 }
             }
         }
-        //on appelle recursivement create avec touts les fils cree
+        //on appelle récursivement create avec tous les fils cree
         for (Arbre a:fils) {
             a.create();
         }
