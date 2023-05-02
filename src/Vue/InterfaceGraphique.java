@@ -29,19 +29,43 @@ package Vue;
 import Modele.Jeu;
 
 import javax.swing.*;
+import javax.tools.Tool;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
 
 // L'interface runnable déclare une méthode run
 public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	Jeu j;
 	CollecteurEvenements control;
-	JFrame frame;
+	JFrame menuPrincipale;
+	JFrame enJeu;
 	boolean maximized;
 	NiveauGraphique niv;
+
+	JFrame courant;
+
+	static Font h1;
+	static Font h2 = new Font("TimesRoman", Font.PLAIN, 15);
+	Font h2MenuJeu;
 
 	InterfaceGraphique(Jeu jeu, CollecteurEvenements c) {
 		j = jeu;
 		control = c;
+
+
+		try {
+			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT, new File("res/Fonts/Medieval-English.ttf"));
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(medievalFont);
+		} catch (FontFormatException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static void demarrer(Jeu j, CollecteurEvenements c) {
@@ -57,36 +81,141 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 			device.setFullScreenWindow(null);
 			maximized = false;
 		} else {
-			device.setFullScreenWindow(frame);
+			device.setFullScreenWindow(courant);
 			maximized = true;
 		}
 	}
 
 	public void run() {
-		frame = new JFrame("Ma fenetre a moi");
-		niv = new NiveauGraphique(j);
-		niv.addMouseListener(new AdaptateurSouris(niv, control));
-		frame.addKeyListener(new AdaptateurClavier(control));
 
-		// Mise en place de l'interface
-		frame.add(niv);
+		menuPrincipale = new JFrame("Antinomy");
+		enJeu = new JFrame("Antinomy");
+
+		enJeu.setSize(500, 300);
+		menuPrincipale.setSize(500, 300);
+//		h2MenuJeu = new Font("Medieval English", Font.PLAIN, enJeu.getWidth()/10);
+
+
+		niv = new NiveauGraphique(j, h2MenuJeu);
+		niv.addMouseListener(new AdaptateurSouris(niv, control));
+
+//		menuPrincipale.addKeyListener(new AdaptateurClavier(control));
+		enJeu.addKeyListener(new AdaptateurClavier(control));
+
+		h1 = new Font("Medieval English", Font.PLAIN, menuPrincipale.getWidth()/2);
+
+//		Box enJeuListe = Box.createVerticalBox();
+//
+//		Box menuJeu = Box.createHorizontalBox();
+//		JLabel name = new JLabel("Antinomy");
+//		name.setFont(h2MenuJeu);
+
+
+//		menuJeu.add(name);
+
+//		enJeuListe.add(menuJeu);
+//		enJeuListe.add(niv);
+
+		setMenuPrincipale();
+
+
 		Timer chrono = new Timer(16, new AdaptateurTemps(control));
 		chrono.start();
 
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(500, 300);
-		frame.setVisible(true);
+		enJeu.add(niv);
+
+		enJeu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		menuPrincipale.setVisible(false);
+		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		enJeu.setVisible(true);
+		courant = enJeu;
+	}
+
+	void setMenuPrincipale(){
+		Box menu = Box.createVerticalBox();
+
+		menu.add(Box.createGlue());
+
+		JLabel nom_jeu = new JLabel("Antinomy");
+
+		nom_jeu.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+
+		menu.add(nom_jeu);
+
+		//=================
+		menu.add(Box.createGlue());
+
+		JButton nouvelle_partie = new JButton("Nouvelle Partie");
+		ActionListener nouvelle_partie_action = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		};
+		nouvelle_partie.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		nouvelle_partie.addActionListener(nouvelle_partie_action);
+
+		menu.add(nouvelle_partie);
+
+		//=================
+		menu.add(Box.createGlue());
+
+		JButton charger = new JButton("Charger");
+		ActionListener charger_action = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		};
+		charger.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		charger.addActionListener(charger_action);
+
+		menu.add(charger);
+
+		//=================
+		menu.add(Box.createGlue());
+
+		JButton tutoriel = new JButton("Tutoriel");
+		ActionListener tutoriel_action = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		};
+		tutoriel.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		tutoriel.addActionListener(tutoriel_action);
+
+		menu.add(tutoriel);
+
+		//=================
+		menu.add(Box.createGlue());
+
+		JButton options = new JButton("Options");
+		ActionListener options_action = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		};
+		options.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		options.addActionListener(options_action);
+
+		menu.add(options);
+
+		//=================
+
+		menu.add(Box.createGlue());
+
+		menuPrincipale.add(menu);
 	}
 
 	public void decale(int l, int c, double dl, double dc) {
-		niv.decale(l, c, dl, dc);
+//		niv.decale(l, c, dl, dc);
 	}
 
+
 	public void metAJourDirection(int dL, int dC) {
-		niv.metAJourDirection(dL, dC);
+
+//		niv.metAJourDirection(dL, dC);
 	}
 
 	public void changeEtape() {
-		niv.changeEtape();
+//		niv.changeEtape();
 	}
 }

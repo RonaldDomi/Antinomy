@@ -35,6 +35,11 @@ import Vue.InterfaceUtilisateur;
 
 public class ControleurMediateur implements CollecteurEvenements {
 	Jeu jeu;
+
+	int etape = 0;
+	int indexCarteMain = -1;
+	int indexCarteContinuum = -1;
+
 	InterfaceUtilisateur vue;
 //	Sequence<Animation> animations;
 	double vitesseAnimations;
@@ -61,14 +66,58 @@ public class ControleurMediateur implements CollecteurEvenements {
 	}
 
 	@Override
-	public void clicSouris(int l, int c) {
-		int dL = l - jeu.lignePousseur();
-		int dC = c - jeu.colonnePousseur();
-		int sum = dC + dL;
-		sum = sum * sum;
-//		if ((dC * dL == 0) && (sum == 1))
-//			deplace(dL, dC);
+	public void clicSouris(int type, int indexCarte) {
+		switch (type){
+			case 1:
+				clicMain(indexCarte);
+				break;
+			case 2:
+				clicContinuum(indexCarte);
+				break;
+			default:
+				break;
+		}
 	}
+
+	void clicMain(int indexCarte){
+		switch (etape){
+			case 0: //debut de jeu
+				break;
+			case 1: //debut de tour
+				System.out.println("Joueur " + jeu.getJoueurCourant() + " selectionne dans ça main la carte d'index " + indexCarte);
+				indexCarteMain = indexCarte;
+				break;
+			default:
+				break;
+		}
+	}
+
+	void clicContinuum(int indexCarte){
+		switch (etape){
+			case 0: //debut de jeu
+				//todo verifier carte jouable
+				System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
+				jeu.coupChangerPositionSorcier(indexCarte);
+				etape = 1;
+				break;
+			case 1: //debut de tour
+				if (indexCarteMain != -1){
+					//todo verifier carte jouable
+					System.out.println("Joueur " + jeu.getJoueurCourant() + " échange la carte de ça main " + indexCarteMain + " avec la carte du continuum " + indexCarte);
+					jeu.coupEchangeCarteMainContinuum(indexCarteMain, indexCarte);
+					indexCarteMain = -1;
+					etape = 2;
+				}
+				break;
+			case 2: //paradox oui/non
+				break;
+			case 3: //paradox droite/gauche
+				break;
+			default:
+				break;
+		}
+	}
+
 
 //	void joue(Coup cp) {
 //		if (cp != null) {

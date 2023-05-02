@@ -29,13 +29,17 @@ package Modele;
 import Patterns.Observable;
 
 import java.util.LinkedList;
+import java.util.Random;
+
+import static java.lang.Math.abs;
 
 public class Jeu extends Observable {
 	//To delete
 	Niveau n;
 	///////////
 	LecteurNiveaux l;
-	
+
+	Random r;
 
 	int tour; //0 à +inf
 	Continuum continuum;
@@ -48,7 +52,20 @@ public class Jeu extends Observable {
 	
 	public Jeu(LecteurNiveaux lect) {
 		l = lect;
-//		prochainNiveau();
+		r = new Random();
+
+		Deck d = new Deck();
+		continuum = new Continuum(d.distribuer(9));
+		infoJoueurs = new InfoJoueur[2];
+		infoJoueurs[0] = new InfoJoueur(1, r);
+		infoJoueurs[0].setMain(d.distribuer(3));
+		infoJoueurs[1] = new InfoJoueur(-1, r);
+		infoJoueurs[1].setMain(d.distribuer(3));
+
+		joueurCourant = 0;
+		joueurGagnant = -1;
+
+		tour = 0;
 	}
 
 	public Niveau niveau() {
@@ -84,47 +101,131 @@ public class Jeu extends Observable {
 		return n.colonnePousseur();
 	}
 
-	public boolean jouer_coup(int ligne, int colonne){
-//		if (ligne == 0 && colonne == 0){
-//			gagnant = joueur_courant;
-//		}
-//		Coup nouveau_coup =  plateau.placer_coup(joueur_courant, ligne, colonne, tour);
-//		historique.ajouter_coup(nouveau_coup);
-//		tour++;
-//		joueur_courant = (1 - (joueur_courant - 1)) + 1;
-//		metAJour();
-//		return true;
-
-		//TODO
-		// calcule les options pour chaque carte(aide a IA et anti-idiot si l'utilisateur change la carte beacoup beacoup // todo dans continum
-
-		// ETAPE 1
-		// prend input, la carte choisis de l'utilisateur // todo dans infoJoueur
-		// prend input, la position ou on veux aller et la carte change //todo dans infojoueur?
-
-		// ETAPE 2
-		// echange cartes // todo dans jeu.java
-		// moveSorcier // todo dans infojoueur
-
-		// ETAPE 3
-		// si existe paradox // todo infojoueur
-		// si active paradox, traitement // todo pas specifiee
-
-		// ETAPE 4
-		// clash() // todo dans jeu
-
-		// VERIF GAGNE // en place
-		// TRAITEMENTE GAGNE // todo continuum, infojoueur, codex
-
-		return true;
-	}
-
-	void prendrePlacerCarte(int carteMainIndice, int carteContinuumIndice){
-		//todo
-		//change le carte du main donne par l'utilisateur avec la carte dans le continuum
+	void echangerCarteMainContinuum(int carteMainIndice, int carteContinuumIndice){
+		//change la carte de la main donnée par l'utilisateur avec la carte dans le continuum
+		continuum.setCarteContinuum(carteContinuumIndice, infoJoueurs[joueurCourant].changeCarte(carteMainIndice, continuum.getCarteContinuum(carteContinuumIndice)));
 		//renvoie rien
-
 	}
-	
-	
+
+	public void coupChangerPositionSorcier(int indexCarte){
+		getInfoJoueurCourant().setSorcierIndice(indexCarte);
+		metAJour();
+	}
+
+	public void coupEchangeCarteMainContinuum(int indexCarte, int indexContinuum){
+		infoJoueurs[joueurCourant].moveSorcier(indexContinuum);
+		echangerCarteMainContinuum(indexCarte, indexContinuum);
+		metAJour();
+	}
+
+	public void coupParadox(boolean faireParadox, int direction){
+		if (faireParadox){
+			//todo melanger main
+			int x;
+			if(direction == -1)
+				x = -3;
+			else if (direction == 1)
+				x = 0;
+			else{
+				System.out.println("Erreur Paradox sans direction");
+				return;
+			}
+
+			for (int i = 0; i < 3; i++){
+				echangerCarteMainContinuum(i, 0+i);
+			}
+
+			infoJoueurs[joueurCourant].addPoint();
+			jeuGagnant();
+		}
+		metAJour();
+	}
+
+	boolean coupClash(){
+		int res = gagnantClash();
+		if (res != -1){
+			if (infoJoueurs[1-res].getPoints() > 0){
+				infoJoueurs[1-res].remPoint();
+				infoJoueurs[res].addPoint();
+				jeuGagnant();
+				metAJour();
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+
+	int adversaire(){
+		return 1-joueurCourant;
+	}
+
+	void finTour(){
+		joueurCourant = adversaire();
+		tour++;
+	}
+
+
+
+	int gagnantClash(){
+		//-1 si égalité sinon index du gagnant
+		int sommeJ0 = infoJoueurs[0].sommeMain(codex.getCouleurInterdite());
+		int sommeJ1 = infoJoueurs[1].sommeMain(codex.getCouleurInterdite());
+
+		if (sommeJ0 == sommeJ1){
+			sommeJ0 = infoJoueurs[0].getCarteAleatoire().getNumero();
+			sommeJ1 = infoJoueurs[1].getCarteAleatoire().getNumero();
+		}
+
+		if (sommeJ0 == sommeJ1){
+			return -1;
+		}
+		else if (sommeJ0 > sommeJ1){
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+
+	void jeuGagnant(){
+		if (infoJoueurs[0].getPoints() >= 5)
+			joueurGagnant = 0;
+		else if (infoJoueurs[1].getPoints() >= 5)
+			joueurGagnant = 1;
+	}
+
+	boolean existeParadoxSuperieur(){
+		return infoJoueurs[joueurCourant].getSorcierIndice() < 3;
+	}
+
+	boolean existeParadoxInferieur(){
+		return infoJoueurs[joueurCourant].getSorcierIndice() > continuum.getContinuumSize() - 3;
+	}
+
+	public Carte[] getMainJoueurCourant(){
+		return infoJoueurs[joueurCourant].getMain();
+	}
+
+	public InfoJoueur[] getInfoJoueurs(){
+		return infoJoueurs;
+	}
+	public InfoJoueur getInfoJoueurCourant(){
+		return infoJoueurs[joueurCourant];
+	}
+
+	public Carte[] getContinuumCarte(){
+		return continuum.getContinuum();
+	}
+
+	public Continuum getContinuum(){
+		return continuum;
+	}
+
+	public int getJoueurCourant(){
+		return joueurCourant;
+	}
+
+	public Jeu Clone(){
+		return new Jeu(this.l);
+	}
 }

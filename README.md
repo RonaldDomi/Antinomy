@@ -1,2 +1,2 @@
 # Antinomy
-Implementation en Java de le jeu de carte Antinomy
+Implementation en Java du jeu de cartes Antinomy
