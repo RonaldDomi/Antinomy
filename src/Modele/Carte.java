@@ -1,7 +1,7 @@
 package Modele;
 
 
-public class Carte {
+public class Carte implements Cloneable {
 	private int numero; //1 à 4
 	private Couleur couleur;
 	private Symbole symbole;
@@ -66,5 +66,12 @@ public class Carte {
 	public String toString() {
 		String res = couleur + "|" + symbole + "|" + numero;
 		return res;
+	}
+
+	@Override
+	public Carte clone() throws CloneNotSupportedException {
+		Carte c = (Carte) super.clone();
+		c = new Carte(numero, couleur, symbole);
+		return c;
 	}
 }

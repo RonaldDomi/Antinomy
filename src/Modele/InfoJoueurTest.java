@@ -154,7 +154,7 @@
 //
 //		testInfoJoueur.setSorcierIndice(rand_pos);
 //
-//		if((rand_dep + rand_pos >= 0) && (rand_dep + rand_pos <= 8)){
+//		if((rand_pos + (rand_dep * testInfoJoueur.getDirection()) >= 0) && (rand_pos + (rand_dep * testInfoJoueur.getDirection()) <= 8)){
 //			assertTrue(testInfoJoueur.moveSorcier(rand_dep));
 //		}else{
 //			assertFalse(testInfoJoueur.moveSorcier(rand_dep));

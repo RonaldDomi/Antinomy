@@ -33,33 +33,24 @@ import java.util.Random;
 
 import static java.lang.Math.abs;
 
-public class Jeu extends Observable {
+public class Jeu extends Observable implements Cloneable{
 	///////////
+	LecteurNiveaux l;
+
 	Random r;
 
+	int tour; //0 à +inf
 	Continuum continuum;
 	InfoJoueur[] infoJoueurs; //2 infoJoueurs
-	Historique historique;
-	int tour; //0 à +inf
 	Codex codex;
+	Historique historique;
 	int joueurCourant; //0 ou 1
 	int joueurGagnant; //0 ou 1
-
-	public Jeu(String stringJeu){
-//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant
-		String[] stringJeuSep = stringJeu.split(";");
-		this.continuum = new Continuum(stringJeuSep[0]);
-		this.infoJoueurs[0] = new InfoJoueur(stringJeuSep[1]);
-		this.infoJoueurs[1] = new InfoJoueur(stringJeuSep[2]);
-		this.tour = Integer.parseInt(stringJeuSep[3]);
-		this.codex = new Codex(stringJeuSep[4]);
-		this.joueurCourant = Integer.parseInt(stringJeuSep[5]);
-		this.joueurGagnant = Integer.parseInt(stringJeuSep[6]);
-
-		this.tour = Integer.parseInt(stringJeuSep[2]);
-	}
 	
-	public Jeu() {
+	
+	
+	public Jeu(LecteurNiveaux lect) {
+		l = lect;
 		r = new Random();
 
 		Deck d = new Deck();
@@ -74,6 +65,20 @@ public class Jeu extends Observable {
 		joueurGagnant = -1;
 
 		tour = 0;
+	}
+
+	public Jeu(String stringJeu){
+//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant
+		String[] stringJeuSep = stringJeu.split(";");
+		this.continuum = new Continuum(stringJeuSep[0]);
+		this.infoJoueurs[0] = new InfoJoueur(stringJeuSep[1]);
+		this.infoJoueurs[1] = new InfoJoueur(stringJeuSep[2]);
+		this.tour = Integer.parseInt(stringJeuSep[3]);
+		this.codex = new Codex(stringJeuSep[4]);
+		this.joueurCourant = Integer.parseInt(stringJeuSep[5]);
+		this.joueurGagnant = Integer.parseInt(stringJeuSep[6]);
+
+		this.tour = Integer.parseInt(stringJeuSep[2]);
 	}
 
 //	public Coup elaboreCoup(int x, int y) {
@@ -211,13 +216,25 @@ public class Jeu extends Observable {
 	}
 
 	public Historique getHistorique(){ return historique;}
+
 	public int getJoueurCourant(){
 		return joueurCourant;
 	}
-
-	public Jeu Clone(){
-		return new Jeu();
+	public Jeu clone() throws CloneNotSupportedException{
+		Jeu j = (Jeu) super.clone();
+		j.l = l;
+		j.r = r;
+		j.joueurCourant = joueurCourant;
+		j.joueurGagnant = joueurGagnant;
+		j.tour = tour;
+		for (int i = 0; i < 2; i++) {
+			j.infoJoueurs[i] = infoJoueurs[i].clone();
+		}
+		j.codex = codex.clone();
+		j.continuum = continuum.clone();
+		return j;
 	}
+
 
 	@Override
 	public String toString() {

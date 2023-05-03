@@ -1,11 +1,10 @@
 package Modele;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class InfoJoueur {
+public class InfoJoueur implements Cloneable{
 	private Carte[] main; //3 cartes
 	private int points; //0 à 5
 	private int directionMouvement; //-1 ou +1
@@ -49,13 +48,15 @@ public class InfoJoueur {
 	public void setMain(Carte[] main){this.main = main;}
 	public void setPoints(int points){this.points = points;}
 	// no setter in directionMouvement, it is supposed to never change
+	public void setDirectionMouvement(int directionMouvement){this.directionMouvement = directionMouvement;}
+
 	public void setSorcierIndice(int indice){this.sorcierIndice = indice;}
 
 	// UTILS
 	void addPoint(){this.points += 1;}
 	void remPoint(){this.points -= 1;}
 	boolean moveSorcier(int deplacement){
-		int nouvelle_position = this.getSorcierIndice() + deplacement;
+		int nouvelle_position = this.getSorcierIndice() + (deplacement * this.getDirectionMouvement());
 		if(nouvelle_position >= 0 && nouvelle_position <= 8){
 			this.setSorcierIndice(nouvelle_position);
 			return true;
@@ -118,6 +119,7 @@ public class InfoJoueur {
 		return res;
 	}
 
+
 	public static Carte[] mockMain(){
 		Carte[] res = new Carte[3];
 		res[0] = new Carte(1, Couleur.ROUGE, Symbole.CLEF);
@@ -126,5 +128,16 @@ public class InfoJoueur {
 		return res;
 	}
 
+	public InfoJoueur clone() throws CloneNotSupportedException{
+		InfoJoueur j = (InfoJoueur) super.clone();
+		for (int i = 0; i < 3; i++) {
+			j.main[i] = main[i].clone();
+		}
+		j.points = points;
+		j.directionMouvement = directionMouvement;
+		j.sorcierIndice = sorcierIndice;
+		j.r = r;
+		return j;
+	}
 
 }
