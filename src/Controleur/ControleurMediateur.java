@@ -63,6 +63,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 		// animations soient supportées (ex. interface textuelle)
 		animationsSupportees = false;
 		animationsActives = false;
+
 	}
 
 	@Override
@@ -146,11 +147,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 //	}
 
 	private void testFin() {
-		if (jeu.niveauTermine()) {
-			jeu.prochainNiveau();
-			if (jeu.jeuTermine())
-				System.exit(0);
-		}
+//		if (jeu.niveauTermine()) {
+//			jeu.prochainNiveau();
+//			if (jeu.jeuTermine())
+//				System.exit(0);
+//		}
 	}
 
 

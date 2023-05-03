@@ -1,7 +1,7 @@
 package Modele;
 
 
-public class Carte {
+public class Carte implements Cloneable {
 	private int numero; //1 à 4
 	private Couleur couleur;
 	private Symbole symbole;
@@ -17,6 +17,19 @@ public class Carte {
 		this.couleur = carte.getCouleur();
 		this.symbole = carte.getSymbole();
 	}
+
+	public Carte(String stringCarte){
+//		Carte:  couleur|symbole|numero
+		String[] strings = stringCarte.split("|");
+
+		// parse "Couleur" to Couleur
+		this.couleur = Couleur.parseCouleur(strings[0]);
+		// parse Symbole
+		this.symbole = Symbole.parseSymbole(strings[1]);
+		this.numero = Integer.parseInt(strings[2]);
+
+	}
+
 
 	
 	public int getNumero(){
@@ -57,11 +70,15 @@ public class Carte {
 
 	@Override
 	public String toString() {
-		return "Card{" +
-				", couleur='" + couleur + '\'' +
-				", symbole='" + symbole + '\'' +
-				"numero'" + numero + '\'' +
-				'}';
+		String res = couleur + "|" + symbole + "|" + numero;
+		return res;
+	}
+
+	@Override
+	public Carte clone() throws CloneNotSupportedException {
+		Carte c = (Carte) super.clone();
+		c = new Carte(numero, couleur, symbole);
+		return c;
 	}
 	
 	

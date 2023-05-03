@@ -28,16 +28,12 @@ package Modele;
 
 import Patterns.Observable;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
 import static java.lang.Math.abs;
 
-public class Jeu extends Observable {
-	//To delete
-	Niveau n;
+public class Jeu extends Observable implements Cloneable{
 	///////////
 	LecteurNiveaux l;
 
@@ -47,6 +43,7 @@ public class Jeu extends Observable {
 	Continuum continuum;
 	InfoJoueur[] infoJoueurs; //2 infoJoueurs
 	Codex codex;
+	Historique historique;
 	int joueurCourant; //0 ou 1
 	int joueurGagnant; //0 ou 1
 	
@@ -71,8 +68,18 @@ public class Jeu extends Observable {
 		tour = 0;
 	}
 
-	public Niveau niveau() {
-		return n;
+	public Jeu(String stringJeu){
+//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant
+		String[] stringJeuSep = stringJeu.split(";");
+		this.continuum = new Continuum(stringJeuSep[0]);
+		this.infoJoueurs[0] = new InfoJoueur(stringJeuSep[1]);
+		this.infoJoueurs[1] = new InfoJoueur(stringJeuSep[2]);
+		this.tour = Integer.parseInt(stringJeuSep[3]);
+		this.codex = new Codex(stringJeuSep[4]);
+		this.joueurCourant = Integer.parseInt(stringJeuSep[5]);
+		this.joueurGagnant = Integer.parseInt(stringJeuSep[6]);
+
+		this.tour = Integer.parseInt(stringJeuSep[2]);
 	}
 
 //	public Coup elaboreCoup(int x, int y) {
@@ -83,26 +90,6 @@ public class Jeu extends Observable {
 //		n.joue(c);
 //		metAJour();
 //	}
-
-	public void prochainNiveau() {
-		n = l.lisProchainNiveau();
-	}
-
-	public boolean niveauTermine() {
-		return n.estTermine();
-	}
-
-	public boolean jeuTermine() {
-		return n == null;
-	}
-
-	public int lignePousseur() {
-		return n.lignePousseur();
-	}
-
-	public int colonnePousseur() {
-		return n.colonnePousseur();
-	}
 
 	void echangerCarteMainContinuum(int carteMainIndice, int carteContinuumIndice){
 		//change la carte de la main donnée par l'utilisateur avec la carte dans le continuum
@@ -159,11 +146,11 @@ public class Jeu extends Observable {
 		}
 		return false;
 	}
-	
+
 	int adversaire(){
 		return 1-joueurCourant;
 	}
-	
+
 	void finTour(){
 		joueurCourant = adversaire();
 		tour++;
@@ -230,11 +217,36 @@ public class Jeu extends Observable {
 		return continuum;
 	}
 
+	public Historique getHistorique(){ return historique;}
+
 	public int getJoueurCourant(){
 		return joueurCourant;
 	}
+	public Jeu clone() throws CloneNotSupportedException{
+		Jeu j = (Jeu) super.clone();
+		j.l = l;
+		j.r = r;
+		j.joueurCourant = joueurCourant;
+		j.joueurGagnant = joueurGagnant;
+		j.tour = tour;
+		for (int i = 0; i < 2; i++) {
+			j.infoJoueurs[i] = infoJoueurs[i].clone();
+		}
+		j.codex = codex.clone();
+		j.continuum = continuum.clone();
+		return j;
+	}
 
-	public Jeu Clone(){
-		return new Jeu(this.l);
+
+	@Override
+	public String toString() {
+//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant
+		return continuum.toString() + ";" +
+				infoJoueurs[0].toString() + ";" +
+				infoJoueurs[1].toString() + ";" +
+				tour + ";" +
+				codex.toString() + ";" +
+				joueurCourant + ";" +
+				joueurGagnant + ";";
 	}
 }
