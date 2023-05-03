@@ -63,6 +63,7 @@ public class Jeu extends Observable {
 		infoJoueurs[0].setMain(d.distribuer(3));
 		infoJoueurs[1] = new InfoJoueur(-1, r);
 		infoJoueurs[1].setMain(d.distribuer(3));
+		codex = new Codex(d.distribuer(1)[0]);
 
 		joueurCourant = 0;
 		joueurGagnant = -1;
@@ -120,13 +121,25 @@ public class Jeu extends Observable {
 		metAJour();
 	}
 
-	public void coupParadox(boolean faireParadox, int direction){
+	public void coupParadox(int direction){
 		Collections.shuffle(Arrays.asList(getInfoJoueurCourant().getMain()));
-		
-		for (int i = 1; i <= 3; i++) {
-			echangerCarteMainContinuum(i, getInfoJoueurCourant().getSorcierIndice() + (i * direction));
+
+
+		if (direction == 1){
+			int indexMain=2;
+			for (int i = 0; i < 3; i++) {
+				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1)));
+				indexMain--;
+			}
+
+		}else{
+			int indexMain=0;
+			for (int i = 0; i < 3; i++) {
+				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction));
+				indexMain++;
+			}
 		}
-		
+
 		infoJoueurs[joueurCourant].addPoint();
 		jeuGagnant();
 		metAJour();
@@ -204,6 +217,7 @@ public class Jeu extends Observable {
 	public InfoJoueur[] getInfoJoueurs(){
 		return infoJoueurs;
 	}
+
 	public InfoJoueur getInfoJoueurCourant(){
 		return infoJoueurs[joueurCourant];
 	}

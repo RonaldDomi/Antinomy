@@ -40,11 +40,11 @@ public class Arbre {
                     if (temp.existeParadoxSuperieur()){
                         //ici, on donne juste sens de paradox
                         temp2 = temp.Clone();
-                        temp2.coupParadox(true, 1);
+                        temp2.coupParadox( 1);
                     }
                     if (temp.existeParadoxInferieur()){
                         temp3 = temp.Clone();
-                        temp3.coupParadox(true, -1);
+                        temp3.coupParadox( -1);
                     }
                 }
 

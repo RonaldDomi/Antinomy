@@ -12,12 +12,16 @@ public class Codex {
 	Carte getCarte(){
 		return this.carte;
 	}
+
 	Couleur getCouleurInterdite(){
 		return this.couleurInterdite;
 	}
-	void setCarte(Carte carte){ this.carte = carte;}
-	void setCouleurInterdite(Couleur couleurInterdite){this.couleurInterdite = couleurInterdite;}
+
+	void setCarte(Carte carte){
+		this.carte = carte;
+	}
+
+	void setCouleurInterdite(Couleur couleurInterdite){
+		this.couleurInterdite = couleurInterdite;
+	}
 }
-
-
-

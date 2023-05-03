@@ -102,4 +102,16 @@ public class Continuum {
 		res[8] = new Carte(1, Couleur.BLEU, Symbole.PAPIER);
 		return res;
 	}
+
+
+	public LinkedList<Integer> getIndexSorcierPossible(Couleur couleur_interdite){
+		LinkedList<Integer> tabIndex = new LinkedList<>();
+
+		for (int i = 0; i < 9; i++) {
+			if (this.getCarteContinuum(i).getCouleur() == couleur_interdite){
+				tabIndex.add(i);
+			}
+		}
+		return tabIndex;
+	}
 }

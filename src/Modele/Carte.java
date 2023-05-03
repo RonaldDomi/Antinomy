@@ -11,6 +11,12 @@ public class Carte {
 		this.couleur = couleur;
 		this.symbole = symbole;
 	}
+	
+	public Carte(Carte carte){
+		this.numero = carte.getNumero();
+		this.couleur = carte.getCouleur();
+		this.symbole = carte.getSymbole();
+	}
 
 	
 	public int getNumero(){
@@ -56,5 +62,15 @@ public class Carte {
 				", symbole='" + symbole + '\'' +
 				"numero'" + numero + '\'' +
 				'}';
+	}
+	
+	
+	public Carte deepCopy(){
+		return new Carte(this.getNumero(), this.getCouleur(),this.getSymbole());
+	}
+	
+	
+	public boolean sontEquivalentes(Carte carte){
+		return this.getNumero() == carte.getNumero() && this.getSymbole() == carte.getSymbole() && this.getCouleur() == carte.getCouleur();
 	}
 }
