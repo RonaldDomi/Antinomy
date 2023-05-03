@@ -147,11 +147,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 //	}
 
 	private void testFin() {
-		if (jeu.niveauTermine()) {
-			jeu.prochainNiveau();
-			if (jeu.jeuTermine())
-				System.exit(0);
-		}
+//		if (jeu.niveauTermine()) {
+//			jeu.prochainNiveau();
+//			if (jeu.jeuTermine())
+//				System.exit(0);
+//		}
 	}
 
 

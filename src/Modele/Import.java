@@ -18,7 +18,8 @@ public class Import {
     }
 
     public Jeu lire_fichier() {
-        Jeu jeu = new Jeu();
+        LecteurNiveaux l = null;
+        Jeu jeu = new Jeu(l);
 
         int currentJeuIndex = Integer.parseInt(scanner.nextLine());
         Historique historique = new Historique(scanner.nextLine());
