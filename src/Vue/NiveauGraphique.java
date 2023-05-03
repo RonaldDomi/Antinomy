@@ -153,8 +153,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 //		g.setFont( medievalFont);
 
 		FontMetrics m = g.getFontMetrics();
-		String s_j0 = "Joueur " + 0 + "   " + j.getInfoJoueurs()[j.getJoueurCourant()].getPoints() + "/5";
-		String s_j1 = "Joueur " + 1 + "   " + j.getInfoJoueurs()[1-j.getJoueurCourant()].getPoints() + "/5";
+		String s_j0 = "Joueur " + 0 + "   " + j.getInfoJoueurs()[0].getPoints() + "/5";
+		String s_j1 = "Joueur " + 1 + "   " + j.getInfoJoueurs()[1].getPoints() + "/5";
 
 		//Texte joueur 1
 		g.drawString(s_j0, padding, hauteur-padding);
