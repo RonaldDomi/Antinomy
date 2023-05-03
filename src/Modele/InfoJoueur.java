@@ -1,5 +1,6 @@
 package Modele;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +20,17 @@ public class InfoJoueur {
 	public InfoJoueur(int directionMouvement, Random r){
 		this.directionMouvement = directionMouvement;
 		this.r = r;
+	}
+
+	public InfoJoueur(String stringInfo){
+//		InfoJoueur: carte1,carte2,carte3,points,directionMouvement,sorcierIndice
+		String[] strings = stringInfo.split(",");
+		main[0] = new Carte(strings[0]);
+		main[1] = new Carte(strings[1]);
+		main[2] = new Carte(strings[2]);
+		points = Integer.parseInt(strings[3]);
+		directionMouvement = Integer.parseInt(strings[4]);
+		sorcierIndice = Integer.parseInt(strings[5]);
 	}
 
 	// GETTERS
@@ -92,6 +104,18 @@ public class InfoJoueur {
 			main[randomIndexToSwap] = main[i];
 			main[i] = temp;
 		}
+	}
+
+	@Override
+	public String toString() {
+		String res = "";
+		res += main[0].toString() + ",";
+		res += main[1].toString() + ",";
+		res += main[2].toString() + ",";
+		res += points + ",";
+		res += directionMouvement + ",";
+		res += sorcierIndice;
+		return res;
 	}
 
 	public static Carte[] mockMain(){

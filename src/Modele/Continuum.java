@@ -11,6 +11,14 @@ public class Continuum {
 		this.continuum = continuum;
 	}
 
+	Continuum(String stringContinuum){
+//		Continuum: carte1,carte2,carte3,....
+		String[] strings = stringContinuum.split(",");
+		for(int i = 0; i < strings.length; i++){
+			continuum[i] = new Carte(strings[i]);
+		}
+	}
+
 	Carte getCarteContinuum(int index){
 		return this.continuum[index];
 	}
@@ -87,6 +95,15 @@ public class Continuum {
 		}
 
 		return index_coups_possibles;
+	}
+
+	@Override
+	public String toString() {
+		String res = "";
+		for(int i=0; i<this.continuum.length; i++){
+			res = res + continuum[i].toString() + ",";
+		}
+		return res;
 	}
 
 	public static Carte[] mockContinuum(){

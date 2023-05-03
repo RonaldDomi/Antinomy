@@ -9,6 +9,13 @@ public class Codex {
 		this.couleurInterdite = Couleur.VERT;
 	}
 
+	public Codex(String stringCodex){
+//		Codex: carte,couleur
+		String[] strings = stringCodex.split(",");
+		carte = new Carte(strings[0]);
+		couleurInterdite = Couleur.parseCouleur(strings[1]);
+	}
+
 	Carte getCarte(){
 		return this.carte;
 	}
@@ -17,6 +24,12 @@ public class Codex {
 	}
 	void setCarte(Carte carte){ this.carte = carte;}
 	void setCouleurInterdite(Couleur couleurInterdite){this.couleurInterdite = couleurInterdite;}
+
+	@Override
+	public String toString() {
+		String res = carte.toString() + "," + couleurInterdite;
+		return res;
+	}
 }
 
 

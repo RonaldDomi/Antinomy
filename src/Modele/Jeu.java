@@ -35,21 +35,31 @@ import static java.lang.Math.abs;
 
 public class Jeu extends Observable {
 	///////////
-	LecteurNiveaux l;
-
 	Random r;
 
-	int tour; //0 à +inf
 	Continuum continuum;
 	InfoJoueur[] infoJoueurs; //2 infoJoueurs
+	Historique historique;
+	int tour; //0 à +inf
 	Codex codex;
 	int joueurCourant; //0 ou 1
 	int joueurGagnant; //0 ou 1
+
+	public Jeu(String stringJeu){
+//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant
+		String[] stringJeuSep = stringJeu.split(";");
+		this.continuum = new Continuum(stringJeuSep[0]);
+		this.infoJoueurs[0] = new InfoJoueur(stringJeuSep[1]);
+		this.infoJoueurs[1] = new InfoJoueur(stringJeuSep[2]);
+		this.tour = Integer.parseInt(stringJeuSep[3]);
+		this.codex = new Codex(stringJeuSep[4]);
+		this.joueurCourant = Integer.parseInt(stringJeuSep[5]);
+		this.joueurGagnant = Integer.parseInt(stringJeuSep[6]);
+
+		this.tour = Integer.parseInt(stringJeuSep[2]);
+	}
 	
-	
-	
-	public Jeu(LecteurNiveaux lect) {
-		l = lect;
+	public Jeu() {
 		r = new Random();
 
 		Deck d = new Deck();
@@ -200,11 +210,24 @@ public class Jeu extends Observable {
 		return continuum;
 	}
 
+	public Historique getHistorique(){ return historique;}
 	public int getJoueurCourant(){
 		return joueurCourant;
 	}
 
 	public Jeu Clone(){
-		return new Jeu(this.l);
+		return new Jeu();
+	}
+
+	@Override
+	public String toString() {
+//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant
+		return continuum.toString() + ";" +
+				infoJoueurs[0].toString() + ";" +
+				infoJoueurs[1].toString() + ";" +
+				tour + ";" +
+				codex.toString() + ";" +
+				joueurCourant + ";" +
+				joueurGagnant + ";";
 	}
 }

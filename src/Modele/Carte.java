@@ -12,6 +12,19 @@ public class Carte {
 		this.symbole = symbole;
 	}
 
+	public Carte(String stringCarte){
+//		Carte:  couleur|symbole|numero
+		String[] strings = stringCarte.split("|");
+
+		// parse "Couleur" to Couleur
+		this.couleur = Couleur.parseCouleur(strings[0]);
+		// parse Symbole
+		this.symbole = Symbole.parseSymbole(strings[1]);
+		this.numero = Integer.parseInt(strings[2]);
+
+	}
+
+
 	
 	public int getNumero(){
 		return this.numero;
@@ -51,10 +64,7 @@ public class Carte {
 
 	@Override
 	public String toString() {
-		return "Card{" +
-				", couleur='" + couleur + '\'' +
-				", symbole='" + symbole + '\'' +
-				"numero'" + numero + '\'' +
-				'}';
+		String res = couleur + "|" + symbole + "|" + numero;
+		return res;
 	}
 }

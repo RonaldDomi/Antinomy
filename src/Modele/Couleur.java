@@ -12,5 +12,17 @@ public enum Couleur {
     public static Couleur getRandomCouleur(){
         return valeurs[random.nextInt(taille)];
     }
+
+    public static Couleur parseCouleur(String couleur){
+        Couleur myCouleur;
+        try {
+            myCouleur = Couleur.valueOf(couleur);
+        } catch (IllegalArgumentException e) {
+            // handle invalid input
+            System.err.println("Invalid enum string: " + couleur);
+            myCouleur = null; // or set a default value
+        }
+        return myCouleur;
+    }
 }
 
