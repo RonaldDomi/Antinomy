@@ -48,26 +48,6 @@ public class Carte implements Cloneable {
 	void setCouleur(Couleur couleur){this.couleur = couleur;};
 	void setSymbole(Symbole symbole){this.symbole = symbole;};
 
-	public void cycleCouleur() {
-		switch (couleur) {
-			case VERT:
-				couleur = Couleur.ROUGE;
-				break;
-			case ROUGE:
-				couleur = Couleur.BLEU;
-				break;
-			case BLEU:
-				couleur = Couleur.VIOLET;
-				break;
-			case VIOLET:
-				couleur = Couleur.VERT;
-				break;
-			default:
-				// Handle any unexpected cases
-				break;
-		}
-	}
-
 	@Override
 	public String toString() {
 		String res = couleur + "|" + symbole + "|" + numero;

@@ -28,6 +28,8 @@ package Modele;
 
 import Patterns.Observable;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -60,7 +62,8 @@ public class Jeu extends Observable implements Cloneable{
 		infoJoueurs[0].setMain(d.distribuer(3));
 		infoJoueurs[1] = new InfoJoueur(-1, r);
 		infoJoueurs[1].setMain(d.distribuer(3));
-		codex = new Codex(d.distribuer(1)[0]);
+
+		codex = new Codex(d.distribuer(1)[0], continuum.getCarteContinuum(0).getCouleur());
 
 		joueurCourant = 0;
 		joueurGagnant = -1;
@@ -97,21 +100,45 @@ public class Jeu extends Observable implements Cloneable{
 		//renvoie rien
 	}
 
-	public void coupChangerPositionSorcier(int indexCarte){
-		getInfoJoueurCourant().setSorcierIndice(indexCarte);
-		metAJour();
+	public boolean coupChangerPositionSorcier(int indexCarte){
+		java.util.LinkedList<Integer> indexPossible = continuum.getIndexSorcierPossible(codex.getCouleurInterdite());
+		for (Integer index:
+				indexPossible) {
+			if (index == indexCarte){
+				getInfoJoueurCourant().setSorcierIndice(indexCarte);
+				metAJour();
+				return true;
+			}
+		}
+
+		return false;
+
 	}
 
-	public void coupEchangeCarteMainContinuum(int indexCarte, int indexContinuum){
-		infoJoueurs[joueurCourant].setSorcierIndice(indexContinuum);
-		echangerCarteMainContinuum(indexCarte, indexContinuum);
-		metAJour();
+	public boolean coupEchangeCarteMainContinuum(int indexMain, int indexContinuum){
+
+		java.util.LinkedList<Integer> indexPossible = continuum.getCoupsPossibles(getInfoJoueurCourant().getCarteMain(indexMain), getInfoJoueurCourant().getSorcierIndice(), getInfoJoueurCourant().getDirection());
+		for (Integer index:
+				indexPossible) {
+			if (index == indexContinuum){
+				infoJoueurs[joueurCourant].setSorcierIndice(indexContinuum);
+				echangerCarteMainContinuum(indexMain, indexContinuum);
+				metAJour();
+				return true;
+			}
+		}
+		return false;
 	}
 
-	public void coupParadox(int direction){
+	public boolean coupParadox(int direction){
+
+		if(!getInfoJoueurCourant().existeParadox(codex.getCouleurInterdite()))
+			return false;
+
+		if(!(direction == 1 && existeParadoxSuperieur() || direction == -1 && existeParadoxInferieur()))
+			return false;
+
 		Collections.shuffle(Arrays.asList(getInfoJoueurCourant().getMain()));
-
-
 		if (direction == 1){
 			int indexMain=2;
 			for (int i = 0; i < 3; i++) {
@@ -128,16 +155,19 @@ public class Jeu extends Observable implements Cloneable{
 		}
 
 		infoJoueurs[joueurCourant].addPoint();
+		codex.cycleCouleur();
 		jeuGagnant();
 		metAJour();
+		return true;
 	}
 
-	boolean coupClash(){
+	public boolean coupClash(){
 		int res = gagnantClash();
 		if (res != -1){
 			if (infoJoueurs[1-res].getPoints() > 0){
 				infoJoueurs[1-res].remPoint();
 				infoJoueurs[res].addPoint();
+				codex.cycleCouleur();
 				jeuGagnant();
 				metAJour();
 				return true;
@@ -147,16 +177,18 @@ public class Jeu extends Observable implements Cloneable{
 		return false;
 	}
 
-	int adversaire(){
+	public int adversaire(){
 		return 1-joueurCourant;
 	}
 
-	void finTour(){
+	public void finTour(){
 		joueurCourant = adversaire();
 		tour++;
 	}
 
-
+	public boolean existeClash(){
+		return infoJoueurs[0].getSorcierIndice() == infoJoueurs[1].getSorcierIndice();
+	}
 
 	//-1 si égalité sinon index du gagnant
 	int gagnantClash(){
@@ -189,12 +221,14 @@ public class Jeu extends Observable implements Cloneable{
 			joueurGagnant = 1;
 	}
 
-	boolean existeParadoxSuperieur(){
-		return infoJoueurs[joueurCourant].getSorcierIndice() < 3;
+	public boolean existeParadoxSuperieur(){
+		return infoJoueurs[joueurCourant].getSorcierIndice()+3*infoJoueurs[joueurCourant].getDirection() < continuum.getContinuumSize() &&
+				infoJoueurs[joueurCourant].getSorcierIndice()+3*infoJoueurs[joueurCourant].getDirection() >= 0;
 	}
 
-	boolean existeParadoxInferieur(){
-		return infoJoueurs[joueurCourant].getSorcierIndice() > continuum.getContinuumSize() - 3;
+	public boolean existeParadoxInferieur(){
+		return infoJoueurs[joueurCourant].getSorcierIndice()-3*infoJoueurs[joueurCourant].getDirection() < continuum.getContinuumSize() &&
+				infoJoueurs[joueurCourant].getSorcierIndice()-3*infoJoueurs[joueurCourant].getDirection() >= 0;
 	}
 
 	public Carte[] getMainJoueurCourant(){
@@ -237,6 +271,7 @@ public class Jeu extends Observable implements Cloneable{
 		return j;
 	}
 
+	public Codex getCodex(){return codex;}
 
 	@Override
 	public String toString() {

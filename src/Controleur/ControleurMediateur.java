@@ -63,7 +63,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 		// animations soient supportées (ex. interface textuelle)
 		animationsSupportees = false;
 		animationsActives = false;
-
 	}
 
 	@Override
@@ -74,6 +73,9 @@ public class ControleurMediateur implements CollecteurEvenements {
 				break;
 			case 2:
 				clicContinuum(indexCarte);
+				break;
+			case 3:
+				clicMain(indexCarte);
 				break;
 			default:
 				break;
@@ -98,27 +100,96 @@ public class ControleurMediateur implements CollecteurEvenements {
 	void clicContinuum(int indexCarte){
 		switch (etape){
 			case 0: //debut de jeu
-				//todo verifier carte jouable
-				System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
-				jeu.coupChangerPositionSorcier(indexCarte);
-				etape = 1;
+				if (jeu.coupChangerPositionSorcier(indexCarte)){
+					etapeSuivante();
+					System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
+				}
 				break;
 			case 1: //debut de tour
 				if (indexCarteMain != -1){
-					//todo verifier carte jouable
-					System.out.println("Joueur " + jeu.getJoueurCourant() + " échange la carte de ça main " + indexCarteMain + " avec la carte du continuum " + indexCarte);
-					jeu.coupEchangeCarteMainContinuum(indexCarteMain, indexCarte);
-					indexCarteMain = -1;
-//					etape = 2;
-					vue.selectionnerCarteMain(-1);
-					vue.selectionnerCarteContinuum(null);
+					java.util.LinkedList<Integer> indexPossible = jeu.getContinuum().getCoupsPossibles(jeu.getInfoJoueurCourant().getCarteMain(indexCarteMain), jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection());
+					for (Integer index:
+							indexPossible) {
+						if (index == indexCarte){
+							System.out.println("Joueur " + jeu.getJoueurCourant() + " échange la carte de ça main " + indexCarteMain + " avec la carte du continuum " + indexCarte);
+							jeu.coupEchangeCarteMainContinuum(indexCarteMain, indexCarte);
+							indexCarteMain = -1;
+							etapeSuivante();
+							vue.selectionnerCarteMain(-1);
+							vue.selectionnerCarteContinuum(null);
+							break;
+						}
+					}
 				}
 				break;
-			case 2: //paradox oui/non
-				break;
-			case 3: //paradox droite/gauche
+			case 2: //paradox droite/gauche
+				if (indexCarte > jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte <= jeu.getInfoJoueurCourant().getSorcierIndice()+3 && jeu.existeParadoxSuperieur()){
+					jeu.coupParadox(+1);
+					etapeSuivante();
+					System.out.println("Paradox, selection des carte dans le future");
+				}
+				else if (indexCarte < jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte >= jeu.getInfoJoueurCourant().getSorcierIndice()-3 && jeu.existeParadoxInferieur()) {
+					jeu.coupParadox(-1);
+					etapeSuivante();
+					System.out.println("Paradox, selection des carte dans le passé");
+				}
 				break;
 			default:
+				break;
+		}
+	}
+
+	void etapeSuivante(){
+		switch (etape){
+			case (0):
+				System.out.println();
+				System.out.println("Echange Carte :");
+				if (jeu.getInfoJoueurs()[jeu.adversaire()].getSorcierIndice() == 9)
+					etape = 0;
+				else
+					etape = 1;
+				jeu.finTour();
+				break;
+			case (1):
+				if (jeu.getInfoJoueurCourant().existeParadox(jeu.getCodex().getCouleurInterdite())){
+					System.out.println();
+					System.out.println("Paradox :");
+					etape = 2;
+				} else if (jeu.existeClash()) {
+					jeu.coupClash();
+					System.out.println();
+					System.out.println("Clash :");
+
+					etape = 1;
+					System.out.println();
+					System.out.println("Echange Carte :");
+					jeu.finTour();
+				}
+				else {
+					etape = 1;
+					System.out.println();
+					System.out.println("Echange Carte :");
+					jeu.finTour();
+				}
+				break;
+			case (2):
+				if (jeu.existeClash()) {
+					etape = 3;
+					jeu.coupClash();
+					System.out.println();
+					System.out.println("Clash :");
+
+					etape = 1;
+					System.out.println();
+					System.out.println("Echange Carte :");
+					jeu.finTour();
+				}
+				else {
+					etape = 1;
+					System.out.println();
+					System.out.println("Echange Carte :");
+					jeu.finTour();
+				}
 				break;
 		}
 	}

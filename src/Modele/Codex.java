@@ -4,9 +4,9 @@ public class Codex implements Cloneable{
 	private Carte carte;
 	private Couleur couleurInterdite;
 
-	public Codex(Carte carte){
+	public Codex(Carte carte, Couleur couleurInterdite){
 		this.carte = carte;
-		this.couleurInterdite = Couleur.VERT;
+		this.couleurInterdite = couleurInterdite;
 	}
 
 	public Codex(String stringCodex){
@@ -19,7 +19,7 @@ public class Codex implements Cloneable{
 	Carte getCarte(){
 		return this.carte;
 	}
-	Couleur getCouleurInterdite(){
+	public Couleur getCouleurInterdite(){
 		return this.couleurInterdite;
 	}
 	void setCarte(Carte carte){ this.carte = carte;}
@@ -36,6 +36,26 @@ public class Codex implements Cloneable{
 	public String toString() {
 		String res = carte.toString() + "," + couleurInterdite;
 		return res;
+	}
+
+	public void cycleCouleur() {
+		switch (couleurInterdite) {
+			case VERT:
+				couleurInterdite = Couleur.ROUGE;
+				break;
+			case ROUGE:
+				couleurInterdite = Couleur.BLEU;
+				break;
+			case BLEU:
+				couleurInterdite = Couleur.VIOLET;
+				break;
+			case VIOLET:
+				couleurInterdite = Couleur.VERT;
+				break;
+			default:
+				// Handle any unexpected cases
+				break;
+		}
 	}
 }
 

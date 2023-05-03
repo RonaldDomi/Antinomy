@@ -76,7 +76,7 @@ public class InfoJoueur implements Cloneable{
 		return carte;
 	}
 
-	boolean existeParadox(Couleur couleur_interdite){
+	public boolean existeParadox(Couleur couleur_interdite){
 		if(main[0].getCouleur() == couleur_interdite || main[1].getCouleur() == couleur_interdite || main[2].getCouleur() == couleur_interdite)
 			return false;
 
