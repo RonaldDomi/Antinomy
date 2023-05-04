@@ -45,23 +45,36 @@ public class AdaptateurSouris extends MouseAdapter {
 				if (e.getX() >= n.deb_joueur + i * n.largeurCarte + i * n.padding && e.getX() < n.deb_joueur + (i + 1) * n.largeurCarte + i * n.padding) {
 					System.out.println("Joueur0 Clicked : " + i);
 					control.clicSouris(1, i);
-					break;
+					return;
 				}
 			}
-		} else if (e.getY() >= n.padding && e.getY() <= n.padding + n.hauteurCarte && n.joueurCourant == 1){
+		}
+		if (e.getY() >= n.padding && e.getY() <= n.padding + n.hauteurCarte && n.joueurCourant == 1) {
 			for (int i = 0; i < 3; i++) {
-				if (e.getX() >= n.deb_joueur + i*n.largeurCarte + i*n.padding && e.getX() < n.deb_joueur + (i+1)*n.largeurCarte + i*n.padding){
+				if (e.getX() >= n.deb_joueur + i * n.largeurCarte + i * n.padding && e.getX() < n.deb_joueur + (i + 1) * n.largeurCarte + i * n.padding) {
 					System.out.println("Joueur1 Clicked : " + i);
 					control.clicSouris(3, i);
-					break;
+					return;
 				}
 			}
+		}
+		if (e.getY() >= n.padding && e.getY() <= n.padding + n.largeurCarte ){
+			//bouton
+			for (int i = 0; i < 4; i++) {
+				if (e.getX() >= n.deb_bouton + i*n.largeurCarte + i*n.padding && e.getX() < n.deb_bouton + (i+1)*n.largeurCarte + i*n.padding){
+					System.out.println("Bouton Clicked : " + i);
+					control.clicSourisBouton(i);
+					return;
+				}
+			}
+
+
 		}  else if (e.getY() >= n.centre_hauteur - n.hauteurCarte/2 && e.getY() <= n.centre_hauteur + n.hauteurCarte/2) {
 			for (int i = 0; i < 9; i++) {
 				if (e.getX() >= n.deb_continuum + i*n.largeurCarte + i*n.padding && e.getX() < n.deb_continuum + (i+1)*n.largeurCarte + i*n.padding){
 					System.out.println("Continium Clicked : " + i);
 					control.clicSouris(2, i);
-					break;
+					return;
 				}
 			}
 		}

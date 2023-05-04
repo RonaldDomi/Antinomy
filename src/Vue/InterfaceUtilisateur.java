@@ -35,4 +35,6 @@ public interface InterfaceUtilisateur {
 	void decale(int versL, int versC, double dL, double dC);
 	void selectionnerCarteMain(int indice);
 	void selectionnerCarteContinuum(LinkedList<Integer> indices);
+	void sauvegarder();
+	void charger();
 }

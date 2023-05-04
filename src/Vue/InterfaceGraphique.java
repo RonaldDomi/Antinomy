@@ -26,6 +26,7 @@ package Vue;
  *          38401 Saint Martin d'Hères
  */
 
+import Modele.Export;
 import Modele.Jeu;
 
 import javax.swing.*;
@@ -227,5 +228,29 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	@Override
 	public void selectionnerCarteContinuum(LinkedList<Integer> indices){
 		niv.selectionnerCarteContinuum(indices);
+	}
+
+	@Override
+	public void sauvegarder(){
+		JFileChooser Save = new JFileChooser();
+		int r = Save.showSaveDialog(null);
+		if (r == JFileChooser.APPROVE_OPTION) {
+			System.out.println("Sauvegarder " + Save.getSelectedFile().getAbsolutePath());
+			Export exp = new Export(Save.getSelectedFile().getAbsolutePath());
+			exp.exporterJeu(j);
+		}
+		else{
+			System.out.println("Sauvegarde annulée");
+		}
+	}
+	@Override
+	public void charger(){
+		JFileChooser Load = new JFileChooser();
+		int r = Load.showOpenDialog(null);
+		if (r == JFileChooser.APPROVE_OPTION) {
+			System.out.println("Charger " + Load.getSelectedFile().getAbsolutePath());
+		}
+		else
+			System.out.println("Chargement annulée");
 	}
 }

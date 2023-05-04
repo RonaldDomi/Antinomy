@@ -82,6 +82,24 @@ public class ControleurMediateur implements CollecteurEvenements {
 		}
 	}
 
+	@Override
+	public void clicSourisBouton(int index){
+		switch (index){
+			case 0: //save
+				vue.sauvegarder();
+				break;
+			case 1: //charger
+				vue.charger();
+				break;
+			case 2: //undo
+//				jeu.undo();
+				break;
+			case 3: //redo
+//				jeu.redo();
+				break;
+		}
+	}
+
 	void clicMain(int indexCarte){
 		switch (etape){
 			case 0: //debut de jeu
@@ -124,12 +142,18 @@ public class ControleurMediateur implements CollecteurEvenements {
 				break;
 			case 2: //paradox droite/gauche
 				if (indexCarte > jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte <= jeu.getInfoJoueurCourant().getSorcierIndice()+3 && jeu.existeParadoxSuperieur()){
-					jeu.coupParadox(+1);
+					if (jeu.getJoueurCourant() == 0)
+						jeu.coupParadox(+1);
+					else
+						jeu.coupParadox(-1);
 					etapeSuivante();
 					System.out.println("Paradox, selection des carte dans le future");
 				}
 				else if (indexCarte < jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte >= jeu.getInfoJoueurCourant().getSorcierIndice()-3 && jeu.existeParadoxInferieur()) {
-					jeu.coupParadox(-1);
+					if (jeu.getJoueurCourant() == 0)
+						jeu.coupParadox(-1);
+					else
+						jeu.coupParadox(+1);
 					etapeSuivante();
 					System.out.println("Paradox, selection des carte dans le passé");
 				}

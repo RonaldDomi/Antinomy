@@ -51,6 +51,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	int padding;
 	int deb_joueur;
 	int deb_continuum;
+
+	int deb_bouton;
 	int largeur, hauteur;
 
 	int indexCarteSelectionneeMain = -1;
@@ -164,7 +166,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		g.drawString(s_j1, largeur - m.stringWidth(s_j1) - padding - largeurCarte/2, 0 + m.getHeight());
 		tracer(drawable, diamant, largeur - padding - largeurCarte/2, 0 + m.getHeight() - largeurCarte/2, largeurCarte/2, largeurCarte/2);
 
-
+		//couleur interdite
 		switch (j.getCodex().getCouleurInterdite()){
 			case BLEU:
 				tracer(drawable, codexBleu, largeur/8 - largeurCarte, centre_hauteur - largeurCarte,largeurCarte*2, largeurCarte*2);
@@ -180,6 +182,14 @@ public class NiveauGraphique extends JComponent implements Observateur {
 				break;
 		}
 		tracer(drawable, fleche, largeur/8 - largeurCarte*5/2, centre_hauteur - largeurCarte,largeurCarte*2, largeurCarte*2);
+
+
+		//bouton
+		deb_bouton = padding;
+		g.fillRect(padding, padding, largeurCarte, largeurCarte);
+		g.fillRect(2*padding + largeurCarte, padding, largeurCarte, largeurCarte);
+		g.fillRect(3*padding + 2*largeurCarte, padding, largeurCarte, largeurCarte);
+		g.fillRect(4*padding + 3*largeurCarte, padding, largeurCarte, largeurCarte);
 	}
 
 	protected void carteMain(Graphics2D g, Carte[][] mains){

@@ -27,6 +27,7 @@ package Vue;
  */
 public interface CollecteurEvenements {
 	void clicSouris(int l, int c);
+	void clicSourisBouton(int i);
 	void toucheClavier(String t);
 	void ajouteInterfaceUtilisateur(InterfaceUtilisateur vue);
 	void tictac();
