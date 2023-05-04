@@ -102,8 +102,8 @@ public class Jeu extends Observable implements Cloneable{
 
 	public boolean coupChangerPositionSorcier(int indexCarte){
 		java.util.LinkedList<Integer> indexPossible = continuum.getIndexSorcierPossible(codex.getCouleurInterdite());
-		for (Integer index:
-				indexPossible) {
+		
+		for (Integer index: indexPossible) {
 			if (index == indexCarte){
 				getInfoJoueurCourant().setSorcierIndice(indexCarte);
 				metAJour();
@@ -112,14 +112,12 @@ public class Jeu extends Observable implements Cloneable{
 		}
 
 		return false;
-
 	}
 
 	public boolean coupEchangeCarteMainContinuum(int indexMain, int indexContinuum){
-
 		java.util.LinkedList<Integer> indexPossible = continuum.getCoupsPossibles(getInfoJoueurCourant().getCarteMain(indexMain), getInfoJoueurCourant().getSorcierIndice(), getInfoJoueurCourant().getDirection());
-		for (Integer index:
-				indexPossible) {
+		
+		for (Integer index: indexPossible) {
 			if (index == indexContinuum){
 				infoJoueurs[joueurCourant].setSorcierIndice(indexContinuum);
 				echangerCarteMainContinuum(indexMain, indexContinuum);
