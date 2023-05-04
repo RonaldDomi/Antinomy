@@ -35,10 +35,10 @@ public class Arbre {
 
                 if (temp.infoJoueurs[temp.joueurCourant].existeParadox(temp.codex.getCouleurInterdite())){
                     //pour chaque coup
-                    //on joue le paradox si il existe et on le joue pas
+                    //on joue le paradox s'il existe et on ne le joue pas
                     //respectivement temp2 et temp3
                     if (temp.existeParadoxSuperieur()){
-                        //ici, on donne juste sens de paradox
+                        //ici, on donne juste le sens de paradox
                         temp2 = temp.clone();
                         temp2.coupParadox(1);
                     }
@@ -55,8 +55,8 @@ public class Arbre {
                 //temp5 contient paradox superieur et clash
                 //temp6 contient paradox inferieur et clash
 
-                //ici si les 2 sorcier on meme indice on peut avoir un clash
-                //et le joueur advairse doit avoir au moins une gemmes
+                //ici si les 2 sorcier ont le meme indice on peut avoir un clash
+                //et le joueur adverse doit avoir au moins une gemme
                 if (temp.infoJoueurs[temp.joueurCourant].getPoints() > 0 && temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
                     temp4 = temp.clone();
                     temp4.gagnantClash();
@@ -86,8 +86,8 @@ public class Arbre {
                         }
                     }
                 }
-                //ici on insere dans fils que les jeu existant
-                //si pas de pas de paradox alors temp2,3,5 et 6 n existe pas (etc...)
+                //ici on insere dans fils que les jeu existants
+                //si pas de paradox alors temp2,3,5 et 6 n existe pas (etc...)
                 if (temp2 != null){
                     fils.add(new Arbre(temp2));
                     if (temp5 != null){
@@ -105,7 +105,7 @@ public class Arbre {
                 }
             }
         }
-        //on appelle recursivement create avec touts les fils cree
+        //on appelle recursivement create avec tous les fils crees
         for (Arbre a:fils) {
             a.create();
         }
