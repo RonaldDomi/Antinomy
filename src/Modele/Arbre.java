@@ -12,7 +12,7 @@ public class Arbre {
         fils = new ArrayList<>();
     }
 
-    public void create() throws CloneNotSupportedException {
+    public void create() throws CloneNotSupportedException{
         //condition arret
         //ici ce jeu est une feuille
         if (this.j.joueurGagnant == 1)
@@ -35,10 +35,10 @@ public class Arbre {
 
                 if (temp.infoJoueurs[temp.joueurCourant].existeParadox(temp.codex.getCouleurInterdite())){
                     //pour chaque coup
-                    //on joue le paradox s'il existe et on ne le joue pas
+                    //on joue le paradox si il existe et on le joue pas
                     //respectivement temp2 et temp3
                     if (temp.existeParadoxSuperieur()){
-                        //ici, on donne juste le sens de paradox
+                        //ici, on donne juste sens de paradox
                         temp2 = temp.clone();
                         temp2.coupParadox(1);
                     }
@@ -55,57 +55,46 @@ public class Arbre {
                 //temp5 contient paradox superieur et clash
                 //temp6 contient paradox inferieur et clash
 
-                //ici si les 2 sorcier ont le meme indice on peut avoir un clash
-                //et le joueur adverse doit avoir au moins une gemme
-                if (temp.infoJoueurs[temp.joueurCourant].getPoints() > 0 && temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
+                //ici, si les 2 sorciers on le même indice on peut avoir un clash
+                if (temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
                     temp4 = temp.clone();
-                    temp4.gagnantClash();
-                    //*******************
-                    //echanger les gemmes
-                    //*******************
+                    temp4.coupClash();
+
                     if (temp2 != null){
                         temp5 = temp2.clone();
-                        temp5.gagnantClash();
-                        //*******************
-                        //echanger les gemmes
-                        //*******************
-                        if (temp5.infoJoueurs[(temp5.joueurCourant+1)%2].getPoints() > 0){
-                            temp5.infoJoueurs[temp5.joueurCourant].addPoint();
-                            temp5.infoJoueurs[(temp5.joueurCourant+1)%2].setPoints(temp5.infoJoueurs[(temp5.joueurCourant+1)%2].getPoints() - 1);
-                        }
+                        temp5.coupClash();
                     }
                     if (temp3 != null){
                         temp6 = temp3.clone();
-                        temp6.gagnantClash();
-                        //*******************
-                        //echanger les gemmes
-                        //*******************
-                        if (temp6.infoJoueurs[(temp6.joueurCourant+1)%2].getPoints() > 0){
-                            temp6.infoJoueurs[temp6.joueurCourant].addPoint();
-                            temp6.infoJoueurs[(temp6.joueurCourant+1)%2].setPoints(temp6.infoJoueurs[(temp6.joueurCourant+1)%2].getPoints() - 1);
-                        }
+                        temp6.coupClash();
                     }
                 }
-                //ici on insere dans fils que les jeu existants
+
+                //ici, on insère dans fils que les jeux existants
                 //si pas de paradox alors temp2,3,5 et 6 n existe pas (etc...)
                 if (temp2 != null){
+                    temp2.finTour();
                     fils.add(new Arbre(temp2));
                     if (temp5 != null){
+                        temp5.finTour();
                         fils.add(new Arbre(temp5));
                     }
                 }
                 if (temp3 != null){
+                    temp3.finTour();
                     fils.add(new Arbre(temp3));
                     if (temp6 != null){
+                        temp6.finTour();
                         fils.add(new Arbre(temp6));
                     }
                 }
                 if (temp4 != null) {
+                    temp4.finTour();
                     fils.add(new Arbre(temp4));
                 }
             }
         }
-        //on appelle recursivement create avec tous les fils crees
+        //on appelle récursivement create avec tous les fils cree
         for (Arbre a:fils) {
             a.create();
         }
