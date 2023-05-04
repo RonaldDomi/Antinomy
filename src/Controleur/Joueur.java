@@ -37,20 +37,17 @@ import Modele.Jeu;
 // - tenir compte d'une temporisation écoulée (utilisé dans une IA)
 // - tenir compte d'un coup joué à la souris (utilisé par un joueur humain)
 abstract class Joueur {
-//    Jeu plateau;
-//    int num;
+    Jeu jeu;
+    int num;
 
     // Le joueur connait son numéro, cela lui permet d'inspecter le plateau en
     // sachant
     // repérer ses pions et évaluer où il en est
-    Joueur(int n, Jeu p) {
-//        num = n;
-//        plateau = p;
+    Joueur(int n, Jeu j) {
+        num = n;
+        jeu = j;
     }
 
-//    int num() {
-//        return num;
-//    }
 
     // Méthode appelée pour tous les joueurs une fois le temps écoulé
     // Si un joueur n'est pas concerné, il lui suffit de l'ignorer
