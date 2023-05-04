@@ -92,18 +92,22 @@ class JoueurHumain extends Joueur {
                 return false;
             case 2: //paradox droite/gauche
                 if (indexCarte > jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte <= jeu.getInfoJoueurCourant().getSorcierIndice()+3){
-                    if (jeu.getJoueurCourant() == 0 && jeu.existeParadoxSuperieur())
+                    if (jeu.getJoueurCourant() == 0 && jeu.existeParadoxSuperieur()){
                         jeu.coupParadox(+1);
-                    else if (jeu.getJoueurCourant() == 0 && jeu.existeParadoxInferieur())
+                    }
+                    else if (jeu.getJoueurCourant() == 1 && jeu.existeParadoxInferieur()){
                         jeu.coupParadox(-1);
+                    }
                     System.out.println("Paradox, selection des carte dans le future");
                     return true;
                 }
-                else if (indexCarte < jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte >= jeu.getInfoJoueurCourant().getSorcierIndice()-3 && jeu.existeParadoxInferieur()) {
-                    if (jeu.getJoueurCourant() == 0 && jeu.existeParadoxInferieur())
+                else if (indexCarte < jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte >= jeu.getInfoJoueurCourant().getSorcierIndice()-3){
+                    if (jeu.getJoueurCourant() == 0 && jeu.existeParadoxInferieur()){
                         jeu.coupParadox(-1);
-                    else if (jeu.getJoueurCourant() == 0 && jeu.existeParadoxSuperieur())
+                    }
+                    else if (jeu.getJoueurCourant() == 1 && jeu.existeParadoxSuperieur()){
                         jeu.coupParadox(+1);
+                    }
                     System.out.println("Paradox, selection des carte dans le passé");
                     return true;
                 }

@@ -133,21 +133,22 @@ public class Jeu extends Observable implements Cloneable{
 		if(!getInfoJoueurCourant().existeParadox(codex.getCouleurInterdite()))
 			return false;
 
-		if(!(direction == 1 && existeParadoxSuperieur() || direction == -1 && existeParadoxInferieur()))
+		if(!((direction == 1 && existeParadoxSuperieur()) || (direction == -1 && existeParadoxInferieur())))
 			return false;
 
 		Collections.shuffle(Arrays.asList(getInfoJoueurCourant().getMain()));
 		if (direction == 1){
 			int indexMain=2;
 			for (int i = 0; i < 3; i++) {
-				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1)));
+				echangerCarteMainContinuum(indexMain,
+						getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction * getInfoJoueurCourant().getDirectionMouvement()));
 				indexMain--;
 			}
 
 		}else{
 			int indexMain=0;
 			for (int i = 0; i < 3; i++) {
-				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction));
+				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction* getInfoJoueurCourant().getDirectionMouvement()));
 				indexMain++;
 			}
 		}
