@@ -49,8 +49,8 @@ public class Historique {
             return null;
         }
         Jeu dernierJoue;
-        dernierJoue = listeJeu.get(jeuIndex);
         jeuIndex--;
+        dernierJoue = listeJeu.get(jeuIndex);
         return dernierJoue;
     }
 
@@ -90,7 +90,7 @@ public class Historique {
         return jeuIndex + "\n" + outputList;
     }
 
-    public Historique Clone(){
+    public Historique clone(){
         Historique h = new Historique();
         h.listeJeu = (LinkedList<Jeu>) listeJeu.clone();
         h.jeuIndex = jeuIndex;

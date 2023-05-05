@@ -44,8 +44,7 @@ public class Antinomy {
 //		in = Configuration.ouvre("Niveaux/Original.txt");
 //		Configuration.info("Niveaux trouvés");
 //
-		LecteurNiveaux l = null;
-		Jeu j = new Jeu(l);
+		Jeu j = new Jeu();
 		CollecteurEvenements control = new ControleurMediateur(j);
 //		switch (typeInterface) {
 		InterfaceGraphique.demarrer(j, control);

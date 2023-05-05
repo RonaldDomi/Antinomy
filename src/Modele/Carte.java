@@ -20,7 +20,7 @@ public class Carte implements Cloneable {
 
 	public Carte(String stringCarte){
 //		Carte:  couleur|symbole|numero
-		String[] strings = stringCarte.split("|");
+		String[] strings = stringCarte.split("\\|");
 
 		// parse "Couleur" to Couleur
 		this.couleur = Couleur.parseCouleur(strings[0]);
@@ -55,18 +55,12 @@ public class Carte implements Cloneable {
 	}
 
 	@Override
-	public Carte clone() throws CloneNotSupportedException {
-		Carte c = (Carte) super.clone();
-		c = new Carte(numero, couleur, symbole);
+	public Carte clone() {
+//		Carte c = (Carte) super.clone();
+		Carte c = new Carte(numero, couleur, symbole);
 		return c;
 	}
-	
-	
-	public Carte deepCopy(){
-		return new Carte(this.getNumero(), this.getCouleur(),this.getSymbole());
-	}
-	
-	
+
 	public boolean sontEquivalentes(Carte carte){
 		return this.getNumero() == carte.getNumero() && this.getSymbole() == carte.getSymbole() && this.getCouleur() == carte.getCouleur();
 	}
