@@ -36,11 +36,12 @@ import Vue.InterfaceUtilisateur;
 public class ControleurMediateur implements CollecteurEvenements {
 	Jeu jeu;
 
-	int etape = 0;
-	int indexCarteMain = -1;
-	int indexCarteContinuum = -1;
+	Joueur[][] joueurs;
+	int [] typeJoueur;
+	int joueurCourant;
 
 	InterfaceUtilisateur vue;
+
 //	Sequence<Animation> animations;
 	double vitesseAnimations;
 	int lenteurPas;
@@ -54,6 +55,15 @@ public class ControleurMediateur implements CollecteurEvenements {
 	public ControleurMediateur(Jeu j) {
 		jeu = j;
 
+		jeu = j;
+		joueurs = new Joueur[2][2];
+		typeJoueur = new int[2];
+		for (int i = 0; i < joueurs.length; i++) {
+			joueurs[i][0] = new JoueurHumain(i, jeu);
+//			joueurs[i][1] = new JoueurIA(i, jeu);
+			typeJoueur[i] = 0;
+		}
+
 //		animations = Configuration.nouvelleSequence();
 		vitesseAnimations = Configuration.vitesseAnimations;
 		lenteurPas = Configuration.lenteurPas;
@@ -65,21 +75,17 @@ public class ControleurMediateur implements CollecteurEvenements {
 		animationsActives = false;
 	}
 
+
 	@Override
-	public void clicSouris(int type, int indexCarte) {
-		switch (type){
-			case 1:
-				clicMain(indexCarte);
-				break;
-			case 2:
-				clicContinuum(indexCarte);
-				break;
-			case 3:
-				clicMain(indexCarte);
-				break;
-			default:
-				break;
-		}
+	public void clicSouris(int l, int c) {
+		// Lors d'un clic, on le transmet au joueur courant.
+		// Si un coup a effectivement été joué (humain, coup valide), on change de joueur.
+		if (joueurs[joueurCourant][typeJoueur[joueurCourant]].jeu(l, c))
+			changeJoueur();
+	}
+
+	void changeJoueur() {
+		joueurCourant = (joueurCourant + 1) % joueurs.length;
 	}
 
 	@Override
@@ -100,123 +106,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 		}
 	}
 
-	void clicMain(int indexCarte){
-		switch (etape){
-			case 0: //debut de jeu
-				break;
-			case 1: //debut de tour
-				System.out.println("Joueur " + jeu.getJoueurCourant() + " selectionne dans ça main la carte d'index " + indexCarte);
-				indexCarteMain = indexCarte;
-				vue.selectionnerCarteMain(indexCarteMain);
-				vue.selectionnerCarteContinuum(jeu.getContinuum().getCoupsPossibles(jeu.getInfoJoueurCourant().getCarteMain(indexCarteMain), jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection()));
-				break;
-			default:
-				break;
-		}
-	}
-
-	void clicContinuum(int indexCarte){
-		switch (etape){
-			case 0: //debut de jeu
-				if (jeu.coupChangerPositionSorcier(indexCarte)){
-					etapeSuivante();
-					System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
-				}
-				break;
-			case 1: //debut de tour
-				if (indexCarteMain != -1){
-					java.util.LinkedList<Integer> indexPossible = jeu.getContinuum().getCoupsPossibles(jeu.getInfoJoueurCourant().getCarteMain(indexCarteMain), jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection());
-					for (Integer index:
-							indexPossible) {
-						if (index == indexCarte){
-							System.out.println("Joueur " + jeu.getJoueurCourant() + " échange la carte de ça main " + indexCarteMain + " avec la carte du continuum " + indexCarte);
-							jeu.coupEchangeCarteMainContinuum(indexCarteMain, indexCarte);
-							indexCarteMain = -1;
-							etapeSuivante();
-							vue.selectionnerCarteMain(-1);
-							vue.selectionnerCarteContinuum(null);
-							break;
-						}
-					}
-				}
-				break;
-			case 2: //paradox droite/gauche
-				if (indexCarte > jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte <= jeu.getInfoJoueurCourant().getSorcierIndice()+3 && jeu.existeParadoxSuperieur()){
-					if (jeu.getJoueurCourant() == 0)
-						jeu.coupParadox(+1);
-					else
-						jeu.coupParadox(-1);
-					etapeSuivante();
-					System.out.println("Paradox, selection des carte dans le future");
-				}
-				else if (indexCarte < jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte >= jeu.getInfoJoueurCourant().getSorcierIndice()-3 && jeu.existeParadoxInferieur()) {
-					if (jeu.getJoueurCourant() == 0)
-						jeu.coupParadox(-1);
-					else
-						jeu.coupParadox(+1);
-					etapeSuivante();
-					System.out.println("Paradox, selection des carte dans le passé");
-				}
-				break;
-			default:
-				break;
-		}
-	}
-
-	void etapeSuivante(){
-		switch (etape){
-			case (0):
-				System.out.println();
-				System.out.println("Echange Carte :");
-				if (jeu.getInfoJoueurs()[jeu.adversaire()].getSorcierIndice() == 9)
-					etape = 0;
-				else
-					etape = 1;
-				jeu.finTour();
-				break;
-			case (1):
-				if (jeu.getInfoJoueurCourant().existeParadox(jeu.getCodex().getCouleurInterdite())){
-					System.out.println();
-					System.out.println("Paradox :");
-					etape = 2;
-				} else if (jeu.existeClash()) {
-					jeu.coupClash();
-					System.out.println();
-					System.out.println("Clash :");
-
-					etape = 1;
-					System.out.println();
-					System.out.println("Echange Carte :");
-					jeu.finTour();
-				}
-				else {
-					etape = 1;
-					System.out.println();
-					System.out.println("Echange Carte :");
-					jeu.finTour();
-				}
-				break;
-			case (2):
-				if (jeu.existeClash()) {
-					etape = 3;
-					jeu.coupClash();
-					System.out.println();
-					System.out.println("Clash :");
-
-					etape = 1;
-					System.out.println();
-					System.out.println("Echange Carte :");
-					jeu.finTour();
-				}
-				else {
-					etape = 1;
-					System.out.println();
-					System.out.println("Echange Carte :");
-					jeu.finTour();
-				}
-				break;
-		}
-	}
 
 
 //	void joue(Coup cp) {

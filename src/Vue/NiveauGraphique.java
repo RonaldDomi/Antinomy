@@ -32,6 +32,7 @@ import Patterns.Observateur;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -44,7 +45,7 @@ import static java.lang.Math.min;
 
 public class NiveauGraphique extends JComponent implements Observateur {
 	Image carteVide, carteDos, carteDosR, bleu, rouge, violet, vert, clef, crane, papier, champignon, diamant,
-			codexBleu, codexVert, codexRouge, codexViolet, fleche;
+			codexBleu, codexVert, codexRouge, codexViolet, fleche, bouton;
 	Jeu j;
 	int largeurCarte;
 	int hauteurCarte;
@@ -90,6 +91,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		codexVert = lisImage("CodexVert");
 		codexViolet = lisImage("CodexViolet");
 		fleche = lisImage("Fleche");
+		bouton = lisImage("Bouton");
 	}
 
 	private Image lisImage(String nom) {
@@ -107,13 +109,15 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	public void paintComponent(Graphics g) {
 		Graphics2D drawable = (Graphics2D) g;
 
+		drawable.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
 		joueurCourant = j.getJoueurCourant();
 
 		largeur = getSize().width;
 		hauteur = getSize().height;
 
-		largeurCarte = min(largeur/14, hauteur/6 * 54 / 84);
-		hauteurCarte = min(hauteur/6, largeur/14 * 84 / 54);
+		largeurCarte = min(largeur/16, hauteur/6 * 54 / 84);
+		hauteurCarte = min(hauteur/6, largeur/16 * 84 / 54);
 		padding = largeurCarte / 4;
 
 		centre_largeur = largeur / 2;
@@ -186,10 +190,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 		//bouton
 		deb_bouton = padding;
-		g.fillRect(padding, padding, largeurCarte, largeurCarte);
-		g.fillRect(2*padding + largeurCarte, padding, largeurCarte, largeurCarte);
-		g.fillRect(3*padding + 2*largeurCarte, padding, largeurCarte, largeurCarte);
-		g.fillRect(4*padding + 3*largeurCarte, padding, largeurCarte, largeurCarte);
+		for (int k = 0; k < 4; k++) {
+			tracer(drawable, bouton, (k+1)*padding + k*largeurCarte, padding, largeurCarte, largeurCarte);
+		}
 	}
 
 	protected void carteMain(Graphics2D g, Carte[][] mains){

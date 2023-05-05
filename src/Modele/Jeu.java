@@ -120,8 +120,8 @@ public class Jeu extends Observable implements Cloneable{
 
 	public boolean coupChangerPositionSorcier(int indexCarte){
 		java.util.LinkedList<Integer> indexPossible = continuum.getIndexSorcierPossible(codex.getCouleurInterdite());
-		for (Integer index:
-				indexPossible) {
+		
+		for (Integer index: indexPossible) {
 			if (index == indexCarte){
 				getInfoJoueurCourant().setSorcierIndice(indexCarte);
 				metAJour();
@@ -130,14 +130,12 @@ public class Jeu extends Observable implements Cloneable{
 		}
 
 		return false;
-
 	}
 
 	public boolean coupEchangeCarteMainContinuum(int indexMain, int indexContinuum){
-
 		java.util.LinkedList<Integer> indexPossible = continuum.getCoupsPossibles(getInfoJoueurCourant().getCarteMain(indexMain), getInfoJoueurCourant().getSorcierIndice(), getInfoJoueurCourant().getDirection());
-		for (Integer index:
-				indexPossible) {
+		
+		for (Integer index: indexPossible) {
 			if (index == indexContinuum){
 				infoJoueurs[joueurCourant].setSorcierIndice(indexContinuum);
 				echangerCarteMainContinuum(indexMain, indexContinuum);
@@ -153,21 +151,22 @@ public class Jeu extends Observable implements Cloneable{
 		if(!getInfoJoueurCourant().existeParadox(codex.getCouleurInterdite()))
 			return false;
 
-		if(!(direction == 1 && existeParadoxSuperieur() || direction == -1 && existeParadoxInferieur()))
+		if(!((direction == 1 && existeParadoxSuperieur()) || (direction == -1 && existeParadoxInferieur())))
 			return false;
 
 		Collections.shuffle(Arrays.asList(getInfoJoueurCourant().getMain()));
 		if (direction == 1){
 			int indexMain=2;
 			for (int i = 0; i < 3; i++) {
-				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1)));
+				echangerCarteMainContinuum(indexMain,
+						getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction * getInfoJoueurCourant().getDirectionMouvement()));
 				indexMain--;
 			}
 
 		}else{
 			int indexMain=0;
 			for (int i = 0; i < 3; i++) {
-				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction));
+				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction* getInfoJoueurCourant().getDirectionMouvement()));
 				indexMain++;
 			}
 		}
