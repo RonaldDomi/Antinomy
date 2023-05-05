@@ -76,12 +76,24 @@ public class ControleurMediateur implements CollecteurEvenements {
 	}
 
 
+
+	public void ajouteInterfaceUtilisateur(InterfaceUtilisateur v) {
+		vue = v;
+		for (int i = 0; i < joueurs.length; i++) {
+			joueurs[i][0].ajouteInterfaceUtilisateur(vue);
+//			joueurs[i][1].ajouteInterfaceUtilisateur(vue);
+		}
+	}
+
+
 	@Override
 	public void clicSouris(int l, int c) {
 		// Lors d'un clic, on le transmet au joueur courant.
 		// Si un coup a effectivement été joué (humain, coup valide), on change de joueur.
-		if (joueurs[joueurCourant][typeJoueur[joueurCourant]].jeu(l, c))
+		if (joueurs[joueurCourant][typeJoueur[joueurCourant]].jeu(l, c)){
 			changeJoueur();
+			joueurs[joueurCourant][typeJoueur[joueurCourant]].afficherPreSelection();
+		}
 	}
 
 	void changeJoueur() {
@@ -169,10 +181,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 			default:
 				System.out.println("Touche inconnue : " + touche);
 		}
-	}
-
-	public void ajouteInterfaceUtilisateur(InterfaceUtilisateur v) {
-		vue = v;
 	}
 
 	@Override

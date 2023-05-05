@@ -216,7 +216,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	}
 
 	public void changeEtape() {
-//		niv.changeEtape();
+		niv.changeEtape();
 	}
 
 

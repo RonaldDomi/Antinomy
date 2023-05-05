@@ -26,6 +26,7 @@ package Controleur;
  */
 
 import Modele.Jeu;
+import Vue.InterfaceUtilisateur;
 
 
 class JoueurHumain extends Joueur {
@@ -35,6 +36,23 @@ class JoueurHumain extends Joueur {
 
     JoueurHumain(int n, Jeu p) {
         super(n, p);
+    }
+
+    void ajouteInterfaceUtilisateur(InterfaceUtilisateur vue){
+        this.vue = vue;
+    }
+
+    @Override
+    int getEtape(){
+        return etape;
+    }
+
+    void afficherPreSelection(){
+        switch (etape){
+            case 0:
+                vue.selectionnerCarteContinuum(jeu.getContinuum().getIndexSorcierPossible(jeu.getCodex().getCouleurInterdite()));
+                break;
+        }
     }
 
     @Override
@@ -61,8 +79,8 @@ class JoueurHumain extends Joueur {
             case 1: //debut de tour
                 System.out.println("Joueur " + jeu.getJoueurCourant() + " selectionne dans ça main la carte d'index " + indexCarte);
                 indexCarteMain = indexCarte;
-//                vue.selectionnerCarteMain(indexCarteMain);
-//                vue.selectionnerCarteContinuum(jeu.getContinuum().getCoupsPossibles(jeu.getInfoJoueurCourant().getCarteMain(indexCarteMain), jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection()));
+                vue.selectionnerCarteMain(indexCarte);
+                vue.selectionnerCarteContinuum(jeu.getContinuum().getCoupsPossibles(jeu.getInfoJoueurCourant().getCarteMain(indexCarte), jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection()));
                 return false;
             default:
                 return false;
@@ -83,8 +101,8 @@ class JoueurHumain extends Joueur {
                             System.out.println("Joueur " + jeu.getJoueurCourant() + " échange la carte de ça main " + indexCarteMain + " avec la carte du continuum " + indexCarte);
                             jeu.coupEchangeCarteMainContinuum(indexCarteMain, indexCarte);
                             indexCarteMain = -1;
-//                            vue.selectionnerCarteMain(-1);
-//                            vue.selectionnerCarteContinuum(null);
+                            vue.selectionnerCarteMain(-1);
+                            vue.selectionnerCarteContinuum(null);
                             return true;
                         }
                     }
@@ -121,6 +139,7 @@ class JoueurHumain extends Joueur {
         switch (etape) {
             case (0):
                 etape = 1;
+                vue.selectionnerCarteContinuum(null);
                 jeu.finTour();
                 return true;
             case (1):
@@ -130,23 +149,35 @@ class JoueurHumain extends Joueur {
                     etape = 2;
                     return false;
                 } else if (jeu.existeClash()) {
+                    System.out.println();
+                    System.out.println("Clash :");
                     jeu.coupClash();
                     etape = 1;
+                    System.out.println();
+                    System.out.println("Debut Tour :");
                     jeu.finTour();
                     return true;
                 } else {
                     etape = 1;
+                    System.out.println();
+                    System.out.println("Debut Tour :");
                     jeu.finTour();
                     return true;
                 }
             case (2):
                 if (jeu.existeClash()) {
+                    System.out.println();
+                    System.out.println("Clash :");
                     jeu.coupClash();
                     jeu.finTour();
+                    System.out.println();
+                    System.out.println("Debut Tour :");
                     return true;
                 } else {
                     etape = 1;
                     jeu.finTour();
+                    System.out.println();
+                    System.out.println("Debut Tour :");
                     return true;
                 }
             default:

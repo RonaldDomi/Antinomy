@@ -45,7 +45,7 @@ import static java.lang.Math.min;
 
 public class NiveauGraphique extends JComponent implements Observateur {
 	Image carteVide, carteDos, carteDosR, bleu, rouge, violet, vert, clef, crane, papier, champignon, diamant,
-			codexBleu, codexVert, codexRouge, codexViolet, fleche, bouton;
+			codexBleu, codexVert, codexRouge, codexViolet, fleche, bouton, carteSelect;
 	Jeu j;
 	int largeurCarte;
 	int hauteurCarte;
@@ -92,6 +92,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		codexViolet = lisImage("CodexViolet");
 		fleche = lisImage("Fleche");
 		bouton = lisImage("Bouton");
+		carteSelect = lisImage("CarteSelect");
 	}
 
 	private Image lisImage(String nom) {
@@ -159,15 +160,22 @@ public class NiveauGraphique extends JComponent implements Observateur {
 //		g.setFont( medievalFont);
 
 		FontMetrics m = g.getFontMetrics();
-		String s_j0 = "Joueur " + 0 + "   " + j.getInfoJoueurs()[0].getPoints() + "/5";
-		String s_j1 = "Joueur " + 1 + "   " + j.getInfoJoueurs()[1].getPoints() + "/5";
+		String s_j[] = new String[2];
+
+		s_j[joueurCourant] = "• ";
+		s_j[j.adversaire()] = "  ";
+
+		s_j[0] += "Joueur " + 0 + "   " + j.getInfoJoueurs()[0].getPoints() + "/5";
+		s_j[1] += "Joueur " + 1 + "   " + j.getInfoJoueurs()[1].getPoints() + "/5";
+
+		//Texte joueur 0
+		g.drawString(s_j[0], padding, hauteur-padding);
+		tracer(drawable, diamant, m.stringWidth(s_j[0]) + 2*padding, hauteur-padding-largeurCarte/2, largeurCarte/2, largeurCarte/2);
+//		g.drawString(s_j[0], largeur - m.stringWidth(s_j[0]) - padding - largeurCarte/2, hauteur-padding);
+//		tracer(drawable, diamant, largeur - padding - largeurCarte/2,  hauteur-padding-largeurCarte/2, largeurCarte/2, largeurCarte/2);
 
 		//Texte joueur 1
-		g.drawString(s_j0, padding, hauteur-padding);
-		tracer(drawable, diamant, m.stringWidth(s_j0) + 2*padding, hauteur-padding-largeurCarte/2, largeurCarte/2, largeurCarte/2);
-
-		//Texte joueur 2
-		g.drawString(s_j1, largeur - m.stringWidth(s_j1) - padding - largeurCarte/2, 0 + m.getHeight());
+		g.drawString(s_j[1], largeur - m.stringWidth(s_j[1]) - padding*2 - largeurCarte/2, 0 + m.getHeight());
 		tracer(drawable, diamant, largeur - padding - largeurCarte/2, 0 + m.getHeight() - largeurCarte/2, largeurCarte/2, largeurCarte/2);
 
 		//couleur interdite
@@ -218,27 +226,28 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	protected void carteContinuum(Graphics2D g, Carte[] continuum){
 		int x, i;
 		if (indexCarteSelectionneeContinuum != null){
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-		}
-			for (i = -4; i < 5; i++) {
-				x = centre_largeur + i * (largeurCarte + padding);
-
-				Couleur couleur = continuum[i+4].getCouleur();
-				Symbole symbole = continuum[i+4].getSymbole();
-				int numero = continuum[i+4].getNumero();
-
-				dessinerCarte(g, x, centre_hauteur-hauteurCarte / 2, largeurCarte, hauteurCarte, couleur, symbole, numero);
-
-			}
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-		if (indexCarteSelectionneeContinuum != null){
 			for (Integer elem : indexCarteSelectionneeContinuum){
 				x = centre_largeur + (elem-4) * (largeurCarte + padding);
-				Couleur couleur = continuum[elem].getCouleur();
-				Symbole symbole = continuum[elem].getSymbole();
-				int numero = continuum[elem].getNumero();
-				dessinerCarte(g, x, centre_hauteur-hauteurCarte / 2, largeurCarte, hauteurCarte, couleur, symbole, numero);
+				tracer(g, carteSelect, x-padding/4,  centre_hauteur-hauteurCarte / 2- padding/4, largeurCarte + padding/2, hauteurCarte+padding/2);
 			}
+		}
+//		int deb = 1, fin = 3;
+//		int deb1 = 5, fin2 = 7;
+		for (i = -4; i < 5; i++) {
+			x = centre_largeur + i * (largeurCarte + padding);
+
+			Couleur couleur = continuum[i+4].getCouleur();
+			Symbole symbole = continuum[i+4].getSymbole();
+			int numero = continuum[i+4].getNumero();
+
+//			if (i+4 >= deb && i+4 <= fin){
+//				x = x+(1-(i+4-deb-1)-1)*padding;
+//			}
+//			else if (i+4 >= deb1 && i+4 <= fin2){
+//				x = x+(1-(i+4-deb-1))*padding;
+//			}
+			dessinerCarte(g, x, centre_hauteur-hauteurCarte / 2, largeurCarte, hauteurCarte, couleur, symbole, numero);
+
 		}
 
 		x = centre_largeur + i * (largeurCarte + padding);
