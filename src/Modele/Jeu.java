@@ -210,6 +210,19 @@ public class Jeu extends Observable implements Cloneable{
 		historique.ajouter_jeu(jeuClone);
 	}
 
+	public void finTour(boolean hist){
+		joueurCourant = adversaire();
+		Jeu jeuClone = null;
+		tour++;
+		try{
+			jeuClone = clone();
+		}catch(CloneNotSupportedException e){
+			System.out.println("Error on update historique: clone failed\n");
+		}
+		if( hist)
+			historique.ajouter_jeu(jeuClone);
+	}
+
 	public boolean existeClash(){
 		return infoJoueurs[0].getSorcierIndice() == infoJoueurs[1].getSorcierIndice();
 	}

@@ -7,7 +7,9 @@ public class Arbre {
     Jeu j;
     List<Arbre> fils;
 
-    int profondeur;
+    int profondeur, idMain, idContinuum;
+
+    Boolean paradox, paradoxBas, paradoxHaut, clash;
 
     public Arbre(Jeu j){
         this.j = j;
@@ -20,13 +22,28 @@ public class Arbre {
         fils = new ArrayList<>();
         this.profondeur = profondeur;
     }
+
+    public Arbre(Jeu j, int profondeur, boolean paradox, boolean paradoxHaut, boolean paradoxBas, boolean clash, int idMain, int idContinuum){
+        this.paradox = paradox;
+        this.paradoxHaut = paradoxHaut;
+        this.paradoxBas = paradoxBas;
+        this.clash = clash;
+        this.idMain = idMain;
+        this.idContinuum = idContinuum;
+        this.j = j;
+        fils = new ArrayList<>();
+        this.profondeur = profondeur;
+    }
+
+
     public void create(){
         //condition arret
         //ici ce jeu est une feuille
-        if (this.j.joueurGagnant == 1 || this.profondeur >= 1)
+        if (this.j.joueurGagnant == 1 || this.profondeur >= 5)
             return;
 
-        Jeu temp2 = null, temp3 = null, temp4 = null, temp5 = null, temp6 = null;
+        Jeu temp = null, temp2 = null;
+        boolean paradox = false, paradoxBas = false, paradoxHaut = false, clash = false;
         //etape 1
         //pour chaque carte choisie
         for (int i = 0; i < 3; i++) {
@@ -34,7 +51,6 @@ public class Arbre {
             List<Integer> cpPossible = j.continuum.getCoupsPossibles(j.getMainJoueurCourant()[i], j.getInfoJoueurCourant().getSorcierIndice(), j.getInfoJoueurCourant().getDirectionMouvement());
             for (int c: cpPossible) {
                 //etape 2
-                Jeu temp = null;
                 try {
                     temp = j.clone();
                 } catch (CloneNotSupportedException e) {
@@ -46,87 +62,52 @@ public class Arbre {
                 temp.coupEchangeCarteMainContinuum(i, c);
 
                 if (temp.infoJoueurs[temp.joueurCourant].existeParadox(temp.codex.getCouleurInterdite())){
+                    paradox = true;
                     //pour chaque coup
                     //on joue le paradox si il existe et on le joue pas
                     //respectivement temp2 et temp3
                     if (temp.existeParadoxSuperieur()){
+                        paradoxHaut = true;
+                        if (temp.existeParadoxInferieur()){
+                            paradoxBas = true;
+                            try {
+                                temp2 = temp.clone();
+                            } catch (CloneNotSupportedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            temp2.coupParadox(-1);
+                        }
                         //ici, on donne juste sens de paradox
-                        try {
-                            temp2 = temp.clone();
-                        } catch (CloneNotSupportedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        temp2.coupParadox(1);
+                        temp.coupParadox(1);
                     }
-                    if (temp.existeParadoxInferieur()){
-                        try {
-                            temp3 = temp.clone();
-                        } catch (CloneNotSupportedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        temp3.coupParadox(-1);
+                    else {
+                        paradoxBas = true;
+                        temp.coupParadox(-1);
                     }
                 }
-
-                //temp ne contient pas de clash et pas de paradox
-                //temp2 contient paradox superieur et pas de clash
-                //temp3 contient paradox inferieur et pas de clash
-                //temp4 contient clash et pas de paradox
-                //temp5 contient paradox superieur et clash
-                //temp6 contient paradox inferieur et clash
 
                 //ici, si les 2 sorciers on le même indice on peut avoir un clash
-                if (temp.infoJoueurs[temp.joueurCourant].getSorcierIndice() == temp.infoJoueurs[(temp.joueurCourant+1)%2].getSorcierIndice()){
-                    try {
-                        temp4 = temp.clone();
-                    } catch (CloneNotSupportedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    temp4.coupClash();
+                if (temp.existeClash()){
+                    clash = true;
+                    temp.coupClash();
 
                     if (temp2 != null){
-                        try {
-                            temp5 = temp2.clone();
-                        } catch (CloneNotSupportedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        temp5.coupClash();
+                        temp2.coupClash();
                     }
-                    if (temp3 != null){
-                        try {
-                            temp6 = temp3.clone();
-                        } catch (CloneNotSupportedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        temp6.coupClash();
-                    }
-                }
 
+                }
 
                 //ici, on insère dans fils que les jeux existants
-                //si pas de paradox alors temp2,3,5 et 6 n existe pas (etc...)
-                temp.finTour();
-                fils.add(new Arbre(temp, profondeur + 1));
-
-                if (temp2 != null){
-                    temp2.finTour();
-                    fils.add(new Arbre(temp2, profondeur + 1));
-                    if (temp5 != null){
-                        temp5.finTour();
-                        fils.add(new Arbre(temp5, profondeur + 1));
-                    }
+                // le false de fintour pour ne pas lancer l'historique
+                temp.finTour(false);
+                if (temp2 == null) {
+                    fils.add(new Arbre(temp, profondeur + 1, paradox, paradoxHaut, paradoxBas, clash, i, c));
                 }
-                if (temp3 != null){
-                    temp3.finTour();
-                    fils.add(new Arbre(temp3, profondeur + 1));
-                    if (temp6 != null){
-                        temp6.finTour();
-                        fils.add(new Arbre(temp6, profondeur + 1));
-                    }
-                }
-                if (temp4 != null) {
-                    temp4.finTour();
-                    fils.add(new Arbre(temp4, profondeur + 1));
+                else {
+                    //si temp2 existe alors le paradox haut est dans temp et le bas est dans temp2
+                    fils.add(new Arbre(temp, profondeur + 1, paradox, paradoxHaut, false, clash, i, c));
+                    temp2.finTour(false);
+                    fils.add(new Arbre(temp2, profondeur + 1, paradox, false, paradoxBas, clash, i, c));
                 }
             }
         }
