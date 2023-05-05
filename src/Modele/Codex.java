@@ -9,6 +9,8 @@ public class Codex implements Cloneable{
 		this.couleurInterdite = couleurInterdite;
 	}
 
+	public Codex(){};
+
 	public Codex(String stringCodex){
 //		Codex: carte,couleur
 		String[] strings = stringCodex.split(",");
@@ -25,10 +27,9 @@ public class Codex implements Cloneable{
 	void setCarte(Carte carte){ this.carte = carte;}
 	void setCouleurInterdite(Couleur couleurInterdite){this.couleurInterdite = couleurInterdite;}
 
-	public Codex clone() throws CloneNotSupportedException {
-		Codex c = (Codex) super.clone();
-		c.setCouleurInterdite(couleurInterdite);
-		c.setCarte(carte);
+	public Codex clone(){
+//		Codex c = (Codex) super.clone();
+		Codex c = new Codex(this.carte, this.couleurInterdite);
 		return c;
 	}
 

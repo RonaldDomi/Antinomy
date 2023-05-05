@@ -24,6 +24,7 @@ public class InfoJoueur implements Cloneable{
 	public InfoJoueur(String stringInfo){
 //		InfoJoueur: carte1,carte2,carte3,points,directionMouvement,sorcierIndice
 		String[] strings = stringInfo.split(",");
+		main = new Carte[3];
 		main[0] = new Carte(strings[0]);
 		main[1] = new Carte(strings[1]);
 		main[2] = new Carte(strings[2]);
@@ -129,14 +130,14 @@ public class InfoJoueur implements Cloneable{
 	}
 
 	public InfoJoueur clone() throws CloneNotSupportedException{
-		InfoJoueur j = (InfoJoueur) super.clone();
+//		InfoJoueur j = (InfoJoueur) super.clone();
+		InfoJoueur j = new InfoJoueur(this.directionMouvement, this.r);
+		j.main = new Carte[3];
 		for (int i = 0; i < 3; i++) {
 			j.main[i] = main[i].clone();
 		}
 		j.points = points;
-		j.directionMouvement = directionMouvement;
 		j.sorcierIndice = sorcierIndice;
-		j.r = r;
 		return j;
 	}
 

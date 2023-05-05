@@ -11,9 +11,12 @@ public class Continuum implements Cloneable {
 		this.continuum = continuum;
 	}
 
+	Continuum(){}
+
 	Continuum(String stringContinuum){
 //		Continuum: carte1,carte2,carte3,....
 		String[] strings = stringContinuum.split(",");
+		this.continuum = new Carte[9];
 		for(int i = 0; i < strings.length; i++){
 			continuum[i] = new Carte(strings[i]);
 		}
@@ -122,7 +125,9 @@ public class Continuum implements Cloneable {
 
 	@Override
 	public Continuum clone() throws CloneNotSupportedException {
-		Continuum c = (Continuum) super.clone();
+//		Continuum c = (Continuum) super.clone();
+		Continuum c = new Continuum();
+		c.continuum = new Carte[9];
 		for (int i = 0; i < 9; i++) {
 			c.continuum[i] = continuum[i].clone();
 		}

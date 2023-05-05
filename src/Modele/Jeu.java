@@ -37,8 +37,6 @@ import static java.lang.Math.abs;
 
 public class Jeu extends Observable implements Cloneable{
 	///////////
-	LecteurNiveaux l;
-
 	Random r;
 
 	int tour; //0 à +inf
@@ -51,8 +49,7 @@ public class Jeu extends Observable implements Cloneable{
 	
 	
 	
-	public Jeu(LecteurNiveaux lect) {
-		l = lect;
+	public Jeu() {
 		r = new Random();
 
 		Deck d = new Deck();
@@ -62,8 +59,12 @@ public class Jeu extends Observable implements Cloneable{
 		infoJoueurs[0].setMain(d.distribuer(3));
 		infoJoueurs[1] = new InfoJoueur(-1, r);
 		infoJoueurs[1].setMain(d.distribuer(3));
+		historique = new Historique();
 
 		codex = new Codex(d.distribuer(1)[0], continuum.getCarteContinuum(0).getCouleur());
+		Jeu jeuClone = new Jeu(this);
+
+		historique.ajouter_jeu(jeuClone);
 
 		joueurCourant = 0;
 		joueurGagnant = -1;
@@ -75,14 +76,31 @@ public class Jeu extends Observable implements Cloneable{
 //		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant
 		String[] stringJeuSep = stringJeu.split(";");
 		this.continuum = new Continuum(stringJeuSep[0]);
+		this.infoJoueurs = new InfoJoueur[2];
 		this.infoJoueurs[0] = new InfoJoueur(stringJeuSep[1]);
 		this.infoJoueurs[1] = new InfoJoueur(stringJeuSep[2]);
 		this.tour = Integer.parseInt(stringJeuSep[3]);
 		this.codex = new Codex(stringJeuSep[4]);
 		this.joueurCourant = Integer.parseInt(stringJeuSep[5]);
 		this.joueurGagnant = Integer.parseInt(stringJeuSep[6]);
+	}
 
-		this.tour = Integer.parseInt(stringJeuSep[2]);
+	public Jeu(Jeu j){
+		this.r = j.r;
+		this.joueurCourant = j.joueurCourant;
+		this.joueurGagnant = j.joueurGagnant;
+		this.tour = j.tour;
+
+		this.infoJoueurs = new InfoJoueur[2];
+		try{
+			this.infoJoueurs[0] = j.infoJoueurs[0].clone();
+			this.infoJoueurs[1] = j.infoJoueurs[1].clone();
+			this.continuum = j.continuum.clone();
+		}catch(CloneNotSupportedException e){
+			System.out.println("Could not clone Jeu in Jeu.constructor(jeu)");
+		}
+		this.historique = j.historique;
+		this.codex = j.codex.clone();
 	}
 
 //	public Coup elaboreCoup(int x, int y) {
@@ -182,7 +200,14 @@ public class Jeu extends Observable implements Cloneable{
 
 	public void finTour(){
 		joueurCourant = adversaire();
+		Jeu jeuClone = null;
 		tour++;
+		try{
+			jeuClone = clone();
+		}catch(CloneNotSupportedException e){
+			System.out.println("Error on update historique: clone failed\n");
+		}
+		historique.ajouter_jeu(jeuClone);
 	}
 
 	public boolean existeClash(){
@@ -255,19 +280,22 @@ public class Jeu extends Observable implements Cloneable{
 	public int getJoueurCourant(){
 		return joueurCourant;
 	}
-	public Jeu clone() throws CloneNotSupportedException{
-		Jeu j = (Jeu) super.clone();
-		j.l = l;
-		j.r = r;
-		j.joueurCourant = joueurCourant;
-		j.joueurGagnant = joueurGagnant;
-		j.tour = tour;
-		for (int i = 0; i < 2; i++) {
-			j.infoJoueurs[i] = infoJoueurs[i].clone();
-		}
-		j.codex = codex.clone();
-		j.continuum = continuum.clone();
-		return j;
+	public Jeu clone() throws CloneNotSupportedException {
+		Jeu jClone = new Jeu(this);
+		return jClone;
+	}
+
+	public void charger(Jeu j){
+		this.codex = j.codex;
+		this.infoJoueurs = j.infoJoueurs;
+		this.continuum = j.continuum;
+		this.historique = j.historique;
+
+		this.r = j.r;
+		this.joueurGagnant = j.joueurGagnant;
+		this.joueurCourant = j.joueurCourant;
+		this.tour = j.tour;
+		metAJour();
 	}
 
 	public Codex getCodex(){return codex;}
