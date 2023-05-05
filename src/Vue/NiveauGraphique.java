@@ -45,7 +45,8 @@ import static java.lang.Math.min;
 
 public class NiveauGraphique extends JComponent implements Observateur {
 	Image carteVide, carteDos, carteDosR, bleu, rouge, violet, vert, clef, crane, papier, champignon, diamant,
-			codexBleu, codexVert, codexRouge, codexViolet, fleche, bouton, carteSelect;
+			codexBleu, codexVert, codexRouge, codexViolet, fleche, bouton, carteSelect, carteSelectL,
+			load, save, undo, redo;
 	Jeu j;
 	int largeurCarte;
 	int hauteurCarte;
@@ -61,6 +62,10 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	int joueurCourant = 0;
 
 	int centre_largeur, centre_hauteur;
+
+
+	int debParadoxInf = -1, finParadoxInf = -1;
+	int debParadoxSup = -1, finParadoxSup = -1;
 
 	// Décalage des éléments (pour pouvoir les animer)
 	Vecteur [][] decalages;
@@ -93,6 +98,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		fleche = lisImage("Fleche");
 		bouton = lisImage("Bouton");
 		carteSelect = lisImage("CarteSelect");
+		carteSelectL = lisImage("CarteSelectL");
+		load = lisImage("Load");
+		save = lisImage("Save");
+		undo = lisImage("Undo");
+		redo = lisImage("Redo");
 	}
 
 	private Image lisImage(String nom) {
@@ -131,10 +141,6 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		int x;
 
 		int i;
-
-		Couleur couleur;
-		Symbole symbole;
-		int numero;
 
 		//Joueurs
 		Carte[][] mains = new Carte[2][3];
@@ -200,6 +206,20 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		deb_bouton = padding;
 		for (int k = 0; k < 4; k++) {
 			tracer(drawable, bouton, (k+1)*padding + k*largeurCarte, padding, largeurCarte, largeurCarte);
+			switch (k){
+				case 0:
+					tracer(drawable, save, (k+1)*padding + k*largeurCarte, padding, largeurCarte, largeurCarte);
+					break;
+				case 1:
+					tracer(drawable, load, (k+1)*padding + k*largeurCarte, padding, largeurCarte, largeurCarte);
+					break;
+				case 2:
+					tracer(drawable, undo, (k+1)*padding + k*largeurCarte, padding, largeurCarte, largeurCarte);
+					break;
+				case 3:
+					tracer(drawable, redo, (k+1)*padding + k*largeurCarte, padding, largeurCarte, largeurCarte);
+					break;
+			}
 		}
 	}
 
@@ -231,8 +251,12 @@ public class NiveauGraphique extends JComponent implements Observateur {
 				tracer(g, carteSelect, x-padding/4,  centre_hauteur-hauteurCarte / 2- padding/4, largeurCarte + padding/2, hauteurCarte+padding/2);
 			}
 		}
-//		int deb = 1, fin = 3;
-//		int deb1 = 5, fin2 = 7;
+
+		if (debParadoxInf >= 0)
+			tracer(g, carteSelectL, centre_largeur + (debParadoxInf-4) * (largeurCarte + padding) + padding*3/4, centre_hauteur-hauteurCarte / 2 - padding/4, 3*largeurCarte + padding/2, hauteurCarte+padding/2);
+		if (debParadoxSup >= 0)
+		tracer(g, carteSelectL, centre_largeur + (debParadoxSup-4) * (largeurCarte + padding) + padding*3/4, centre_hauteur-hauteurCarte / 2 - padding/4, 3*largeurCarte + padding/2, hauteurCarte+padding/2);
+
 		for (i = -4; i < 5; i++) {
 			x = centre_largeur + i * (largeurCarte + padding);
 
@@ -240,12 +264,12 @@ public class NiveauGraphique extends JComponent implements Observateur {
 			Symbole symbole = continuum[i+4].getSymbole();
 			int numero = continuum[i+4].getNumero();
 
-//			if (i+4 >= deb && i+4 <= fin){
-//				x = x+(1-(i+4-deb-1)-1)*padding;
-//			}
-//			else if (i+4 >= deb1 && i+4 <= fin2){
-//				x = x+(1-(i+4-deb-1))*padding;
-//			}
+			if (i+4 >= debParadoxInf && i+4 < finParadoxInf){
+				x = x+(1-(i+4-debParadoxInf-1)-1)*padding;
+			}
+			else if (i+4 >= debParadoxSup && i+4 < finParadoxSup){
+				x = x+(1-(i+4-debParadoxSup-1)-1)*padding;
+			}
 			dessinerCarte(g, x, centre_hauteur-hauteurCarte / 2, largeurCarte, hauteurCarte, couleur, symbole, numero);
 
 		}
@@ -357,5 +381,12 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	void selectionnerCarteContinuum(LinkedList<Integer> indices){
 		indexCarteSelectionneeContinuum = indices;
 		miseAJour();
+	}
+
+	void selectionnerParadox(int debParadoxInf, int finParadoxInf, int debParadoxSup, int finParadoxSup){
+		this.debParadoxInf = debParadoxInf;
+		this.finParadoxInf = finParadoxInf;
+		this.debParadoxSup = debParadoxSup;
+		this.finParadoxSup = finParadoxSup;
 	}
 }
