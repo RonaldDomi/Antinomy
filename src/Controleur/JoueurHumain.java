@@ -25,6 +25,7 @@ package Controleur;
  *          38401 Saint Martin d'Hères
  */
 
+import Modele.Arbre;
 import Modele.Jeu;
 import Vue.InterfaceUtilisateur;
 
@@ -57,6 +58,8 @@ class JoueurHumain extends Joueur {
 
     @Override
     boolean jeu(int type, int indexCarte) {
+        Arbre a = new Arbre(this.jeu);
+        a.create();
         switch (type){
             case 1: //main
                 if (clicMain(indexCarte))
