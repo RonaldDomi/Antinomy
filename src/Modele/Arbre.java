@@ -7,7 +7,7 @@ public class Arbre {
     Jeu j;
     List<Arbre> fils;
 
-    int profondeur, idMain, idContinuum;
+    int profondeur, idMain, idContinuum, score;
 
     Boolean paradox, paradoxBas, paradoxHaut, clash;
 
@@ -23,7 +23,8 @@ public class Arbre {
         this.profondeur = profondeur;
     }
 
-    public Arbre(Jeu j, int profondeur, boolean paradox, boolean paradoxHaut, boolean paradoxBas, boolean clash, int idMain, int idContinuum){
+    public Arbre(Jeu j, int profondeur, boolean paradox, boolean paradoxHaut, boolean paradoxBas, boolean clash, int idMain, int idContinuum, int score){
+        this.score = score;
         this.paradox = paradox;
         this.paradoxHaut = paradoxHaut;
         this.paradoxBas = paradoxBas;
@@ -36,6 +37,11 @@ public class Arbre {
     }
 
 
+    //on suppose qu l'ia est le joueur 0
+    //le score est le nombre de gemmes de l'ia
+    //l'heuristique du score est a changé ici elle est mauvaise car elle ne minimise pas celle de l'adversaire
+    //on pourrait prendre (scoreIA - scoreADVERSAIRE) et maximiser cela
+    //à discuter avec l'équipe
     public void create(){
         //condition arret
         //ici ce jeu est une feuille
@@ -101,13 +107,13 @@ public class Arbre {
                 // le false de fintour pour ne pas lancer l'historique
                 temp.finTour(false);
                 if (temp2 == null) {
-                    fils.add(new Arbre(temp, profondeur + 1, paradox, paradoxHaut, paradoxBas, clash, i, c));
+                    fils.add(new Arbre(temp, profondeur + 1, paradox, paradoxHaut, paradoxBas, clash, i, c, temp.infoJoueurs[/*temp.joueurCourant*/0].getPoints()));
                 }
                 else {
                     //si temp2 existe alors le paradox haut est dans temp et le bas est dans temp2
-                    fils.add(new Arbre(temp, profondeur + 1, paradox, paradoxHaut, false, clash, i, c));
+                    fils.add(new Arbre(temp, profondeur + 1, paradox, paradoxHaut, false, clash, i, c, temp.infoJoueurs[/*temp.joueurCourant*/0].getPoints()));
                     temp2.finTour(false);
-                    fils.add(new Arbre(temp2, profondeur + 1, paradox, false, paradoxBas, clash, i, c));
+                    fils.add(new Arbre(temp2, profondeur + 1, paradox, false, paradoxBas, clash, i, c, temp.infoJoueurs[/*temp.joueurCourant*/0].getPoints()));
                 }
             }
         }
@@ -115,5 +121,37 @@ public class Arbre {
         for (Arbre a:fils) {
             a.create();
         }
+    }
+
+
+    //ici on cherche a maximiser le score
+    public Arbre prochain_Coup(){
+        if (this.fils.isEmpty())
+            return this;
+        Arbre max = null;
+        int maxVal = -1;
+        for (Arbre a: this.fils){
+            Arbre temp = a.prochain_Coup2();
+            if (temp.score > maxVal){
+                max = a;
+                maxVal = temp.score;
+            }
+        }
+        return max;
+    }
+
+    public Arbre prochain_Coup2(){
+        if (this.fils.isEmpty())
+            return this;
+        Arbre min = null;
+        int minVal = 6;
+        for (Arbre a: this.fils){
+            Arbre temp = a.prochain_Coup();
+            if (temp.score < minVal){
+                min = a;
+                minVal = temp.score;
+            }
+        }
+        return min;
     }
 }
