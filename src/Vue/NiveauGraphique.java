@@ -339,11 +339,6 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		miseAJour();
 	}
 
-	// Animation du pousseur
-	void metAJourPousseur() {
-//		pousseur = pousseurs[direction][etape];
-	}
-
 	public void metAJourDirection(int dL, int dC) {
 		switch (dL + 2 * dC) {
 			case -2:
@@ -364,12 +359,10 @@ public class NiveauGraphique extends JComponent implements Observateur {
 			default:
 				Configuration.erreur("Bug interne, direction invalide");
 		}
-		metAJourPousseur();
 	}
 
 	public void changeEtape() {
 		etape = (etape + 1) % pousseurs[direction].length;
-		metAJourPousseur();
 		miseAJour();
 	}
 

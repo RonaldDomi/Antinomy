@@ -54,8 +54,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	public ControleurMediateur(Jeu j) {
 		jeu = j;
-
-		jeu = j;
 		joueurs = new Joueur[2][2];
 		typeJoueur = new int[2];
 		for (int i = 0; i < joueurs.length; i++) {
@@ -79,8 +77,8 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	public void ajouteInterfaceUtilisateur(InterfaceUtilisateur v) {
 		vue = v;
-		for (int i = 0; i < joueurs.length; i++) {
-			joueurs[i][0].ajouteInterfaceUtilisateur(vue);
+		for (Joueur[] joueur : joueurs) {
+			joueur[0].ajouteInterfaceUtilisateur(vue);
 //			joueurs[i][1].ajouteInterfaceUtilisateur(vue);
 		}
 	}
@@ -93,6 +91,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 		if (joueurs[joueurCourant][typeJoueur[joueurCourant]].jeu(l, c)){
 			changeJoueur();
 			joueurs[joueurCourant][typeJoueur[joueurCourant]].afficherPreSelection();
+			jeu.metAJour();
 		}
 	}
 
@@ -113,9 +112,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 				jeu.undo();
 				break;
 			case 3: //redo
-//				jeu.redo();
+
+				jeu.redo();
 				break;
 		}
+		jeu.metAJour();
 	}
 
 
@@ -131,12 +132,14 @@ public class ControleurMediateur implements CollecteurEvenements {
 	@Override
 	public void toucheClavier(String touche) {
 		switch (touche) {
-//			case "Left":
-//				deplace(0, -1);
-//				break;
-//			case "Right":
-//				deplace(0, 1);
-//				break;
+			case "Left":
+				jeu.undo();
+				jeu.metAJour();
+				break;
+			case "Right":
+				jeu.redo();
+				jeu.metAJour();
+				break;
 //			case "Up":
 //				deplace(-1, 0);
 //				break;
@@ -147,10 +150,10 @@ public class ControleurMediateur implements CollecteurEvenements {
 				System.exit(0);
 				break;
 			case "Pause":
-				basculeAnimations();
+//				basculeAnimations();
 				break;
 			case "IA":
-				basculeIA();
+//				basculeIA();
 				break;
 			case "Full":
 				vue.toggleFullscreen();
@@ -186,14 +189,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 //				}
 //			}
 //		}
-	}
-
-	public void changeEtape() {
-		vue.changeEtape();
-	}
-
-	public void decale(int versL, int versC, double dL, double dC) {
-		vue.decale(versL, versC, dL, dC);
 	}
 
 	public void basculeAnimations() {

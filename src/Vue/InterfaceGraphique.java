@@ -92,8 +92,8 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		menuPrincipale = new JFrame("Antinomy");
 		enJeu = new JFrame("Antinomy");
 
-		enJeu.setSize(500, 300);
-		menuPrincipale.setSize(500, 300);
+		enJeu.setSize(1000, 600);
+		menuPrincipale.setSize(1000, 600);
 //		h2MenuJeu = new Font("Medieval English", Font.PLAIN, enJeu.getWidth()/10);
 
 
@@ -251,7 +251,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		if (r == JFileChooser.APPROVE_OPTION) {
 			System.out.println("Charger " + Load.getSelectedFile().getAbsolutePath());
 			Import imp = new Import(Load.getSelectedFile().getAbsolutePath());
-			j.charger(imp.lire_fichier());
+			j.charger(imp.lire_fichier(), true);
 		}
 		else
 			System.out.println("Chargement annulée");

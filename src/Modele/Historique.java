@@ -4,7 +4,12 @@ import java.util.LinkedList;
 
 public class Historique {
     LinkedList<Jeu> listeJeu;
-    int jeuIndex=0;
+
+    // if we do undo, we will increment courrant.
+    // courrant contains the number of steps we traced back
+
+    // insert en tete
+    int courrant=0;
 
     Historique(){
         listeJeu = new LinkedList<>();
@@ -16,64 +21,68 @@ public class Historique {
 
         String[] tabHist = stringHist.split("!");
 
-        for (int i = 0; i < tabHist.length; i++) {
-            listeJeu.add(new Jeu(tabHist[i]));
+        for (String s : tabHist) {
+            listeJeu.add(new Jeu(s));
         }
     }
 
-
-    public boolean peut_annuler(){
-        return jeuIndex >= 1;
+    Historique(Jeu jeu){
+        listeJeu = new LinkedList<>();
+        ajouterJeu(jeu);
     }
 
 
-    public boolean peut_refaire(){
-        return jeuIndex < listeJeu.size();
+    public boolean peutAnnuler(){
+        return courrant != listeJeu.size()-1;
     }
 
 
-    void ajouter_jeu(Jeu jeu){
-        listeJeu.add(jeuIndex, jeu);
-        jeuIndex++;
+    public boolean peutRefaire(){
+        return courrant > 0;
+    }
 
-        supprimer_suite_coup();
-        System.out.println("Historique : ");
+
+    void ajouterJeu(Jeu jeu){
+
+        // if we did a bunch of undos, we should remove them
+        // being that we are rewriting history
+        for (int k = 0; k < courrant; k++) {
+            //remove first
+            listeJeu.remove(0);
+        }
+        listeJeu.add(0, jeu);
+        courrant = 0;
+
+        System.out.println("Historique(" + listeJeu.size() + ", " + courrant + ") : ");
         System.out.println(listeJeu);
         System.out.println();
     }
 
 
-    Jeu annuler_coup(){
-        if (!peut_annuler()){
+    Jeu annuler(){
+        if (!peutAnnuler()){
             System.err.println("Impossible d'annuler le coup. Aucun coup n'a été joué !");
             return null;
         }
-        Jeu dernierJoue;
-        jeuIndex--;
-        dernierJoue = listeJeu.get(jeuIndex);
+        courrant++;
+        Jeu dernierJoue = listeJeu.get(courrant);
+        System.out.println("did undo");
+        System.out.println("Historique(" + listeJeu.size() + ", " + courrant + ")");
         return dernierJoue;
     }
 
 
-    Jeu refaire_coup() {
-        Jeu aRefaire;
-
-        if (!peut_refaire()){
+    Jeu refaire() {
+        if (!peutRefaire()){
             System.err.println("Impossible de refaire le coup. Aucun coup n'a été annulé !");
             return null;
         }
 
-        aRefaire = listeJeu.get(jeuIndex);
-        jeuIndex++;
-
+        courrant--;
+        Jeu aRefaire = listeJeu.get(courrant);
+        System.out.println("did redo");
+        System.out.println("Historique(" + listeJeu.size() + ", " + courrant + ")");
         return aRefaire;
-    }
-
-
-    void supprimer_suite_coup(){
-        if (listeJeu.size() > jeuIndex) {
-            listeJeu.subList(jeuIndex, listeJeu.size()).clear();
-        }
     }
 
     public String toString(){
@@ -83,17 +92,17 @@ public class Historique {
 //        jeu1!jeu2!jeu3!jeu4
 
         String outputList = "";
-        for(int i = 0; i < listeJeu.size(); i++){
-            outputList += listeJeu.get(i).toString();
+        for (Jeu jeu : listeJeu) {
+            outputList += jeu.toString();
             outputList += "!";
         }
-        return jeuIndex + "\n" + outputList;
+        return courrant + "\n" + outputList;
     }
 
     public Historique clone(){
         Historique h = new Historique();
         h.listeJeu = (LinkedList<Jeu>) listeJeu.clone();
-        h.jeuIndex = jeuIndex;
+        h.courrant = courrant;
         return h;
     }
 }

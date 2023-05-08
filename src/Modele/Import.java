@@ -22,16 +22,16 @@ public class Import {
 
         int currentJeuIndex = Integer.parseInt(scanner.nextLine()) - 1;
         Historique historique = new Historique(scanner.nextLine());
-        historique.jeuIndex = currentJeuIndex;
+        historique.courrant = currentJeuIndex;
 
         jeu.historique = historique;
-        jeu.infoJoueurs[0] = historique.listeJeu.get(historique.jeuIndex).infoJoueurs[0];
-        jeu.infoJoueurs[1] = historique.listeJeu.get(historique.jeuIndex).infoJoueurs[1];
-        jeu.continuum = historique.listeJeu.get(historique.jeuIndex).continuum;
-        jeu.tour = historique.listeJeu.get(historique.jeuIndex).tour;
-        jeu.codex = historique.listeJeu.get(historique.jeuIndex).codex;
-        jeu.joueurGagnant = historique.listeJeu.get(historique.jeuIndex).joueurGagnant;
-        jeu.joueurCourant = historique.listeJeu.get(historique.jeuIndex).joueurCourant;
+        jeu.infoJoueurs[0] = historique.listeJeu.get(historique.courrant).infoJoueurs[0];
+        jeu.infoJoueurs[1] = historique.listeJeu.get(historique.courrant).infoJoueurs[1];
+        jeu.continuum = historique.listeJeu.get(historique.courrant).continuum;
+        jeu.tour = historique.listeJeu.get(historique.courrant).tour;
+        jeu.codex = historique.listeJeu.get(historique.courrant).codex;
+        jeu.joueurGagnant = historique.listeJeu.get(historique.courrant).joueurGagnant;
+        jeu.joueurCourant = historique.listeJeu.get(historique.courrant).joueurCourant;
 
         return jeu;
     }
