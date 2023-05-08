@@ -32,7 +32,6 @@ import Vue.InterfaceUtilisateur;
 
 class JoueurHumain extends Joueur {
 
-    int etape = 0;
     int indexCarteMain = -1;
 
     JoueurHumain(int n, Jeu p) {
@@ -45,14 +44,16 @@ class JoueurHumain extends Joueur {
 
     @Override
     int getEtape(){
-        return etape;
+        return jeu.getEtape();
     }
 
     void afficherPreSelection(){
-        switch (etape){
-            case 0:
+        switch (jeu.getEtape()) {
+            case -1:
                 vue.selectionnerCarteContinuum(jeu.getContinuum().getIndexSorcierPossible(jeu.getCodex().getCouleurInterdite()));
                 break;
+            case -2:
+                vue.selectionnerCarteContinuum(jeu.getContinuum().getIndexSorcierPossible(jeu.getCodex().getCouleurInterdite()));
         }
     }
 
@@ -77,8 +78,9 @@ class JoueurHumain extends Joueur {
     }
 
     boolean clicMain(int indexCarte){
-        switch (etape){
-            case 0: //debut de jeu
+        switch (jeu.getEtape()){
+            case -1: //debut de jeu
+            case -2: //debut de jeu
                 return false;
             case 1: //debut de tour
                 System.out.println("Joueur " + jeu.getJoueurCourant() + " selectionne dans ça main la carte d'index " + indexCarte);
@@ -92,8 +94,11 @@ class JoueurHumain extends Joueur {
     }
 
     boolean clicContinuum(int indexCarte){
-        switch (etape){
-            case 0: //debut de jeu
+        switch (jeu.getEtape()){
+            case -1: //debut de jeu
+//                    System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
+                return jeu.coupChangerPositionSorcier(indexCarte);
+            case -2: //debut de jeu
 //                    System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
                 return jeu.coupChangerPositionSorcier(indexCarte);
             case 1: //debut de tour
@@ -140,9 +145,14 @@ class JoueurHumain extends Joueur {
     }
 
     boolean etapeSuivante() {
-        switch (etape) {
-            case (0):
-                etape = 1;
+        switch (jeu.getEtape()) {
+            case (-1):
+                jeu.setEtape(-2);
+                vue.selectionnerCarteContinuum(null);
+                jeu.finTour();
+                return true;
+            case (-2):
+                jeu.setEtape(1);
                 vue.selectionnerCarteContinuum(null);
                 jeu.finTour();
                 return true;
@@ -150,19 +160,19 @@ class JoueurHumain extends Joueur {
                 if (jeu.getInfoJoueurCourant().existeParadox(jeu.getCodex().getCouleurInterdite())) {
                     System.out.println();
                     System.out.println("Paradox :");
-                    etape = 2;
+                    jeu.setEtape(2);
                     return false;
                 } else if (jeu.existeClash()) {
                     System.out.println();
                     System.out.println("Clash :");
                     jeu.coupClash();
-                    etape = 1;
+                    jeu.setEtape(1);
                     System.out.println();
                     System.out.println("Debut Tour :");
                     jeu.finTour();
                     return true;
                 } else {
-                    etape = 1;
+                    jeu.setEtape(1);
                     System.out.println();
                     System.out.println("Debut Tour :");
                     jeu.finTour();
@@ -178,7 +188,7 @@ class JoueurHumain extends Joueur {
                     System.out.println("Debut Tour :");
                     return true;
                 } else {
-                    etape = 1;
+                    jeu.setEtape(1);
                     jeu.finTour();
                     System.out.println();
                     System.out.println("Debut Tour :");

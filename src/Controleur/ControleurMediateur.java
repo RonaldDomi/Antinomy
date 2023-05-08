@@ -110,7 +110,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 				vue.charger();
 				break;
 			case 2: //undo
-//				jeu.undo();
+				jeu.undo();
 				break;
 			case 3: //redo
 //				jeu.redo();
@@ -118,29 +118,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 		}
 	}
 
-
-
-//	void joue(Coup cp) {
-//		if (cp != null) {
-//			jeu.joue(cp);
-//			vue.metAJourDirection(cp.dirPousseurL(), cp.dirPousseurC());
-//			if (animationsActives) {
-//				mouvement = new AnimationCoup(cp, vitesseAnimations, this);
-//				animations.insereQueue(mouvement);
-//			} else
-//				testFin();
-//		} else {
-//			Configuration.alerte("Coup null fourni, probablement un bug dans l'IA");
-//		}
-//	}
-//
-//	void deplace(int dL, int dC) {
-//		if (mouvement == null) {
-//			Coup cp = jeu.elaboreCoup(dL, dC);
-//			if (cp != null)
-//				joue(cp);
-//		}
-//	}
 
 	private void testFin() {
 //		if (jeu.niveauTermine()) {

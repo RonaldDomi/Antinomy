@@ -46,7 +46,7 @@ public class Jeu extends Observable implements Cloneable{
 	Historique historique;
 	int joueurCourant; //0 ou 1
 	int joueurGagnant; //0 ou 1
-	
+	int etape;
 	
 	
 	public Jeu() {
@@ -60,6 +60,7 @@ public class Jeu extends Observable implements Cloneable{
 		infoJoueurs[1] = new InfoJoueur(-1, r);
 		infoJoueurs[1].setMain(d.distribuer(3));
 		historique = new Historique();
+		etape = -1;
 
 		codex = new Codex(d.distribuer(1)[0], continuum.getCarteContinuum(0).getCouleur());
 		Jeu jeuClone = new Jeu(this);
@@ -73,7 +74,7 @@ public class Jeu extends Observable implements Cloneable{
 	}
 
 	public Jeu(String stringJeu){
-//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant
+//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant;etape;
 		String[] stringJeuSep = stringJeu.split(";");
 		this.continuum = new Continuum(stringJeuSep[0]);
 		this.infoJoueurs = new InfoJoueur[2];
@@ -90,6 +91,7 @@ public class Jeu extends Observable implements Cloneable{
 		this.joueurCourant = j.joueurCourant;
 		this.joueurGagnant = j.joueurGagnant;
 		this.tour = j.tour;
+		this.etape = j.etape;
 
 		this.infoJoueurs = new InfoJoueur[2];
 		try{
@@ -268,6 +270,14 @@ public class Jeu extends Observable implements Cloneable{
 				infoJoueurs[joueurCourant].getSorcierIndice()-3*infoJoueurs[joueurCourant].getDirection() >= 0;
 	}
 
+	public void undo(){
+		if(!historique.peut_annuler()) return;
+		charger(historique.annuler_coup());
+	}
+
+	public int getEtape(){ return this.etape; };
+	public void setEtape(int etape){this.etape = etape;}
+
 	public Carte[] getMainJoueurCourant(){
 		return infoJoueurs[joueurCourant].getMain();
 	}
@@ -303,6 +313,7 @@ public class Jeu extends Observable implements Cloneable{
 		this.infoJoueurs = j.infoJoueurs;
 		this.continuum = j.continuum;
 		this.historique = j.historique;
+		this.etape = j.etape;
 
 		this.r = j.r;
 		this.joueurGagnant = j.joueurGagnant;
@@ -315,13 +326,14 @@ public class Jeu extends Observable implements Cloneable{
 
 	@Override
 	public String toString() {
-//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant
+//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant;etape
 		return continuum.toString() + ";" +
 				infoJoueurs[0].toString() + ";" +
 				infoJoueurs[1].toString() + ";" +
 				tour + ";" +
 				codex.toString() + ";" +
 				joueurCourant + ";" +
-				joueurGagnant + ";";
+				joueurGagnant + ";" +
+				etape + ";";
 	}
 }
