@@ -54,24 +54,31 @@ class JoueurHumain extends Joueur {
                 break;
             case -2:
                 vue.selectionnerCarteContinuum(jeu.getContinuum().getIndexSorcierPossible(jeu.getCodex().getCouleurInterdite()));
+//            case 2:
+//                int debParInf = -1, finParInf = -1, debParSup = -1, finParSup = -1;
+//                if (jeu.existeParadoxInferieur()){
+//                    debParInf = jeu.getInfoJoueurCourant().getSorcierIndice() - 3*jeu.getInfoJoueurCourant().getDirection();
+//                    finParInf = jeu.getInfoJoueurCourant().getSorcierIndice();
+//                }
+//                if (jeu.existeParadoxSuperieur()){
+//                    debParSup = jeu.getInfoJoueurCourant().getSorcierIndice() + 1*jeu.getInfoJoueurCourant().getDirection();
+//                    finParSup = jeu.getInfoJoueurCourant().getSorcierIndice() + 3*jeu.getInfoJoueurCourant().getDirection();
+//                }
+//                System.out.println(debParInf + " " + finParInf + " " + debParSup + " " + finParSup);
+//                vue.selectionnerParadox(debParInf, finParInf, debParSup, finParSup);
         }
     }
 
     @Override
     boolean jeu(int type, int indexCarte) {
-        Arbre a = new Arbre(this.jeu);
+//        Arbre a = new Arbre(this.jeu);
 //        a.create();
-        Arbre temp = a.prochain_Coup();
+//        Arbre temp = a.prochain_Coup();
         switch (type){
             case 1: //main
-                if (clicMain(indexCarte))
-                    return etapeSuivante();
-                return false;
+                return clicMain(indexCarte);
             case 2: //continuum
-                if (clicContinuum(indexCarte)){
-                    return etapeSuivante();
-                }
-                return false;
+                return clicContinuum(indexCarte);
             default:
                 return false;
         }
@@ -97,7 +104,6 @@ class JoueurHumain extends Joueur {
         switch (jeu.getEtape()){
             case -1: //debut de jeu
 //                    System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
-                return jeu.coupChangerPositionSorcier(indexCarte);
             case -2: //debut de jeu
 //                    System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
                 return jeu.coupChangerPositionSorcier(indexCarte);
@@ -112,7 +118,8 @@ class JoueurHumain extends Joueur {
                             indexCarteMain = -1;
                             vue.selectionnerCarteMain(-1);
                             vue.selectionnerCarteContinuum(null);
-                            return true;
+                            afficherPreSelection();
+                            return getEtape() == 1;
                         }
                     }
                 }
@@ -126,7 +133,8 @@ class JoueurHumain extends Joueur {
                         jeu.coupParadox(-1);
                     }
                     System.out.println("Paradox, selection des carte dans le future");
-                    return true;
+                    vue.selectionnerParadox(-1, -1, -1, -1);
+                    return getEtape() == 1;
                 }
                 else if (indexCarte < jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte >= jeu.getInfoJoueurCourant().getSorcierIndice()-3){
                     if (jeu.getJoueurCourant() == 0 && jeu.existeParadoxInferieur()){
@@ -136,64 +144,10 @@ class JoueurHumain extends Joueur {
                         jeu.coupParadox(+1);
                     }
                     System.out.println("Paradox, selection des carte dans le passé");
+                    vue.selectionnerParadox(-1, -1, -1, -1);
                     return true;
                 }
                 return false;
-            default:
-                return false;
-        }
-    }
-
-    boolean etapeSuivante() {
-        switch (jeu.getEtape()) {
-            case (-1):
-                jeu.setEtape(-2);
-                vue.selectionnerCarteContinuum(null);
-                jeu.finTour();
-                return true;
-            case (-2):
-                jeu.setEtape(1);
-                vue.selectionnerCarteContinuum(null);
-                jeu.finTour();
-                return true;
-            case (1):
-                if (jeu.getInfoJoueurCourant().existeParadox(jeu.getCodex().getCouleurInterdite())) {
-                    System.out.println();
-                    System.out.println("Paradox :");
-                    jeu.setEtape(2);
-                    return false;
-                } else if (jeu.existeClash()) {
-                    System.out.println();
-                    System.out.println("Clash :");
-                    jeu.coupClash();
-                    jeu.setEtape(1);
-                    System.out.println();
-                    System.out.println("Debut Tour :");
-                    jeu.finTour();
-                    return true;
-                } else {
-                    jeu.setEtape(1);
-                    System.out.println();
-                    System.out.println("Debut Tour :");
-                    jeu.finTour();
-                    return true;
-                }
-            case (2):
-                if (jeu.existeClash()) {
-                    System.out.println();
-                    System.out.println("Clash :");
-                    jeu.coupClash();
-                    jeu.finTour();
-                    System.out.println();
-                    System.out.println("Debut Tour :");
-                    return true;
-                } else {
-                    jeu.setEtape(1);
-                    jeu.finTour();
-                    System.out.println();
-                    System.out.println("Debut Tour :");
-                    return true;
-                }
             default:
                 return false;
         }

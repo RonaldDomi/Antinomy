@@ -232,6 +232,11 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	}
 
 	@Override
+	public void selectionnerParadox(int debParadoxInf, int finParadoxInf, int debParadoxSup, int finParadoxSup){
+		niv.selectionnerParadox(debParadoxInf, finParadoxInf, debParadoxSup, finParadoxSup);
+	}
+
+	@Override
 	public void sauvegarder(){
 		JFileChooser Save = new JFileChooser();
 		int r = Save.showSaveDialog(null);
