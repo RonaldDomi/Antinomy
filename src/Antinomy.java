@@ -27,7 +27,6 @@
 
 import Controleur.ControleurMediateur;
 import Modele.Jeu;
-import Modele.LecteurNiveaux;
 import Vue.InterfaceGraphique;
 import Vue.CollecteurEvenements;
 //import Modele.LecteurNiveaux;

@@ -2,6 +2,7 @@ package Modele;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Import {
@@ -25,13 +26,17 @@ public class Import {
         historique.courrant = currentJeuIndex;
 
         jeu.historique = historique;
+        jeu.r = new Random();
         jeu.infoJoueurs[0] = historique.listeJeu.get(historique.courrant).infoJoueurs[0];
+        jeu.infoJoueurs[0].r = jeu.r;
         jeu.infoJoueurs[1] = historique.listeJeu.get(historique.courrant).infoJoueurs[1];
+        jeu.infoJoueurs[1].r = jeu.r;
         jeu.continuum = historique.listeJeu.get(historique.courrant).continuum;
         jeu.tour = historique.listeJeu.get(historique.courrant).tour;
         jeu.codex = historique.listeJeu.get(historique.courrant).codex;
         jeu.joueurGagnant = historique.listeJeu.get(historique.courrant).joueurGagnant;
         jeu.joueurCourant = historique.listeJeu.get(historique.courrant).joueurCourant;
+        jeu.etape = historique.listeJeu.get(historique.courrant).etape;
 
         return jeu;
     }
