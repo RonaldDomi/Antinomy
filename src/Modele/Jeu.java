@@ -112,11 +112,17 @@ public class Jeu extends Observable implements Cloneable{
 	}
 
 	public boolean coupChangerPositionSorcier(int indexCarte){
+
+		if (getEtape() != -1 && getEtape() != -2 )
+			return false;
+
 		java.util.LinkedList<Integer> indexPossible = continuum.getIndexSorcierPossible(codex.getCouleurInterdite());
 		
 		for (Integer index: indexPossible) {
 			if (index == indexCarte){
 				getInfoJoueurCourant().setSorcierIndice(indexCarte);
+				etapeSuivante();
+				metAJour();
 				return true;
 			}
 		}
@@ -125,13 +131,19 @@ public class Jeu extends Observable implements Cloneable{
 	}
 
 	public boolean coupEchangeCarteMainContinuum(int indexMain, int indexContinuum){
+
+		if (getEtape() != 1)
+			return false;
+
+
 		java.util.LinkedList<Integer> indexPossible = continuum.getCoupsPossibles(getInfoJoueurCourant().getCarteMain(indexMain), getInfoJoueurCourant().getSorcierIndice(), getInfoJoueurCourant().getDirection());
 		
 		for (Integer index: indexPossible) {
 			if (index == indexContinuum){
 				infoJoueurs[joueurCourant].setSorcierIndice(indexContinuum);
 				echangerCarteMainContinuum(indexMain, indexContinuum);
-//				metAJour();
+				etapeSuivante();
+				metAJour();
 				return true;
 			}
 		}
@@ -139,6 +151,9 @@ public class Jeu extends Observable implements Cloneable{
 	}
 
 	public boolean coupParadox(int direction){
+
+		if (getEtape() != 2)
+			return false;
 
 		if(!getInfoJoueurCourant().existeParadox(codex.getCouleurInterdite()))
 			return false;
@@ -166,24 +181,34 @@ public class Jeu extends Observable implements Cloneable{
 		infoJoueurs[joueurCourant].addPoint();
 		codex.cycleCouleur();
 		jeuGagnant();
-//		metAJour();
+		etapeSuivante();
+		metAJour();
 		return true;
 	}
 
 	public boolean coupClash(){
+
+		if (getEtape() != 3)
+			return false;
+
+
 		int res = gagnantClash();
 		if (res != -1){
+			System.out.println("joueur " + res + " gagne le clash");
 			if (infoJoueurs[1-res].getPoints() > 0){
 				infoJoueurs[1-res].remPoint();
 				infoJoueurs[res].addPoint();
 				codex.cycleCouleur();
+				etapeSuivante();
 				jeuGagnant();
-//				metAJour();
+				metAJour();
 				return true;
 			}
-			return false;
+			System.out.println("Pas de point a voler");
+			return true;
 		}
-		return false;
+		System.out.println("égalité");
+		return true;
 	}
 
 	public int adversaire(){
@@ -213,6 +238,63 @@ public class Jeu extends Observable implements Cloneable{
 		}
 		if( hist)
 			historique.ajouterJeu(jeuClone);
+	}
+
+
+	boolean etapeSuivante() {
+		switch (getEtape()) {
+			case (-1):
+				setEtape(-2);
+				finTour();
+				return true;
+			case (-2):
+				setEtape(1);
+				finTour();
+				return true;
+			case (1):
+				if (getInfoJoueurCourant().existeParadox(getCodex().getCouleurInterdite())) {
+					System.out.println();
+					System.out.println("Paradox :");
+					setEtape(2);
+					return false;
+				} else if (existeClash()) {
+					System.out.println();
+					System.out.println("Clash 1:");
+					setEtape(3);
+					coupClash();
+					setEtape(1);
+					finTour();
+					System.out.println();
+					System.out.println("Debut Tour :");
+					return false;
+				} else {
+					setEtape(1);
+					System.out.println();
+					System.out.println("Debut Tour :");
+					finTour();
+					return true;
+				}
+			case (2):
+				if (existeClash()) {
+					System.out.println();
+					System.out.println("Clash 2:");
+					setEtape(3);
+					coupClash();
+					setEtape(1);
+					finTour();
+					System.out.println();
+					System.out.println("Debut Tour :");
+					return true;
+				} else {
+					setEtape(1);
+					finTour();
+					System.out.println();
+					System.out.println("Debut Tour :");
+					return true;
+				}
+			default:
+				return false;
+		}
 	}
 
 	public boolean existeClash(){
@@ -301,6 +383,10 @@ public class Jeu extends Observable implements Cloneable{
 
 	public int getJoueurCourant(){
 		return joueurCourant;
+	}
+
+	public int getJoueurGagnant(){
+		return joueurGagnant;
 	}
 	public Jeu clone() throws CloneNotSupportedException {
 		Jeu jClone = new Jeu(this);

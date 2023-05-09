@@ -38,7 +38,7 @@ public class InfoJoueur implements Cloneable{
 	public int getSorcierIndice(){return this.sorcierIndice;}
 	int getDirectionMouvement(){return this.directionMouvement;}
 	public Carte getCarteMain(int index){return this.main[index];}
-	Carte getCarteAleatoire(){
+	public Carte getCarteAleatoire(){
 		return this.main[r.nextInt(main.length)];
 	}
 	public Carte[] getMain(){return this.main;}

@@ -35,6 +35,8 @@ public interface InterfaceUtilisateur {
 	void decale(int versL, int versC, double dL, double dC);
 	void selectionnerCarteMain(int indice);
 	void selectionnerCarteContinuum(LinkedList<Integer> indices);
+	void selectionnerParadox(int debParadoxInf, int finParadoxInf, int debParadoxSup, int finParadoxSup);
+
 	void sauvegarder();
 	void charger();
 }

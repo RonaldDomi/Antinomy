@@ -52,15 +52,20 @@ public class ControleurMediateur implements CollecteurEvenements {
 	boolean IAActive;
 	AnimationJeuAutomatique animationIA;
 
+
+	final int lenteurAttente = 50;
+	int decompte;
+
 	public ControleurMediateur(Jeu j) {
 		jeu = j;
 		joueurs = new Joueur[2][2];
 		typeJoueur = new int[2];
 		for (int i = 0; i < joueurs.length; i++) {
 			joueurs[i][0] = new JoueurHumain(i, jeu);
-//			joueurs[i][1] = new JoueurIA(i, jeu);
+			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
 			typeJoueur[i] = 0;
 		}
+		typeJoueur[1] = 1;
 
 //		animations = Configuration.nouvelleSequence();
 		vitesseAnimations = Configuration.vitesseAnimations;
@@ -88,10 +93,10 @@ public class ControleurMediateur implements CollecteurEvenements {
 	public void clicSouris(int l, int c) {
 		// Lors d'un clic, on le transmet au joueur courant.
 		// Si un coup a effectivement été joué (humain, coup valide), on change de joueur.
-		if (joueurs[joueurCourant][typeJoueur[joueurCourant]].jeu(l, c)){
+		if (joueurs[joueurCourant][typeJoueur[joueurCourant]].jeu(l, c)) {
 			changeJoueur();
-			joueurs[joueurCourant][typeJoueur[joueurCourant]].afficherPreSelection();
-			jeu.metAJour();
+//				joueurs[joueurCourant][typeJoueur[joueurCourant]].afficherPreSelection();
+//				jeu.metAJour();
 		}
 	}
 
@@ -112,7 +117,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 				jeu.undo();
 				break;
 			case 3: //redo
-
 				jeu.redo();
 				break;
 		}
@@ -164,7 +168,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 	}
 
 	@Override
-	public void tictac() {
+//	public void tictac() {
 //		// On sait qu'on supporte les animations si on reçoit des évènements temporels
 //		if (!animationsSupportees) {
 //			animationsSupportees = true;
@@ -189,6 +193,27 @@ public class ControleurMediateur implements CollecteurEvenements {
 //				}
 //			}
 //		}
+//	}
+
+	public void tictac() {
+		if (jeu.getJoueurGagnant() == -1) {
+			if (decompte == 0) {
+//				System.out.println("tic");
+				int type = typeJoueur[joueurCourant];
+				// Lorsque le temps est écoulé on le transmet au joueur courant.
+				// Si un coup a été joué (IA) on change de joueur.
+				if (joueurs[joueurCourant][type].tempsEcoule()) {
+					System.out.println("IA jouer");
+					changeJoueur();
+				} else {
+					// Sinon on indique au joueur qui ne réagit pas au temps (humain) qu'on l'attend.
+//					System.out.println("On vous attend, joueur " + joueurs[joueurCourant][type].num());
+					decompte = lenteurAttente;
+				}
+			} else {
+				decompte--;
+			}
+		}
 	}
 
 	public void basculeAnimations() {
