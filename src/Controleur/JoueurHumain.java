@@ -60,7 +60,7 @@ class JoueurHumain extends Joueur {
     @Override
     boolean jeu(int type, int indexCarte) {
         Arbre a = new Arbre(this.jeu);
-        a.create();
+//        a.create();
         Arbre temp = a.prochain_Coup();
         switch (type){
             case 1: //main

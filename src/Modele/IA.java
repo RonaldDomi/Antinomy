@@ -33,7 +33,6 @@ import java.util.logging.Logger;
 
 public abstract class IA {
 	private Jeu jeu;
-	Niveau niveau;
 
 	public static IA nouvelle(Jeu j) {
 		IA resultat = null;
