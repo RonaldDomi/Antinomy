@@ -97,7 +97,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 //		h2MenuJeu = new Font("Medieval English", Font.PLAIN, enJeu.getWidth()/10);
 
 
-		niv = new NiveauGraphique(j, h2MenuJeu);
+		niv = new NiveauGraphique(j);
 		niv.addMouseListener(new AdaptateurSouris(niv, control));
 
 //		menuPrincipale.addKeyListener(new AdaptateurClavier(control));
@@ -117,7 +117,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 //		enJeuListe.add(menuJeu);
 //		enJeuListe.add(niv);
 
-		setMenuPrincipale();
+		setMenuPrincipal();
 
 
 		Timer chrono = new Timer(16, new AdaptateurTemps(control));
@@ -132,7 +132,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		courant = enJeu;
 	}
 
-	void setMenuPrincipale(){
+	void setMenuPrincipal(){
 		Box menu = Box.createVerticalBox();
 
 		menu.add(Box.createGlue());

@@ -150,18 +150,18 @@ public class Jeu extends Observable implements Cloneable{
 
 		Collections.shuffle(Arrays.asList(getInfoJoueurCourant().getMain()));
 		if (direction == 1){
-			int indexMain=2;
+			int indexMain=0;
 			for (int i = 0; i < 3; i++) {
 				echangerCarteMainContinuum(indexMain,
 						getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction * getInfoJoueurCourant().getDirectionMouvement()));
-				indexMain--;
+				indexMain++;
 			}
 
 		}else{
-			int indexMain=0;
+			int indexMain=2;
 			for (int i = 0; i < 3; i++) {
 				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction* getInfoJoueurCourant().getDirectionMouvement()));
-				indexMain++;
+				indexMain--;
 			}
 		}
 
