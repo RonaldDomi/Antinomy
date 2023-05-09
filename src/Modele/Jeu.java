@@ -28,9 +28,7 @@ package Modele;
 
 import Patterns.Observable;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 
 public class Jeu extends Observable implements Cloneable{
@@ -332,6 +330,43 @@ public class Jeu extends Observable implements Cloneable{
 	}
 
 	public Codex getCodex(){return codex;}
+
+	List<Coup> getCoupsPossibles(){
+		List<Coup> coupsPossibles = new ArrayList<>();
+		for(int i = 0; i < getInfoJoueurCourant().getMain().length; i++){
+			// pour chaque carte Main
+			List<Integer> coupsCarteMain = continuum.getCoupsPossibles(getMainJoueurCourant()[i], getInfoJoueurCourant().getSorcierIndice(), getInfoJoueurCourant().getDirectionMouvement());
+			for(int c: coupsCarteMain){
+				// pour chaque carte Continuum
+				Jeu temp;
+				try {
+					temp = clone();
+				} catch (CloneNotSupportedException e) {
+					throw new RuntimeException(e);
+				}
+
+				//faire echange
+				temp.coupEchangeCarteMainContinuum(i, c);
+				// if paradox
+				if (temp.infoJoueurs[temp.joueurCourant].existeParadox(temp.codex.getCouleurInterdite())){
+					// if paradox superieur
+					if (temp.existeParadoxSuperieur()) {
+						coupsPossibles.add(new Coup(i, c, 1));
+					}else if(temp.existeParadoxInferieur()){
+						coupsPossibles.add(new Coup(i, c, -1));
+					}
+				}else{
+					// no paradox
+					coupsPossibles.add(new Coup(i, c, 0));
+				}
+
+
+			}
+		}
+
+		return coupsPossibles;
+	}
+
 
 	@Override
 	public String toString() {
