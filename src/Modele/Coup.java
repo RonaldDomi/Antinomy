@@ -14,4 +14,8 @@ public class Coup {
         this.indexMain = indexMain;
         this.paradox = paradox;
     }
+
+    public int getIndexMain(){return this.indexMain;}
+    public int getIndexContinuum(){return this.indexContinuum;}
+    public int getParadox(){return this.paradox;}
 }

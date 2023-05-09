@@ -417,7 +417,7 @@ public class Jeu extends Observable implements Cloneable{
 
 	public Codex getCodex(){return codex;}
 
-	List<Coup> getCoupsPossibles(){
+	public List<Coup> getCoupsPossibles(){
 		List<Coup> coupsPossibles = new ArrayList<>();
 		for(int i = 0; i < getInfoJoueurCourant().getMain().length; i++){
 			// pour chaque carte Main
@@ -427,6 +427,7 @@ public class Jeu extends Observable implements Cloneable{
 				Jeu temp;
 				try {
 					temp = clone();
+					temp.historique = new Historique(this.historique);
 				} catch (CloneNotSupportedException e) {
 					throw new RuntimeException(e);
 				}

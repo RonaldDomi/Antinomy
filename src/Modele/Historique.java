@@ -14,6 +14,10 @@ public class Historique {
     Historique(){
         listeJeu = new LinkedList<>();
     }
+    Historique(Historique hist){
+        this.courrant = hist.courrant;
+        this.listeJeu = (LinkedList<Jeu>) hist.listeJeu.clone();
+    }
 
     Historique(String stringHist){
 //        jeu1!jeu2!jeu3!jeu4

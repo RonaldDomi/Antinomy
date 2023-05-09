@@ -26,8 +26,11 @@ package Controleur;
  */
 
 import Modele.Arbre;
+import Modele.Coup;
 import Modele.Jeu;
 import Vue.InterfaceUtilisateur;
+
+import java.util.List;
 
 
 class JoueurHumain extends Joueur {

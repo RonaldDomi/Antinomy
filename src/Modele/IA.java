@@ -42,9 +42,9 @@ public abstract class IA {
 			case "Aleatoire":
 				resultat = new IAAleatoire();
 				break;
-//			case "Teleportations":
+			case "IA":
 //				resultat = new IATeleportations();
-//				break;
+				break;
 //			case "ParcoursFixe":
 //				resultat = new IAParcoursFixe();
 //				break;
