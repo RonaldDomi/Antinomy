@@ -1,5 +1,4 @@
 package Controleur;
-
 /*
  * Morpion pédagogique
  * Copyright (C) 2016 Guillaume Huard
@@ -26,42 +25,42 @@ package Controleur;
  *          38401 Saint Martin d'Hères
  */
 
+import Modele.Arbre;
+import Modele.Historique;
+import Modele.Import;
 import Modele.Jeu;
 import Vue.InterfaceUtilisateur;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-// Classe commune à tous les joueurs : IA ou humain
-// L'idée est que, en ayant la même interface, tous les joueurs sont traités de la même
-// manière par le moteur de jeu. C'est plus simple et permet toutes les combinaisons.
-//
-// Tous les joueurs ont donc potentiellement la possibilité de :
-// - provoquer une temporisation (utilisé dans une IA)
-// - tenir compte d'une temporisation écoulée (utilisé dans une IA)
-// - tenir compte d'un coup joué à la souris (utilisé par un joueur humain)
-abstract class Joueur {
-    Jeu jeu;
-    int num;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-    InterfaceUtilisateur vue;
+
+class JoueurEnLigne extends Joueur {
+
+    int indexCarteMain = -1;
     Socket clientSocket;
     
-    // Le joueur connait son numéro, cela lui permet d'inspecter le plateau en
-    // sachant
-    // repérer ses pions et évaluer où il en est
-    Joueur(int n, Jeu j) {
-        num = n;
-        jeu = j;
+    JoueurEnLigne(int n, Jeu p) {
+        super(n, p);
     }
 
     void ajouteInterfaceUtilisateur(InterfaceUtilisateur vue){
         this.vue = vue;
     }
     
+    
     void ajouteSocket(Socket clientSocket){
         this.clientSocket = clientSocket;
+    }
+
+    @Override
+    int getEtape(){
+        return jeu.getEtape();
     }
     
     void envoyerJeu(){
@@ -72,23 +71,23 @@ abstract class Joueur {
             e.printStackTrace();
         }
     }
-    // Méthode appelée pour tous les joueurs une fois le temps écoulé
-    // Si un joueur n'est pas concerné, il lui suffit de l'ignorer
+    
+    @Override
     boolean tempsEcoule() {
-        return false;
-    }
-
-    // Méthode appelée pour tous les joueurs lors d'un clic sur le plateau
-    // Si un joueur n'est pas concerné, il lui suffit de l'ignorer
-    boolean jeu(int i, int j) {
-        return false;
-    }
-
-    void afficherPreSelection(){
-        ;
-    }
-
-    int getEtape(){
-        return -1;
+        System.out.println("En attente");
+        try {
+            BufferedReader incoming = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            jeu.modifierJeu(incoming.readLine());
+            System.out.println("ici2 : " + jeu.getTour());
+            System.out.println("ici2 : " + jeu.getJoueurCourant());
+            jeu.historique = new Historique();
+            jeu.metAJour();
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+            return false;
+        }
+        System.out.println("Fin attente");
+        
+        return true;
     }
 }

@@ -11,7 +11,7 @@ public class Historique {
     // insert en tete
     int courrant=0;
 
-    Historique(){
+    public Historique(){
         listeJeu = new LinkedList<>();
     }
 

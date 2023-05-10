@@ -36,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.LinkedList;
 
 
@@ -48,15 +49,16 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	boolean maximized;
 	NiveauGraphique niv;
 	JFrame courant;
+	Socket clientSocket;
 
 	static Font h1;
 	static Font h2 = new Font("TimesRoman", Font.PLAIN, 15);
 	Font h2MenuJeu;
 
-	InterfaceGraphique(Jeu jeu, CollecteurEvenements c) {
+	InterfaceGraphique(Jeu jeu, CollecteurEvenements c, Socket clientSocket) {
 		j = jeu;
 		control = c;
-
+		this.clientSocket = clientSocket;
 
 		try {
 			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT, new File("res/Fonts/Medieval-English.ttf"));
@@ -69,9 +71,10 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		}
 	}
 
-	public static void demarrer(Jeu j, CollecteurEvenements c) {
-		InterfaceGraphique vue = new InterfaceGraphique(j, c);
+	public static void demarrer(Jeu j, CollecteurEvenements c, Socket clientSocket) {
+		InterfaceGraphique vue = new InterfaceGraphique(j, c, clientSocket);
 		c.ajouteInterfaceUtilisateur(vue);
+		c.ajouteSocket(clientSocket);
 		SwingUtilities.invokeLater(vue);
 	}
 

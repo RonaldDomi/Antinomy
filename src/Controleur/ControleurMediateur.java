@@ -33,6 +33,8 @@ import Modele.*;
 import Vue.CollecteurEvenements;
 import Vue.InterfaceUtilisateur;
 
+import java.net.Socket;
+
 public class ControleurMediateur implements CollecteurEvenements {
 	Jeu jeu;
 
@@ -51,7 +53,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 	IA joueurAutomatique;
 	boolean IAActive;
 	AnimationJeuAutomatique animationIA;
-
+	Socket clientSocket;
 
 	final int lenteurAttente = 50;
 	int decompte;
@@ -62,10 +64,12 @@ public class ControleurMediateur implements CollecteurEvenements {
 		typeJoueur = new int[2];
 		for (int i = 0; i < joueurs.length; i++) {
 			joueurs[i][0] = new JoueurHumain(i, jeu);
-			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
+//			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
+			joueurs[i][1] = new JoueurEnLigne(i, jeu);
 			typeJoueur[i] = 0;
 		}
-		typeJoueur[1] = 1;
+		if (Configuration.typeJoueur >= 0)
+		typeJoueur[Configuration.typeJoueur] = 1;
 
 //		animations = Configuration.nouvelleSequence();
 		vitesseAnimations = Configuration.vitesseAnimations;
@@ -84,17 +88,29 @@ public class ControleurMediateur implements CollecteurEvenements {
 		vue = v;
 		for (Joueur[] joueur : joueurs) {
 			joueur[0].ajouteInterfaceUtilisateur(vue);
+			
 //			joueurs[i][1].ajouteInterfaceUtilisateur(vue);
 		}
 	}
 
-
+	
+	
+	public void ajouteSocket(Socket clientSocket){
+		this.clientSocket = clientSocket;
+		for (Joueur[] joueur: joueurs) {
+			joueur[1].ajouteSocket(clientSocket);
+			joueur[0].ajouteSocket(clientSocket);
+		}
+	}
+	
+	
 	@Override
 	public void clicSouris(int l, int c) {
 		// Lors d'un clic, on le transmet au joueur courant.
 		// Si un coup a effectivement été joué (humain, coup valide), on change de joueur.
 		if (joueurs[joueurCourant][typeJoueur[joueurCourant]].jeu(l, c)) {
 			changeJoueur();
+			joueurs[joueurCourant][typeJoueur[joueurCourant]].envoyerJeu();
 //				joueurs[joueurCourant][typeJoueur[joueurCourant]].afficherPreSelection();
 //				jeu.metAJour();
 		}
@@ -202,6 +218,8 @@ public class ControleurMediateur implements CollecteurEvenements {
 				int type = typeJoueur[joueurCourant];
 				// Lorsque le temps est écoulé on le transmet au joueur courant.
 				// Si un coup a été joué (IA) on change de joueur.
+				System.out.println("type = " + type);
+				System.out.println(jeu.getJoueurCourant());
 				if (joueurs[joueurCourant][type].tempsEcoule()) {
 					System.out.println("IA jouer");
 					changeJoueur();

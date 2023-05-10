@@ -26,6 +26,7 @@
  */
 
 import Controleur.ControleurMediateur;
+import Global.Configuration;
 import Modele.Jeu;
 import Vue.InterfaceGraphique;
 import Vue.CollecteurEvenements;
@@ -43,9 +44,12 @@ public class Antinomy {
 //		in = Configuration.ouvre("Niveaux/Original.txt");
 //		Configuration.info("Niveaux trouvés");
 //
+		
+		Configuration.typeJoueur = -1;
 		Jeu j = new Jeu();
 		CollecteurEvenements control = new ControleurMediateur(j);
 //		switch (typeInterface) {
-		InterfaceGraphique.demarrer(j, control);
+		InterfaceGraphique.demarrer(j, control, null);
+		
 	}
 }
