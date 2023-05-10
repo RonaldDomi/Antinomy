@@ -41,7 +41,7 @@ public class Arbre2 {
             int indexContinuum = moves.get(i).indexContinuum;
             int dirParadox = moves.get(i).paradox;
             //faire coup
-            Jeu jeuBase;
+            Jeu jeuBase, jeuBase2 = null;
             try {
                 jeuBase = arbreCourant.jeuCourant.clone();
                 jeuBase.historique = new Historique(arbreCourant.jeuCourant.historique);
@@ -51,22 +51,43 @@ public class Arbre2 {
             jeuBase.coupEchangeCarteMainContinuum(indexMain, indexContinuum);
             //faire paradox
             if(dirParadox == 1){
-                jeuBase.coupParadox(1);
+                try {
+                    jeuBase2 = jeuBase.clone();
+                } catch (CloneNotSupportedException e) {
+                    throw new RuntimeException(e);
+                }
+                jeuBase2.coupParadox(1);
             }else if(dirParadox == -1){
                 jeuBase.coupParadox(-1);
             }
             //faire clash if exist
             if (jeuBase.existeClash()){
                 jeuBase.coupClash();
+                if(jeuBase2 != null)
+                    jeuBase2.coupClash();
             }
 
+            jeuBase.finTour(false);
             //evaluation
-            Arbre2 newFils = new Arbre2(jeuBase, moves.get(i));
-            float evaluation = -Search(depth - 1, newFils);
+            Arbre2 newFils = new Arbre2(jeuBase, moves.get(i)), newFils2 = null;
+            float evaluation = -Search(depth - 1, newFils), evaluation2 = 0;
+
+            if(jeuBase2 != null){
+                jeuBase2.finTour(false);
+                //evaluation
+                newFils2 = new Arbre2(jeuBase2, moves.get(i));
+                evaluation2 = -Search(depth - 1, newFils2);
+            }
 //            int evaluation = Search(depth - 1, newFils);
             arbreCourant.fils.add(newFils);
-            bestEvalThisIteration = Math.max(evaluation, bestEvalThisIteration);
-
+            if(jeuBase2 == null)
+                bestEvalThisIteration = Math.max(evaluation, bestEvalThisIteration);
+            else {
+                arbreCourant.fils.add(newFils2);
+                bestEvalThisIteration = Math.max(evaluation, Math.max(evaluation2, bestEvalThisIteration));
+            }
+            //ici pas compris a voir
+            //!!!!!!!!!!!!!!!!!!!!!!
             if (bestEvalThisIteration > arbreCourant.bestEval) {
                 arbreCourant.bestCoup = moves.get(i);
                 arbreCourant.bestEval = bestEvalThisIteration;
