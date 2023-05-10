@@ -2,6 +2,7 @@ package Modele;
 
 import java.util.ArrayList;
 import java.util.List;
+import Global.Statistics;
 
 public class Arbre2 {
     Jeu jeuCourant;
@@ -20,12 +21,13 @@ public class Arbre2 {
         bestEval = -1000;
     }
 
-    public Coup getCoup(){
-        Search(2, this);
+    public Coup getCoup(int depth){
+        Search(depth, this);
         return bestCoup;
     }
 
     int Search(int depth, Arbre2 arbreCourant){
+        Statistics.incrementConfigurationsLookedAt();
         if(depth == 0){
             arbreCourant.bestEval = Evaluate(arbreCourant.jeuCourant);
             return arbreCourant.bestEval;
@@ -61,6 +63,7 @@ public class Arbre2 {
             //evaluation
             Arbre2 newFils = new Arbre2(jeuBase, moves.get(i));
             int evaluation = -Search(depth - 1, newFils);
+//            int evaluation = Search(depth - 1, newFils);
             arbreCourant.fils.add(newFils);
             bestEvalThisIteration = Math.max(evaluation, bestEvalThisIteration);
 

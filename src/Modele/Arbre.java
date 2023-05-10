@@ -1,5 +1,7 @@
 package Modele;
 
+import Global.Statistics;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,10 +44,11 @@ public class Arbre {
     //l'heuristique du score est a changé ici elle est mauvaise car elle ne minimise pas celle de l'adversaire
     //on pourrait prendre (scoreIA - scoreADVERSAIRE) et maximiser cela
     //à discuter avec l'équipe
-    public void create(){
+    public void create(int profondeurMax){
+        Statistics.incrementConfigurationsLookedAt();
         //condition arret
         //ici ce jeu est une feuille
-        if (this.j.joueurGagnant == 1 || this.profondeur >= 5)
+        if (this.j.joueurGagnant == 1 || this.profondeur >= profondeurMax)
             return;
 
         Jeu temp = null, temp2 = null;
@@ -59,6 +62,7 @@ public class Arbre {
                 //etape 2
                 try {
                     temp = j.clone();
+                    temp.historique = j.historique.clone();
                 } catch (CloneNotSupportedException e) {
                     throw new RuntimeException(e);
                 }
@@ -78,6 +82,7 @@ public class Arbre {
                             paradoxBas = true;
                             try {
                                 temp2 = temp.clone();
+                                temp2.historique = temp.historique.clone();
                             } catch (CloneNotSupportedException e) {
                                 throw new RuntimeException(e);
                             }
@@ -119,7 +124,7 @@ public class Arbre {
         }
         //on appelle récursivement create avec tous les fils cree
         for (Arbre a:fils) {
-            a.create();
+            a.create(profondeurMax);
         }
     }
 
