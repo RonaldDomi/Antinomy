@@ -115,17 +115,26 @@ public class ControleurMediateur implements CollecteurEvenements {
 				break;
 			case 1: //charger
 				vue.charger();
+				resetSelection();
 				break;
-			case 2: //undo
+			case 2: //undo;
 				jeu.undo();
+				resetSelection();
 				break;
 			case 3: //redo
 				jeu.redo();
+				resetSelection();
 				break;
 		}
 		jeu.metAJour();
 	}
 
+
+	private void resetSelection(){
+		vue.selectionnerParadox(-1, -1, -1, -1);
+		vue.selectionnerCarteContinuum(null);
+		vue.selectionnerCarteMain(-1);
+	}
 
 	private void testFin() {
 //		if (jeu.niveauTermine()) {
@@ -141,11 +150,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 		switch (touche) {
 			case "Left":
 				jeu.undo();
-				jeu.metAJour();
+				resetSelection();
 				break;
 			case "Right":
 				jeu.redo();
-				jeu.metAJour();
+				resetSelection();
 				break;
 //			case "Up":
 //				deplace(-1, 0);

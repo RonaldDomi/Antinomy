@@ -81,7 +81,11 @@ class JoueurHumain extends Joueur {
             case 1: //main
                 return clicMain(indexCarte);
             case 2: //continuum
-                return clicContinuum(indexCarte);
+                if (clicContinuum(indexCarte)){
+                    vue.selectionnerCarteContinuum(null);
+                    return true;
+                }
+                return false;
             default:
                 return false;
         }
@@ -109,7 +113,7 @@ class JoueurHumain extends Joueur {
 //                    System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
             case -2: //debut de jeu
 //                    System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
-                vue.selectionnerCarteContinuum(null);
+
                 return jeu.coupChangerPositionSorcier(indexCarte);
             case 1: //debut de tour
                 if (indexCarteMain != -1){
