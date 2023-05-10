@@ -16,7 +16,7 @@ public class StatisticsTracker {
     }
 
     static double generateDepthAverage(int depth){
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 100; i++){
             Jeu jeu = new Jeu();
             jeu.getInfoJoueurs()[0].setSorcierIndice(0);
             jeu.getInfoJoueurs()[1].setSorcierIndice(0);

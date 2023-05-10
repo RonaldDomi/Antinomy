@@ -10,7 +10,7 @@ public class Arbre2 {
 //    Coup bestsMoveThisPosition;
 //    Coup bestMoveThisIteration;
 //    int bestEvalThisIteration;
-    int bestEval;
+    float bestEval;
     Coup bestCoup;
     Coup coupDeParent;
 
@@ -26,14 +26,14 @@ public class Arbre2 {
         return bestCoup;
     }
 
-    int Search(int depth, Arbre2 arbreCourant){
+    float Search(int depth, Arbre2 arbreCourant){
         Statistics.incrementConfigurationsLookedAt();
         if(depth == 0){
             arbreCourant.bestEval = Evaluate(arbreCourant.jeuCourant);
             return arbreCourant.bestEval;
         }
 
-        int bestEvalThisIteration = -1000;
+        float bestEvalThisIteration = -1000;
 
         List<Coup> moves = arbreCourant.jeuCourant.getCoupsPossibles();
         for(int i = 0; i < moves.size(); i++) {
@@ -48,8 +48,8 @@ public class Arbre2 {
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
-            //faire paradox
             jeuBase.coupEchangeCarteMainContinuum(indexMain, indexContinuum);
+            //faire paradox
             if(dirParadox == 1){
                 jeuBase.coupParadox(1);
             }else if(dirParadox == -1){
@@ -62,7 +62,7 @@ public class Arbre2 {
 
             //evaluation
             Arbre2 newFils = new Arbre2(jeuBase, moves.get(i));
-            int evaluation = -Search(depth - 1, newFils);
+            float evaluation = -Search(depth - 1, newFils);
 //            int evaluation = Search(depth - 1, newFils);
             arbreCourant.fils.add(newFils);
             bestEvalThisIteration = Math.max(evaluation, bestEvalThisIteration);
@@ -75,5 +75,15 @@ public class Arbre2 {
         return bestEvalThisIteration;
     }
 
-    int Evaluate(Jeu jeu){return jeu.getInfoJoueurs()[1].getPoints();}
+    float Evaluate(Jeu jeu){
+        float evaluation;
+        evaluation = jeu.getInfoJoueurCourant().getPoints() - jeu.getInfoJoueurs()[jeu.adversaire()].getPoints();
+        return evaluation;
+    }
+
+    @Override
+    public String toString() {
+        String res = "";
+        return res + this.jeuCourant.getInfoJoueurs()[1].getPoints();
+    }
 }

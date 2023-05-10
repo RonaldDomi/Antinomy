@@ -145,12 +145,14 @@ public class ControleurMediateur implements CollecteurEvenements {
 				jeu.redo();
 				jeu.metAJour();
 				break;
-//			case "Up":
-//				deplace(-1, 0);
-//				break;
-//			case "Down":
-//				deplace(1, 0);
-//				break;
+			case "Import":
+				vue.charger();
+				jeu.metAJour();
+				break;
+			case "Save":
+				vue.sauvegarder();
+				jeu.metAJour();
+				break;
 			case "Quit":
 				System.exit(0);
 				break;

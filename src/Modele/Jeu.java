@@ -439,7 +439,8 @@ public class Jeu extends Observable implements Cloneable{
 					// if paradox superieur
 					if (temp.existeParadoxSuperieur()) {
 						coupsPossibles.add(new Coup(i, c, 1));
-					}else if(temp.existeParadoxInferieur()){
+					}
+					if(temp.existeParadoxInferieur()){
 						coupsPossibles.add(new Coup(i, c, -1));
 					}
 				}else{
