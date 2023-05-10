@@ -126,6 +126,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		enJeu.add(niv);
 
 		enJeu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		enJeu.getContentPane().setBackground(new Color(62, 129, 125, 255));
 		menuPrincipale.setVisible(false);
 		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		enJeu.setVisible(true);

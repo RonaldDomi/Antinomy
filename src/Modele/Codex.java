@@ -42,16 +42,16 @@ public class Codex implements Cloneable{
 	public void cycleCouleur() {
 		switch (couleurInterdite) {
 			case VERT:
-				couleurInterdite = Couleur.ROUGE;
-				break;
-			case ROUGE:
-				couleurInterdite = Couleur.BLEU;
-				break;
-			case BLEU:
 				couleurInterdite = Couleur.VIOLET;
 				break;
-			case VIOLET:
+			case ROUGE:
 				couleurInterdite = Couleur.VERT;
+				break;
+			case BLEU:
+				couleurInterdite = Couleur.ROUGE;
+				break;
+			case VIOLET:
+				couleurInterdite = Couleur.BLEU;
 				break;
 			default:
 				// Handle any unexpected cases

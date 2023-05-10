@@ -65,7 +65,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
 			typeJoueur[i] = 0;
 		}
-		typeJoueur[1] = 1;
+		typeJoueur[1] = 0;
 
 //		animations = Configuration.nouvelleSequence();
 		vitesseAnimations = Configuration.vitesseAnimations;
@@ -102,6 +102,9 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	void changeJoueur() {
 		joueurCourant = (joueurCourant + 1) % joueurs.length;
+		if (typeJoueur[joueurCourant] == 0){
+			joueurs[joueurCourant][0].afficherPreSelection();
+		}
 	}
 
 	@Override
@@ -206,6 +209,9 @@ public class ControleurMediateur implements CollecteurEvenements {
 					System.out.println("IA jouer");
 					changeJoueur();
 				} else {
+					if (typeJoueur[joueurCourant] == 0){
+						joueurs[joueurCourant][0].afficherPreSelection();
+					}
 					// Sinon on indique au joueur qui ne réagit pas au temps (humain) qu'on l'attend.
 //					System.out.println("On vous attend, joueur " + joueurs[joueurCourant][type].num());
 					decompte = lenteurAttente;

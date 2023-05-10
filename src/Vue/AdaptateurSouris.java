@@ -61,7 +61,7 @@ public class AdaptateurSouris extends MouseAdapter {
 		if (e.getY() >= n.padding && e.getY() <= n.padding + n.largeurCarte ){
 			//bouton
 			for (int i = 0; i < 4; i++) {
-				if (e.getX() >= n.deb_bouton + i*n.largeurCarte + i*n.padding && e.getX() < n.deb_bouton + (i+1)*n.largeurCarte + i*n.padding){
+				if (e.getX() >= n.deb_bouton + i*n.taille_bouton + i*n.padding && e.getX() < n.deb_bouton + (i+1)*n.taille_bouton + i*n.padding){
 					System.out.println("Bouton Clicked : " + i);
 					control.clicSourisBouton(i);
 					return;
