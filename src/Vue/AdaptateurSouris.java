@@ -69,7 +69,7 @@ public class AdaptateurSouris extends MouseAdapter {
 			}
 
 
-		}  else if (e.getY() >= n.centre_hauteur - n.hauteurCarte/2 && e.getY() <= n.centre_hauteur + n.hauteurCarte/2) {
+		}  else if (e.getY() >= n.centre_hauteur - n.hauteurCarte/2 - (n.joueurCourant) * (n.largeurCarte + n.padding) && e.getY() <= n.centre_hauteur + n.hauteurCarte/2 + (1-n.joueurCourant) * (n.largeurCarte + n.padding)) {
 			for (int i = 0; i < 9; i++) {
 				if (e.getX() >= n.deb_continuum + i*n.largeurCarte + i*n.padding && e.getX() < n.deb_continuum + (i+1)*n.largeurCarte + i*n.padding){
 					System.out.println("Continium Clicked : " + i);
