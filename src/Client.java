@@ -1,7 +1,6 @@
 import Controleur.ControleurMediateur;
 import Global.Configuration;
 import Modele.Historique;
-import Modele.Import;
 import Modele.Jeu;
 import Vue.CollecteurEvenements;
 import Vue.InterfaceGraphique;
@@ -10,51 +9,56 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class Client {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		if (args.length != 2) {
 			System.err.println("Usage : Client <host name> <port number>");
 			System.exit(1);
 		}
 		
-		String hostName = args[0];
-		int portNumber = Integer.parseInt(args[1]);
+		String nom_host = args[0];
+		int numero_port = Integer.parseInt(args[1]);
 		
+		Configuration.typeJoueur = 0;
+		Jeu jeu = null;
+		PrintWriter outgoing = null;
+		BufferedReader incoming = null;
+		BufferedReader stdIn = null;
+		Socket client_socket=null;
 		
 		try{
-			Configuration.typeJoueur = 0;
+			client_socket = new Socket(nom_host, numero_port);
 			
-			Socket clientSocket = new Socket(hostName, portNumber);
+			outgoing = new PrintWriter(client_socket.getOutputStream(), true);
+			incoming = new BufferedReader(new InputStreamReader(client_socket.getInputStream()));
+			stdIn = new BufferedReader(new InputStreamReader(System.in));
 			
-			PrintWriter outgoing = new PrintWriter(clientSocket.getOutputStream(), true);
-			BufferedReader incoming = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-			
-			Jeu jeu = new Jeu(incoming.readLine());
-			jeu.historique = new Historique();
-			CollecteurEvenements control = new ControleurMediateur(jeu);
-			InterfaceGraphique.demarrer(jeu, control, clientSocket);
-
-//			System.out.println("Carte : " + incoming.readLine());
-//
-//			String userInput;
-//			while ((userInput = stdIn.readLine()) != null) {
-//				outgoing.println(userInput);
-//				System.out.println("echo : " + incoming.readLine());
-//			}
-		
-		} catch (UnknownHostException e){
-			System.err.println("Unknown host : " + e.getMessage());
+		} catch (UnknownHostException unknownHostException){
+			System.err.println("Unknown host : " + unknownHostException.getMessage());
 			System.exit(1);
-		} catch (IOException e) {
-			System.err.println("Erreur : " + e.getMessage());
+		} catch (IOException ioException) {
+			System.err.println("IOException : " + ioException.getMessage());
+			System.exit(1);
+		} catch (IllegalArgumentException illegalArgumentException){
+			System.err.println("illegal port number : " + illegalArgumentException.getMessage());
 			System.exit(1);
 		}
 		
+		try{
+			jeu = new Jeu(incoming.readLine());
+		}catch (IOException ioException){
+			System.err.println("Le serveur s'est déconnecté?? " + ioException.getMessage());
+			client_socket.close();
+			System.exit(1);
+		}
+		
+		System.out.println("Client main thread : " + Thread.currentThread().getName());
+		jeu.historique = new Historique();
+		CollecteurEvenements control = new ControleurMediateur(jeu);
+		InterfaceGraphique.demarrer(jeu, control, client_socket);
 	}
 }

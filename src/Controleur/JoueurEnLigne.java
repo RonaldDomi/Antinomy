@@ -25,19 +25,14 @@ package Controleur;
  *          38401 Saint Martin d'Hères
  */
 
-import Modele.Arbre;
 import Modele.Historique;
-import Modele.Import;
 import Modele.Jeu;
-import Vue.InterfaceUtilisateur;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 class JoueurEnLigne extends Joueur {
@@ -48,12 +43,8 @@ class JoueurEnLigne extends Joueur {
     JoueurEnLigne(int n, Jeu p) {
         super(n, p);
     }
-
-    void ajouteInterfaceUtilisateur(InterfaceUtilisateur vue){
-        this.vue = vue;
-    }
     
-    
+    @Override
     void ajouteSocket(Socket clientSocket){
         this.clientSocket = clientSocket;
     }
@@ -63,6 +54,7 @@ class JoueurEnLigne extends Joueur {
         return jeu.getEtape();
     }
     
+    @Override
     void envoyerJeu(){
         try{
             PrintWriter outgoing = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -74,19 +66,29 @@ class JoueurEnLigne extends Joueur {
     
     @Override
     boolean tempsEcoule() {
-        System.out.println("En attente");
+        System.out.println("En attente de l'autre machine...");
+        
         try {
+            System.out.println("Client tempsEcoule thread : " + Thread.currentThread().getName());
             BufferedReader incoming = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            jeu.modifierJeu(incoming.readLine());
-            System.out.println("ici2 : " + jeu.getTour());
-            System.out.println("ici2 : " + jeu.getJoueurCourant());
-            jeu.historique = new Historique();
-            jeu.metAJour();
-        }catch (Exception e){
-            System.err.println(e.getMessage());
-            return false;
+            String jeu_string = incoming.readLine();
+            
+            if (jeu_string == null){
+                System.err.println("Connection reset by peer??");
+                System.exit(1);
+            }
+            
+            jeu.modifierJeu(jeu_string);
+            
+        }catch (IOException ioException){
+            System.err.println("IOException : " + ioException.getMessage());
+            System.err.println("Connection reset by peer??");
+            System.exit(1);
         }
-        System.out.println("Fin attente");
+        
+        System.out.println("Fin de l'attente");
+        jeu.historique = new Historique(); //Pour l'instant, on ne gère pas d'historique
+        jeu.metAJour();
         
         return true;
     }

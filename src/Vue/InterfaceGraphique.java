@@ -64,10 +64,10 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT, new File("res/Fonts/Medieval-English.ttf"));
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(medievalFont);
-		} catch (FontFormatException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		} catch (FontFormatException fontFormatException) {
+			throw new RuntimeException(fontFormatException);
+		} catch (IOException ioException) {
+			throw new RuntimeException(ioException);
 		}
 	}
 
@@ -77,6 +77,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		c.ajouteSocket(clientSocket);
 		SwingUtilities.invokeLater(vue);
 	}
+
 
 	public void toggleFullscreen() {
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();

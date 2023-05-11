@@ -5,8 +5,6 @@ import java.net.Socket;
 import java.util.Random;
 import java.util.Scanner;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 public class Import {
     Scanner scanner;
 
@@ -22,17 +20,15 @@ public class Import {
     
     public Import(Socket clientSocket){
         try{
-            assertNotNull(clientSocket);
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            assertNotNull(in);
             
-            System.out.println("En attente");
+            System.out.println("En attente de l'autre machine...");
             this.scanner = new Scanner(in.readLine());
             
             System.out.println("Hors attente");
-        }catch (IOException e){
-            System.err.println("IOException : ");
-            e.printStackTrace();
+        }catch (IOException ioException){
+            System.err.println("IOException : " + ioException.getMessage());
+            ioException.printStackTrace();
         }
     }
 

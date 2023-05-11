@@ -1,13 +1,16 @@
-import java.io.*;
-import java.net.*;
-
 import Controleur.ControleurMediateur;
 import Global.Configuration;
-import Modele.*;
+import Modele.Jeu;
 import Vue.CollecteurEvenements;
 import Vue.InterfaceGraphique;
 
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class Server {
 	
@@ -19,37 +22,42 @@ public class Server {
 		
 		int portNumber = Integer.parseInt(args[0]);
 		
-		
+		Configuration.typeJoueur = 1;
+		ServerSocket server_socket = null ;
+		Socket client_socket = null;
+		PrintWriter outgoing = null;
+		BufferedReader incoming = null;
 		try{
 			
-			Configuration.typeJoueur = 1;
-			
-			ServerSocket serverSocket = new ServerSocket(portNumber);
-			Socket clientSocket = serverSocket.accept();
-			
-			PrintWriter outgoing = new PrintWriter(clientSocket.getOutputStream(), true);
-			BufferedReader incoming = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			
-			Jeu jeu = new Jeu();
-			CollecteurEvenements control = new ControleurMediateur(jeu);
-			InterfaceGraphique.demarrer(jeu, control, clientSocket);
 			
 			
+			server_socket = new ServerSocket(portNumber);
 			
-			outgoing.println(jeu);
-//
-//			while ((inputLine = incoming.readLine()) != null) {
-//				System.out.println("Incoming!");
-//				System.out.println("Message : " + inputLine);
-//			}
-		
-		} catch (IOException e) {
-			System.err.println("Erreur :" + e.getMessage());
-			e.printStackTrace();
+			client_socket = server_socket.accept();
 			
-		} catch(Exception except){
-			System.err.println("Autre erreur : " + except.getMessage());
-			except.printStackTrace();
+			outgoing = new PrintWriter(client_socket.getOutputStream(), true);
+			incoming = new BufferedReader(new InputStreamReader(client_socket.getInputStream()));
+			
 		}
+		catch(SocketTimeoutException socketTimeoutException){
+			System.err.println("Socket timeout exception : " + socketTimeoutException.getMessage());
+			System.exit(1);
+		}
+		catch (IOException ioException){
+			System.err.println("IOException :" + ioException.getMessage());
+			System.exit(1);
+		}
+		catch(IllegalArgumentException illegalArgumentException){
+			System.err.println("Illegal port number : " + illegalArgumentException.getMessage());
+			System.exit(1);
+		}
+		
+		Jeu jeu = new Jeu();
+		CollecteurEvenements control = new ControleurMediateur(jeu);
+		InterfaceGraphique.demarrer(jeu, control, client_socket);
+		
+		outgoing.println(jeu);
 	}
+	
 }
+
