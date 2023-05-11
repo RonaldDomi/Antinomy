@@ -65,8 +65,8 @@ class JoueurAI extends Joueur {
 //        System.out.println("total for this configuration: " + Statistics.getNbTotalConfigurations());
 
 
-        Arbre2 arbre2 = new Arbre2(jeu, null);
-        Coup bestCoup = arbre2.getCoup(5);
+        Arbre2 arbre2 = new Arbre2(jeu, null, true);
+        Coup bestCoup = arbre2.getCoup(1, true);
         jeu.coupEchangeCarteMainContinuum(bestCoup.getIndexMain(), bestCoup.getIndexContinuum());
         if(bestCoup.getParadox() != 0) jeu.coupParadox(bestCoup.getParadox());
         return true;

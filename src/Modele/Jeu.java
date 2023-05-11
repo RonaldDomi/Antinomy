@@ -455,6 +455,31 @@ public class Jeu extends Observable implements Cloneable{
 		return coupsPossibles;
 	}
 
+	public static Jeu faireCoupClone(Jeu jeu, Coup coup){
+		int indexMain = coup.indexMain;
+		int indexContinuum = coup.indexContinuum;
+		int dirParadox = coup.paradox;
+
+		//dirParadox -1, +1, or 0 for nothing
+		Jeu jeuBase;
+		try {
+			jeuBase = jeu.clone();
+			jeuBase.historique = new Historique(jeu.historique);
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+		jeuBase.coupEchangeCarteMainContinuum(indexMain, indexContinuum);
+		//faire paradox
+		if(dirParadox != 0) jeuBase.coupParadox(dirParadox);
+
+		//faire clash if exist
+		if (jeuBase.existeClash()){
+			jeuBase.coupClash();
+		}
+
+		return jeuBase;
+	}
+
 	@Override
 	public String toString() {
 //		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant;etape

@@ -4,28 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 import Global.Statistics;
 
+import static Modele.Jeu.faireCoupClone;
+
 public class Arbre2 {
     Jeu jeuCourant;
     List<Arbre2> fils;
-//    Coup bestsMoveThisPosition;
-//    Coup bestMoveThisIteration;
-//    int bestEvalThisIteration;
     float bestEval;
     Coup bestCoup;
     Coup coupDeParent;
+    boolean isMaximizingPlayer;
 
-    public Arbre2(Jeu jeuCourant, Coup coupDeParent){
+    public Arbre2(Jeu jeuCourant, Coup coupDeParent, boolean isMaximizingPlayer){
         this.jeuCourant = jeuCourant;
         this.coupDeParent = coupDeParent;
+        this.isMaximizingPlayer = isMaximizingPlayer;
+        if(isMaximizingPlayer) this.bestEval = Integer.MIN_VALUE;
+        else this.bestEval = Integer.MAX_VALUE;
         fils = new ArrayList<>();
-        bestEval = -1000;
     }
 
-    public Coup getCoup(int depth){
-        Search(depth, this);
+    public Coup getCoup(int depth, boolean withAlphaBeta){
+        if(withAlphaBeta) SearchAlphaBeta(depth, this, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        else Search(depth, this);
         return bestCoup;
     }
-
     float Search(int depth, Arbre2 arbreCourant){
         Statistics.incrementConfigurationsLookedAt();
         if(depth == 0){
@@ -41,7 +43,7 @@ public class Arbre2 {
             int indexContinuum = moves.get(i).indexContinuum;
             int dirParadox = moves.get(i).paradox;
             //faire coup
-            Jeu jeuBase, jeuBase2 = null;
+            Jeu jeuBase;
             try {
                 jeuBase = arbreCourant.jeuCourant.clone();
                 jeuBase.historique = new Historique(arbreCourant.jeuCourant.historique);
@@ -51,43 +53,22 @@ public class Arbre2 {
             jeuBase.coupEchangeCarteMainContinuum(indexMain, indexContinuum);
             //faire paradox
             if(dirParadox == 1){
-                try {
-                    jeuBase2 = jeuBase.clone();
-                } catch (CloneNotSupportedException e) {
-                    throw new RuntimeException(e);
-                }
-                jeuBase2.coupParadox(1);
+                jeuBase.coupParadox(1);
             }else if(dirParadox == -1){
                 jeuBase.coupParadox(-1);
             }
             //faire clash if exist
             if (jeuBase.existeClash()){
                 jeuBase.coupClash();
-                if(jeuBase2 != null)
-                    jeuBase2.coupClash();
             }
 
-            jeuBase.finTour(false);
             //evaluation
-            Arbre2 newFils = new Arbre2(jeuBase, moves.get(i)), newFils2 = null;
-            float evaluation = -Search(depth - 1, newFils), evaluation2 = 0;
-
-            if(jeuBase2 != null){
-                jeuBase2.finTour(false);
-                //evaluation
-                newFils2 = new Arbre2(jeuBase2, moves.get(i));
-                evaluation2 = -Search(depth - 1, newFils2);
-            }
+            Arbre2 newFils = new Arbre2(jeuBase, moves.get(i), true);
+            float evaluation = -Search(depth - 1, newFils);
 //            int evaluation = Search(depth - 1, newFils);
             arbreCourant.fils.add(newFils);
-            if(jeuBase2 == null)
-                bestEvalThisIteration = Math.max(evaluation, bestEvalThisIteration);
-            else {
-                arbreCourant.fils.add(newFils2);
-                bestEvalThisIteration = Math.max(evaluation, Math.max(evaluation2, bestEvalThisIteration));
-            }
-            //ici pas compris a voir
-            //!!!!!!!!!!!!!!!!!!!!!!
+            bestEvalThisIteration = Math.max(evaluation, bestEvalThisIteration);
+
             if (bestEvalThisIteration > arbreCourant.bestEval) {
                 arbreCourant.bestCoup = moves.get(i);
                 arbreCourant.bestEval = bestEvalThisIteration;
@@ -96,9 +77,66 @@ public class Arbre2 {
         return bestEvalThisIteration;
     }
 
+    float SearchAlphaBeta(int depth, Arbre2 arbreCourant, float alpha, float beta){
+        Statistics.incrementConfigurationsLookedAt();
+        if(depth == 0){
+            arbreCourant.bestEval = Evaluate(arbreCourant.jeuCourant);
+            return arbreCourant.bestEval;
+        }
+
+        List<Coup> moves = arbreCourant.jeuCourant.getCoupsPossibles();
+        if(isMaximizingPlayer){
+            float maxEval = Integer.MIN_VALUE;
+            for(int i = 0; i < moves.size(); i++) {
+                //faire coup
+                Jeu jeuBase = faireCoupClone(arbreCourant.jeuCourant, moves.get(i));
+                Arbre2 newFils = new Arbre2(jeuBase, moves.get(i), false);
+
+                //evaluation
+                float evaluation = SearchAlphaBeta(depth - 1, newFils, alpha, beta);
+                maxEval = Math.max(maxEval, evaluation);
+                alpha = Math.max(alpha, evaluation);
+                if (evaluation > arbreCourant.bestEval) {
+                    arbreCourant.bestCoup = moves.get(i);
+                    arbreCourant.bestEval = maxEval;
+                }
+
+                arbreCourant.fils.add(newFils);
+                if (beta <= alpha) {
+                    break; // Beta cutoff
+                }
+            }
+            return maxEval;
+        }else{
+            float minEval = Integer.MAX_VALUE;
+            for(int i = 0; i < moves.size(); i++) {
+                //faire coup
+                Jeu jeuBase = faireCoupClone(arbreCourant.jeuCourant, moves.get(i));
+                Arbre2 newFils = new Arbre2(jeuBase, moves.get(i), true);
+
+                //evaluation
+                float evaluation = SearchAlphaBeta(depth - 1, newFils, alpha, beta);
+                minEval = Math.min(minEval, evaluation);
+                beta = Math.min(beta, evaluation);
+                if (evaluation < arbreCourant.bestEval) {
+                    arbreCourant.bestCoup = moves.get(i);
+                    arbreCourant.bestEval = minEval;
+                }
+
+                if (beta <= alpha) {
+                    break; // Alpha cutoff
+                }
+            }
+
+            return minEval;
+        }
+
+    }
+
+
     float Evaluate(Jeu jeu){
         float evaluation;
-        evaluation = jeu.getInfoJoueurCourant().getPoints() - jeu.getInfoJoueurs()[jeu.adversaire()].getPoints();
+        evaluation = jeu.getInfoJoueurs()[1].getPoints() - jeu.getInfoJoueurs()[0].getPoints();
         return evaluation;
     }
 
