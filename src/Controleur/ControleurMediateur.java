@@ -130,6 +130,21 @@ public class ControleurMediateur implements CollecteurEvenements {
 	}
 
 
+	@Override
+	public void clicSourisBoutonMenu(int index){
+		switch (index){
+			case 0: //Nouvelle partie
+				break;
+			case 1: //Charger
+				break;
+			case 2: //En ligne;
+				break;
+			case 3: //Tutoriel
+				break;
+		}
+
+	}
+
 	private void resetSelection(){
 		vue.selectionnerParadox(-1, -1, -1, -1);
 		vue.selectionnerCarteContinuum(null);

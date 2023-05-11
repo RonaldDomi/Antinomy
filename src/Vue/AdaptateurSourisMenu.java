@@ -25,11 +25,30 @@ package Vue;
  *          Domaine universitaire
  *          38401 Saint Martin d'Hères
  */
-public interface CollecteurEvenements {
-	void clicSouris(int l, int c);
-	void clicSourisBouton(int i);
-	void clicSourisBoutonMenu(int i);
-	void toucheClavier(String t);
-	void ajouteInterfaceUtilisateur(InterfaceUtilisateur vue);
-	void tictac();
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class AdaptateurSourisMenu extends MouseAdapter {
+	MenuGraphique m;
+	CollecteurEvenements control;
+
+	AdaptateurSourisMenu(MenuGraphique menu, CollecteurEvenements c) {
+		m = menu;
+		control = c;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() <= m.centre_largeur + m.taille_bouton/2 ){
+			//bouton
+			for (int i = 0; i < 4; i++) {
+				if (e.getY() >= m.deb_bouton + i*m.mesureLargeur + i*m.padding && e.getY() < m.deb_bouton + (i+1)*m.mesureLargeur + i*m.padding){
+					System.out.println("Bouton Clicked : " + i);
+					control.clicSourisBoutonMenu(i);
+					return;
+				}
+			}
+		}
+	}
 }

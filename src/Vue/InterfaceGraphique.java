@@ -26,16 +26,19 @@ package Vue;
  *          38401 Saint Martin d'Hères
  */
 
+import Global.Configuration;
 import Modele.Export;
 import Modele.Jeu;
 import Modele.Import;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 
 
@@ -47,6 +50,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	JFrame enJeu;
 	boolean maximized;
 	NiveauGraphique niv;
+	MenuGraphique menu;
 	JFrame courant;
 
 	static Font h1;
@@ -92,10 +96,25 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		menuPrincipale = new JFrame("Antinomy");
 		enJeu = new JFrame("Antinomy");
 
+
+		Image icon;
+		InputStream in = Configuration.ouvre("Images/Diamant.png");
+		Configuration.info("Chargement de l'image " + "Icon");
+		try {
+			icon = ImageIO.read(in);
+			menuPrincipale.setIconImage(icon);
+			enJeu.setIconImage(icon);
+		} catch (Exception e) {
+			Configuration.erreur("Impossible de charger l'image " + "Icon");
+		}
+
+
 		enJeu.setSize(1000, 600);
 		menuPrincipale.setSize(1000, 600);
 //		h2MenuJeu = new Font("Medieval English", Font.PLAIN, enJeu.getWidth()/10);
 
+		menu = new MenuGraphique();
+		menu.addMouseListener(new AdaptateurSourisMenu(menu, control));
 
 		niv = new NiveauGraphique(j);
 		niv.addMouseListener(new AdaptateurSouris(niv, control));
@@ -117,94 +136,28 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 //		enJeuListe.add(menuJeu);
 //		enJeuListe.add(niv);
 
-		setMenuPrincipal();
-
 
 		Timer chrono = new Timer(16, new AdaptateurTemps(control));
 		chrono.start();
 
 		enJeu.add(niv);
 
-		enJeu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		enJeu.getContentPane().setBackground(new Color(62, 129, 125, 255));
-		menuPrincipale.setVisible(false);
-		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		enJeu.setVisible(true);
-		courant = enJeu;
-	}
-
-	void setMenuPrincipal(){
-		Box menu = Box.createVerticalBox();
-
-		menu.add(Box.createGlue());
-
-		JLabel nom_jeu = new JLabel("Antinomy");
-
-		nom_jeu.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-
-		menu.add(nom_jeu);
-
-		//=================
-		menu.add(Box.createGlue());
-
-		JButton nouvelle_partie = new JButton("Nouvelle Partie");
-		ActionListener nouvelle_partie_action = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			}
-		};
-		nouvelle_partie.setAlignmentX(JButton.CENTER_ALIGNMENT);
-		nouvelle_partie.addActionListener(nouvelle_partie_action);
-
-		menu.add(nouvelle_partie);
-
-		//=================
-		menu.add(Box.createGlue());
-
-		JButton charger = new JButton("Charger");
-		ActionListener charger_action = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			}
-		};
-		charger.setAlignmentX(JButton.CENTER_ALIGNMENT);
-		charger.addActionListener(charger_action);
-
-		menu.add(charger);
-
-		//=================
-		menu.add(Box.createGlue());
-
-		JButton tutoriel = new JButton("Tutoriel");
-		ActionListener tutoriel_action = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			}
-		};
-		tutoriel.setAlignmentX(JButton.CENTER_ALIGNMENT);
-		tutoriel.addActionListener(tutoriel_action);
-
-		menu.add(tutoriel);
-
-		//=================
-		menu.add(Box.createGlue());
-
-		JButton options = new JButton("Options");
-		ActionListener options_action = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			}
-		};
-		options.setAlignmentX(JButton.CENTER_ALIGNMENT);
-		options.addActionListener(options_action);
-
-		menu.add(options);
-
-		//=================
-
-		menu.add(Box.createGlue());
-
 		menuPrincipale.add(menu);
+
+		enJeu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		Color background_color = new Color(62, 129, 125, 255);
+		Color background_color = new Color(100, 182, 176, 255);
+		enJeu.getContentPane().setBackground(background_color);
+		menuPrincipale.getContentPane().setBackground(background_color);
+		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+		menuPrincipale.setVisible(false);
+//		menuPrincipale.setVisible(true);
+		enJeu.setVisible(true);
+//		enJeu.setVisible(false);
+//		courant = enJeu;
+		courant = menuPrincipale;
 	}
 
 	public void decale(int l, int c, double dl, double dc) {

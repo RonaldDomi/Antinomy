@@ -45,8 +45,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	Image carteVide, carteDos, carteDosR, bleu, rouge, violet, vert, clef, crane, papier, champignon,
 			diamant, diamantVide,
 			codexBleu, codexVert, codexRouge, codexViolet, backCodex,
-			fleche, bouton, boutonBlocked, carteSelect,
-			load, save, undo, redo;
+			fleche, bouton, boutonBlocked, boutonSelected, carteSelect,
+			load, save, undo, redo,
+			sceptre0, sceptre1;
 	Jeu j;
 	int largeurCarte;
 	int hauteurCarte;
@@ -65,9 +66,10 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 	int taille_bouton;
 
-
 	int debParadoxInf = -1, finParadoxInf = -1;
 	int debParadoxSup = -1, finParadoxSup = -1;
+
+	int selectBouton=-1;
 
 	// Décalage des éléments (pour pouvoir les animer)
 	Vecteur [][] decalages;
@@ -75,7 +77,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	Image [][] pousseurs;
 	int direction, etape;
 
-	Font h1, fontCarte, h2;
+	Font h1, fontCarte;
 	LinkedList<Integer> indexCarteSelectionneeContinuum;
 
 	NiveauGraphique(Jeu jeu) {
@@ -101,12 +103,15 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		fleche = lisImage("Fleche");
 		bouton = lisImage("Bouton");
 		boutonBlocked = lisImage("BoutonBlocked");
+		boutonSelected = lisImage("BoutonSelected");
 		carteSelect = lisImage("CarteSelect");
 		load = lisImage("Load");
 		save = lisImage("Save");
 		undo = lisImage("Undo");
 		redo = lisImage("Redo");
 		backCodex = lisImage("BackCodex");
+		sceptre0 = lisImage("Sceptre0");
+		sceptre1 = lisImage("Sceptre1");
 	}
 
 	private Image lisImage(String nom) {
@@ -172,16 +177,16 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		for (int k = 0; k < 4; k++) {
 			switch (k){
 				case 0:
-					tracer(drawable, bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+					tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					tracer(drawable, save, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					break;
 				case 1:
-					tracer(drawable, bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+					tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					tracer(drawable, load, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					break;
 				case 2:
 					if (j.getHistorique().peutAnnuler())
-						tracer(drawable, bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					else
 						tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 
@@ -189,7 +194,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 					break;
 				case 3:
 					if (j.getHistorique().peutRefaire())
-						tracer(drawable, bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					else
 						tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					tracer(drawable, redo, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
@@ -265,9 +270,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	
 	private void paintPositionJoueurs(Graphics g){
 		int x = centre_largeur + (j.getInfoJoueurs()[0].getSorcierIndice()-4) * (largeurCarte + padding);
-		g.fillOval(x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
+		tracer((Graphics2D) g, sceptre1, x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
+//		g.fillOval(x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
 		x = centre_largeur + (j.getInfoJoueurs()[1].getSorcierIndice()-4) * (largeurCarte + padding);
-		g.fillOval(x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
+		tracer((Graphics2D) g, sceptre0,x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
+//		g.fillOval(x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
 	}
 	
 	
@@ -397,8 +404,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		repaint();
 	}
 
-	public void decale(int l, int c, double dl, double dc) {
-		if ((dl != 0) || (dc != 0)) {
+	public void decale(int l, int c) {
 			Vecteur v = decalages[l][c];
 			if (v == null) {
 				v = new Vecteur();
@@ -454,5 +460,15 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		this.finParadoxInf = finParadoxInf;
 		this.debParadoxSup = debParadoxSup;
 		this.finParadoxSup = finParadoxSup;
+	}
+
+	public void selectBouton(int i){
+		selectBouton = i;
+		miseAJour();
+	}
+
+	public void unselectBouton() {
+		selectBouton = -1;
+		miseAJour();
 	}
 }
