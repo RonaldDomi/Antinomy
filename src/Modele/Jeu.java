@@ -472,10 +472,13 @@ public class Jeu extends Observable implements Cloneable{
 		//faire paradox
 		if(dirParadox != 0) jeuBase.coupParadox(dirParadox);
 
+		if(jeu.egaliteClash()) return null;
+
 		//faire clash if exist
 		if (jeuBase.existeClash()){
 			jeuBase.coupClash();
 		}
+
 
 		return jeuBase;
 	}

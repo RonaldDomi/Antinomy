@@ -108,6 +108,26 @@ public class InfoJoueur implements Cloneable{
 		}
 	}
 
+	public static float getEvaluationSommeMain(Carte[] main, Couleur couleurInterdite){
+		float valeur = 0;
+		for(int carteI = 0; carteI < main.length; carteI++){
+			if(main[carteI].getCouleur() != couleurInterdite){
+				valeur += main[carteI].getNumero() - 2;
+			}
+		}
+		return valeur;
+	}
+
+	public static float getEvaluationDuosMain(Carte[] main, Couleur couleurInterdite){
+		float valeur = 0;
+//		for(int carteI = 0; carteI < main.length; carteI++) {
+//			if(main[carteI].getCouleur() != couleurInterdite) {
+//
+//			}
+//		}
+		return valeur;
+	}
+
 	@Override
 	public String toString() {
 		String res = "";
