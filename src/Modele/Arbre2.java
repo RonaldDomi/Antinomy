@@ -62,17 +62,19 @@ public class Arbre2 {
             for(int i = 0; i < moves.size(); i++) {
                 //faire coup
                 Jeu jeuBase = faireCoupClone(arbreCourant.jeuCourant, moves.get(i));
-                Arbre2 newFils = new Arbre2(jeuBase, moves.get(i), true);
-
-                //evaluation
-                float evaluation = Search(depth - 1, newFils);
-                arbreCourant.fils.add(newFils);
-
-                minEval = Math.min(minEval, evaluation);
-                if (evaluation < arbreCourant.bestEval) {
-                    arbreCourant.bestCoup = moves.get(i);
-                    arbreCourant.bestEval = minEval;
+                //ici on fait la verification que il existe un jeu qui n'est pas null
+                if(jeuBase != null){
+                    Arbre2 newFils = new Arbre2(jeuBase, moves.get(i), true);
+                    //evaluation
+                    float evaluation = Search(depth - 1, newFils);
+                    arbreCourant.fils.add(newFils);
+                    minEval = Math.min(minEval, evaluation);
+                    if (evaluation < arbreCourant.bestEval) {
+                        arbreCourant.bestCoup = moves.get(i);
+                        arbreCourant.bestEval = minEval;
+                    }
                 }
+
             }
 
             return minEval;
