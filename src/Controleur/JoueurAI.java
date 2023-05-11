@@ -28,8 +28,6 @@ package Controleur;
 import Modele.*;
 import Vue.InterfaceUtilisateur;
 
-import java.util.LinkedList;
-
 
 class JoueurAI extends Joueur {
 
@@ -58,15 +56,15 @@ class JoueurAI extends Joueur {
                 return true;
         }
 
-//        Arbre arbre = new Arbre(jeu, 4);
+//        Arbre arbre = new ArbrePapa(jeu, 4);
 //        Statistics.setNbTotalConfigurations(0);
 //        arbre.create(4);
 
 //        System.out.println("total for this configuration: " + Statistics.getNbTotalConfigurations());
 
 
-        Arbre2 arbre2 = new Arbre2(jeu, null, true);
-        Coup bestCoup = arbre2.getCoup(1, true);
+        Arbre arbre = new Arbre(jeu, null, true);
+        Coup bestCoup = arbre.getCoup(4, false);
         jeu.coupEchangeCarteMainContinuum(bestCoup.getIndexMain(), bestCoup.getIndexContinuum());
         if(bestCoup.getParadox() != 0) jeu.coupParadox(bestCoup.getParadox());
         return true;

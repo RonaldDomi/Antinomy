@@ -1,162 +1,193 @@
 package Modele;
 
-import Global.Statistics;
-
 import java.util.ArrayList;
 import java.util.List;
+import Global.Statistics;
+
+import static Modele.InfoJoueur.getEvaluationDuosMain;
+import static Modele.InfoJoueur.getEvaluationSommeMain;
+import static Modele.Jeu.faireCoupClone;
 
 public class Arbre {
-    Jeu j;
+    Jeu jeuCourant;
     List<Arbre> fils;
+    float bestEval;
+    Coup bestCoup;
+    Coup coupDeParent;
+    boolean isMaximizingPlayer;
 
-    int profondeur, idMain, idContinuum, score;
-
-    Boolean paradox, paradoxBas, paradoxHaut, clash;
-
-    public Arbre(Jeu j){
-        this.j = j;
+    public Arbre(Jeu jeuCourant, Coup coupDeParent, boolean isMaximizingPlayer){
+        this.jeuCourant = jeuCourant;
+        this.coupDeParent = coupDeParent;
+        this.isMaximizingPlayer = isMaximizingPlayer;
+        if(isMaximizingPlayer) this.bestEval = -1000;
+        else this.bestEval = 1000;
         fils = new ArrayList<>();
-        this.profondeur = 0;
     }
 
-    public Arbre(Jeu j, int profondeur){
-        this.j = j;
-        fils = new ArrayList<>();
-        this.profondeur = profondeur;
-    }
-
-    public Arbre(Jeu j, int profondeur, boolean paradox, boolean paradoxHaut, boolean paradoxBas, boolean clash, int idMain, int idContinuum, int score){
-        this.score = score;
-        this.paradox = paradox;
-        this.paradoxHaut = paradoxHaut;
-        this.paradoxBas = paradoxBas;
-        this.clash = clash;
-        this.idMain = idMain;
-        this.idContinuum = idContinuum;
-        this.j = j;
-        fils = new ArrayList<>();
-        this.profondeur = profondeur;
+    public Coup getCoup(int depth, boolean withAlphaBeta){
+        if(withAlphaBeta) SearchAlphaBeta(depth, this, -1000, 1000);
+        else Search(depth);
+        return bestCoup;
     }
 
 
-    //on suppose qu l'ia est le joueur 0
-    //le score est le nombre de gemmes de l'ia
-    //l'heuristique du score est a changé ici elle est mauvaise car elle ne minimise pas celle de l'adversaire
-    //on pourrait prendre (scoreIA - scoreADVERSAIRE) et maximiser cela
-    //à discuter avec l'équipe
-    public void create(int profondeurMax){
+    float Search(int depth){
         Statistics.incrementConfigurationsLookedAt();
-        //condition arret
-        //ici ce jeu est une feuille
-        if (this.j.joueurGagnant == 1 || this.profondeur >= profondeurMax)
-            return;
+        if(depth == 0 || jeuCourant.joueurGagnant != -1){
+            bestEval = Evaluate(jeuCourant);
+            return bestEval;
+        }
 
-        Jeu temp = null, temp2 = null;
-        boolean paradox = false, paradoxBas = false, paradoxHaut = false, clash = false;
-        //etape 1
-        //pour chaque carte choisie
-        for (int i = 0; i < 3; i++) {
-            //pour chaque coup avec chaque carte
-            List<Integer> cpPossible = j.continuum.getCoupsPossibles(j.getMainJoueurCourant()[i], j.getInfoJoueurCourant().getSorcierIndice(), j.getInfoJoueurCourant().getDirectionMouvement());
-            for (int c: cpPossible) {
-                //etape 2
-                try {
-                    temp = j.clone();
-                    temp.historique = j.historique.clone();
-                } catch (CloneNotSupportedException e) {
-                    throw new RuntimeException(e);
-                }
-
-                //direction paradox ?
-                //on joue le coup
-                temp.coupEchangeCarteMainContinuum(i, c);
-
-                if (temp.infoJoueurs[temp.joueurCourant].existeParadox(temp.codex.getCouleurInterdite())){
-                    paradox = true;
-                    //pour chaque coup
-                    //on joue le paradox si il existe et on le joue pas
-                    //respectivement temp2 et temp3
-                    if (temp.existeParadoxSuperieur()){
-                        paradoxHaut = true;
-                        if (temp.existeParadoxInferieur()){
-                            paradoxBas = true;
-                            try {
-                                temp2 = temp.clone();
-                                temp2.historique = temp.historique.clone();
-                            } catch (CloneNotSupportedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            temp2.coupParadox(-1);
-                        }
-                        //ici, on donne juste sens de paradox
-                        temp.coupParadox(1);
+        List<Coup> moves = jeuCourant.getCoupsPossibles();
+        if(isMaximizingPlayer){
+            float maxEval = -1000;
+            for(int i = 0; i < moves.size(); i++) {
+                //faire coup
+                Jeu jeuBase = faireCoupClone(jeuCourant, moves.get(i));
+                // si clash, saute au prochain coup
+                if(jeuBase == null){
+                    if( Evaluate(jeuCourant) > bestEval) {
+                        maxEval = Evaluate(jeuCourant);
+                        bestCoup = moves.get(i);
+                        bestEval = Evaluate(jeuCourant);
                     }
-                    else {
-                        paradoxBas = true;
-                        temp.coupParadox(-1);
+                    continue;
+                }
+
+                Arbre newFils = new Arbre(jeuBase, moves.get(i), false);
+
+                //evaluation
+                float evaluation = newFils.Search(depth - 1);
+                fils.add(newFils);
+
+                maxEval = Math.max(maxEval, evaluation);
+                if (evaluation > bestEval) {
+                    bestCoup = moves.get(i);
+                    bestEval = maxEval;
+                }
+
+            }
+            return maxEval;
+        }else{
+            float minEval = 1000;
+            for(int i = 0; i < moves.size(); i++) {
+                //faire coup
+                Jeu jeuBase = faireCoupClone(jeuCourant, moves.get(i));
+                // si clash, saute au prochain coup
+                if(jeuBase == null){
+                    if( Evaluate(jeuCourant) < bestEval) {
+                        minEval = Evaluate(jeuCourant);
+                        bestCoup = moves.get(i);
+                        bestEval = Evaluate(jeuCourant);
                     }
+                    continue;
                 }
 
-                //ici, si les 2 sorciers on le même indice on peut avoir un clash
-                if (temp.existeClash()){
-                    clash = true;
-                    temp.coupClash();
+                Arbre newFils = new Arbre(jeuBase, moves.get(i), true);
 
-                    if (temp2 != null){
-                        temp2.coupClash();
-                    }
+                //evaluation
+                float evaluation = newFils.Search(depth - 1);
+                fils.add(newFils);
 
-                }
-
-                //ici, on insère dans fils que les jeux existants
-                // le false de fintour pour ne pas lancer l'historique
-                temp.finTour(false);
-                if (temp2 == null) {
-                    fils.add(new Arbre(temp, profondeur + 1, paradox, paradoxHaut, paradoxBas, clash, i, c, temp.infoJoueurs[/*temp.joueurCourant*/0].getPoints()));
-                }
-                else {
-                    //si temp2 existe alors le paradox haut est dans temp et le bas est dans temp2
-                    fils.add(new Arbre(temp, profondeur + 1, paradox, paradoxHaut, false, clash, i, c, temp.infoJoueurs[/*temp.joueurCourant*/0].getPoints()));
-                    temp2.finTour(false);
-                    fils.add(new Arbre(temp2, profondeur + 1, paradox, false, paradoxBas, clash, i, c, temp.infoJoueurs[/*temp.joueurCourant*/0].getPoints()));
+                minEval = Math.min(minEval, evaluation);
+                if (evaluation < bestEval) {
+                    bestCoup = moves.get(i);
+                    bestEval = minEval;
                 }
             }
+
+            return minEval;
         }
-        //on appelle récursivement create avec tous les fils cree
-        for (Arbre a:fils) {
-            a.create(profondeurMax);
+
+    }
+
+    float SearchAlphaBeta(int depth, Arbre arbreCourant, float alpha, float beta){
+        Statistics.incrementConfigurationsLookedAt();
+        if(depth == 0){
+            arbreCourant.bestEval = Evaluate(arbreCourant.jeuCourant);
+            return arbreCourant.bestEval;
         }
+
+        List<Coup> moves = arbreCourant.jeuCourant.getCoupsPossibles();
+        if(isMaximizingPlayer){
+            float maxEval = -1000;
+            for(int i = 0; i < moves.size(); i++) {
+                //faire coup
+                Jeu jeuBase = faireCoupClone(arbreCourant.jeuCourant, moves.get(i));
+                // si clash, saute au prochain coup
+                if(jeuBase == null) continue;
+
+                Arbre newFils = new Arbre(jeuBase, moves.get(i), false);
+
+                //evaluation
+                float evaluation = SearchAlphaBeta(depth - 1, newFils, alpha, beta);
+                arbreCourant.fils.add(newFils);
+
+                maxEval = Math.max(maxEval, evaluation);
+                alpha = Math.max(alpha, evaluation);
+                if (evaluation > arbreCourant.bestEval) {
+                    arbreCourant.bestCoup = moves.get(i);
+                    arbreCourant.bestEval = maxEval;
+                }
+
+                if (beta <= alpha) {
+                    break; // Beta cutoff
+                }
+            }
+            return maxEval;
+        }else{
+            float minEval = 1000;
+            for(int i = 0; i < moves.size(); i++) {
+                //faire coup
+                Jeu jeuBase = faireCoupClone(arbreCourant.jeuCourant, moves.get(i));
+                // si clash, saute au prochain coup
+                if(jeuBase == null) continue;
+                Arbre newFils = new Arbre(jeuBase, moves.get(i), true);
+
+                //evaluation
+                float evaluation = SearchAlphaBeta(depth - 1, newFils, alpha, beta);
+                arbreCourant.fils.add(newFils);
+
+                minEval = Math.min(minEval, evaluation);
+                beta = Math.min(beta, evaluation);
+                if (evaluation < arbreCourant.bestEval) {
+                    arbreCourant.bestCoup = moves.get(i);
+                    arbreCourant.bestEval = minEval;
+                }
+
+                if (beta <= alpha) {
+                    break; // Alpha cutoff
+                }
+            }
+
+            return minEval;
+        }
+
     }
 
 
-    //ici on cherche a maximiser le score
-    public Arbre prochain_Coup(){
-        if (this.fils.isEmpty())
-            return this;
-        Arbre max = null;
-        int maxVal = -1;
-        for (Arbre a: this.fils){
-            Arbre temp = a.prochain_Coup2();
-            if (temp.score > maxVal){
-                max = a;
-                maxVal = temp.score;
-            }
-        }
-        return max;
+    float Evaluate(Jeu jeu){
+        float evaluation = 0;
+        InfoJoueur IAInfo = jeu.getInfoJoueurs()[1];
+        InfoJoueur AdversaireInfo = jeu.getInfoJoueurs()[0];
+
+//        evaluation += (jeu.egaliteClash()) ? -50 : 0;
+
+        // difference de points
+        evaluation += (IAInfo.getPoints() - AdversaireInfo.getPoints()) * 100;
+        // somme main
+        evaluation += getEvaluationSommeMain(IAInfo.getMain(), jeu.getCodex().getCouleurInterdite());
+        evaluation += getEvaluationDuosMain(IAInfo.getMain(), jeu.getCodex().getCouleurInterdite());
+
+        if(IAInfo.getPoints() >= 5) evaluation = 99999;
+        if(AdversaireInfo.getPoints() >= 5) evaluation = -99999;
+        return evaluation;
     }
 
-    public Arbre prochain_Coup2(){
-        if (this.fils.isEmpty())
-            return this;
-        Arbre min = null;
-        int minVal = 6;
-        for (Arbre a: this.fils){
-            Arbre temp = a.prochain_Coup();
-            if (temp.score < minVal){
-                min = a;
-                minVal = temp.score;
-            }
-        }
-        return min;
+    @Override
+    public String toString() {
+        String res = "";
+        return res + this.bestEval;
     }
 }
