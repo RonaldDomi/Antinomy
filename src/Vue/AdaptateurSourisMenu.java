@@ -38,17 +38,46 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 		control = c;
 	}
 
+
+	@Override
+	public void mouseReleased(MouseEvent e){
+		switch (m.affichage) {
+			case 1:
+				if (e.getX() >= m.centre_largeur - m.taille_bouton / 2 && e.getX() <= m.centre_largeur + m.taille_bouton / 2) {
+					//bouton
+					for (int i = 0; i < 5; i++) {
+						if (e.getY() >= m.deb_bouton + i * m.mesureLargeur + i * m.padding && e.getY() < m.deb_bouton + (i + 1) * m.mesureLargeur + i * m.padding) {
+							System.out.println("Bouton Clicked : " + i);
+							control.clicSourisBoutonMenu(i);
+							break;
+						}
+					}
+				}
+				break;
+			case 2:
+
+				break;
+		}
+		m.unselectBouton();
+	}
+
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() <= m.centre_largeur + m.taille_bouton/2 ){
-			//bouton
-			for (int i = 0; i < 4; i++) {
-				if (e.getY() >= m.deb_bouton + i*m.mesureLargeur + i*m.padding && e.getY() < m.deb_bouton + (i+1)*m.mesureLargeur + i*m.padding){
-					System.out.println("Bouton Clicked : " + i);
-					control.clicSourisBoutonMenu(i);
-					return;
+		switch (m.affichage){
+			case 1:
+				if (e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() <= m.centre_largeur + m.taille_bouton/2 ){
+				//bouton
+					for (int i = 0; i < 5; i++) {
+						if (e.getY() >= m.deb_bouton + i*m.mesureLargeur + i*m.padding && e.getY() < m.deb_bouton + (i+1)*m.mesureLargeur + i*m.padding){
+							System.out.println("Bouton Clicked : " + i);
+							m.selectBouton(i);
+							return;
+						}
+					}
 				}
-			}
+				break;
+			case 2:
+				break;
 		}
 	}
 }

@@ -39,4 +39,6 @@ public interface InterfaceUtilisateur {
 
 	void sauvegarder();
 	void charger();
+
+	void setAffichage(int i);
 }

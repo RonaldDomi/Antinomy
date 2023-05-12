@@ -36,10 +36,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
+
+import static java.lang.Math.min;
 
 
 // L'interface runnable déclare une méthode run
@@ -122,7 +126,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 //		menuPrincipale.addKeyListener(new AdaptateurClavier(control));
 		enJeu.addKeyListener(new AdaptateurClavier(control));
 
-		h1 = new Font("Medieval English", Font.PLAIN, menuPrincipale.getWidth()/2);
+//		h1 = new Font("Medieval English", Font.PLAIN, menuPrincipale.getWidth()/2);
 
 //		Box enJeuListe = Box.createVerticalBox();
 //
@@ -152,10 +156,10 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-		menuPrincipale.setVisible(false);
-//		menuPrincipale.setVisible(true);
-		enJeu.setVisible(true);
-//		enJeu.setVisible(false);
+//		menuPrincipale.setVisible(false);
+		menuPrincipale.setVisible(true);
+//		enJeu.setVisible(true);
+		enJeu.setVisible(false);
 //		courant = enJeu;
 		courant = menuPrincipale;
 	}
@@ -171,7 +175,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	}
 
 	public void changeEtape() {
-		niv.changeEtape();
+//		niv.changeEtape();
 	}
 
 
@@ -214,5 +218,10 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		}
 		else
 			System.out.println("Chargement annulée");
+	}
+
+	@Override
+	public void setAffichage(int i) {
+		menu.setAffichage(i);
 	}
 }

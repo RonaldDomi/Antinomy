@@ -46,6 +46,7 @@ public class AdaptateurSouris extends MouseAdapter {
 				if (e.getX() >= n.deb_bouton + i*n.taille_bouton + i*n.padding && e.getX() < n.deb_bouton + (i+1)*n.taille_bouton + i*n.padding && n.selectBouton == i){
 					System.out.println("Bouton Clicked : " + i);
 					control.clicSourisBouton(i);
+					break;
 				}
 			}
 		}  else if (e.getY() >= n.centre_hauteur - n.hauteurCarte/2 - (n.joueurCourant) * (n.largeurCarte + n.padding) && e.getY() <= n.centre_hauteur + n.hauteurCarte/2 + (1-n.joueurCourant) * (n.largeurCarte + n.padding)) {
@@ -53,10 +54,10 @@ public class AdaptateurSouris extends MouseAdapter {
 				if (e.getX() >= n.deb_continuum + i*n.largeurCarte + i*n.padding && e.getX() < n.deb_continuum + (i+1)*n.largeurCarte + i*n.padding){
 					System.out.println("Continium Clicked : " + i);
 					control.clicSouris(2, i);
+					break;
 				}
 			}
 		}
-
 		n.unselectBouton();
 	}
 
@@ -85,6 +86,7 @@ public class AdaptateurSouris extends MouseAdapter {
 			for (int i = 0; i < 4; i++) {
 				if (e.getX() >= n.deb_bouton + i*n.taille_bouton + i*n.padding && e.getX() < n.deb_bouton + (i+1)*n.taille_bouton + i*n.padding){
 					n.selectBouton(i);
+					//bouton
 					return;
 				}
 			}

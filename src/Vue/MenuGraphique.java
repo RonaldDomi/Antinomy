@@ -42,7 +42,7 @@ import java.util.LinkedList;
 import static java.lang.Math.min;
 
 public class MenuGraphique extends JComponent implements Observateur {
-	Image bouton;
+	Image bouton, boutonSelected;
 	int mesureLargeur;
 	int mesureHauteur;
 	int padding;
@@ -54,10 +54,22 @@ public class MenuGraphique extends JComponent implements Observateur {
 
 	int deb_bouton;
 
+	int affichage = 1;
+
 	Font h1, h2;
+
+	FontMetrics m;
+
+	int selectBouton = -1;
+
+	int[] choix_type;
 
 	MenuGraphique() {
 		bouton = lisImage("BoutonL");
+		boutonSelected = lisImage("BoutonSelectedL");
+		choix_type = new int[2];
+		choix_type[0] = 0;
+		choix_type[1] = 0;
 	}
 
 	private Image lisImage(String nom) {
@@ -89,9 +101,54 @@ public class MenuGraphique extends JComponent implements Observateur {
 		largeur = getSize().width;
 		hauteur = getSize().height;
 
-		mesureLargeur = min(largeur/6, hauteur/8);
-		mesureHauteur = min(hauteur/8, largeur/6);
+		switch (affichage){
+			case 1:
+				menuPrincipale(g);
+				break;
+			case 2:
+				nouvellePartie(g);
+		}
+	}
+
+	void nouvellePartie(Graphics g){
+
+		String[] type_possible = {"Humain", "IA Aleatoire", "IA Difficile"};
+
+		mesureLargeur = min(largeur/(4*5+4), hauteur/10);
+		mesureHauteur = min(hauteur/10, largeur/(4*5+4));
 		padding = mesureLargeur / 4;
+
+		centre_largeur = largeur / 2;
+		centre_hauteur = hauteur / 2;
+
+		h2 = new Font("Medieval English", Font.PLAIN, min(largeur/36, hauteur/18));
+
+		int x;
+		int y;
+
+		g.setFont(h2);
+		m = g.getFontMetrics();
+
+
+		for (int j = 0; j < 2; j++) {
+			y = centre_hauteur + (j-1) * (mesureHauteur + padding);
+			for (int i = 0; i < 4; i++) {
+				if (i==0){
+					x = centre_largeur - 2*(5 * mesureLargeur+padding) + (5 * mesureLargeur + padding)/2;
+					g.drawString("Joueur " + j + " :", x-m.stringWidth("Joueur " + j + " :")/2, y+m.getHeight() - mesureHauteur/2);
+				}
+				else {
+					x = centre_largeur + (i-2) * (5 * mesureLargeur + padding) + (5 * mesureLargeur + padding)/2;
+					bouton((Graphics2D) g, bouton, type_possible[i-1], x, y, 5 * mesureLargeur, mesureHauteur);
+				}
+			}
+		}
+	}
+
+	void menuPrincipale(Graphics g){
+		mesureLargeur = min(largeur/6, hauteur/10);
+		mesureHauteur = min(hauteur/10, largeur/6);
+		padding = mesureLargeur / 5;
 
 		centre_largeur = largeur / 2;
 		centre_hauteur = hauteur / 2;
@@ -99,14 +156,18 @@ public class MenuGraphique extends JComponent implements Observateur {
 		h1 = new Font("Medieval English", Font.PLAIN, min(largeur/6, hauteur/8));
 		h2 = new Font("Medieval English", Font.PLAIN, min(largeur/12, hauteur/16));
 
-		FontMetrics m;
 
 		//title
+
 		g.setFont(h1);
 		m = g.getFontMetrics();
+
 		g.drawString("Antinomy", centre_largeur-m.stringWidth("Antinomy")/2, centre_hauteur/4+m.getHeight());
 
+		Graphics2D drawable = (Graphics2D) g;
+
 		//bouton
+
 		taille_bouton = mesureLargeur*5;
 
 
@@ -116,15 +177,34 @@ public class MenuGraphique extends JComponent implements Observateur {
 		String[] bouton_string = {"Nouvelle Partie", "En ligne", "Charger", "Tutoriel"};
 
 		int y;
-		deb_bouton = centre_hauteur -(mesureHauteur+padding);
-		for (int i = -1; i < 3; i++) {
+		deb_bouton = centre_hauteur - mesureHauteur/2;
+		for (int i = 0; i < 4; i++) {
 			y = centre_hauteur + i*(mesureHauteur+padding);
-			tracer(drawable, bouton, centre_largeur - taille_bouton/2, y, taille_bouton, mesureHauteur);
-			g.drawString(bouton_string[i+1], centre_largeur-m.stringWidth(bouton_string[i+1])/2, y+m.getHeight()+padding/2);
+			bouton(drawable, selectBouton == i ? boutonSelected : bouton, bouton_string[i], centre_largeur, y, taille_bouton, mesureHauteur);
 		}
 	}
+
+	private void bouton(Graphics2D drawable, Image bouton,String string, int x, int y, int taille_bouton_l, int taille_bouton_h){
+		tracer(drawable, bouton, x - taille_bouton_l/2, y - taille_bouton_h/2, taille_bouton_l, taille_bouton_h);
+		drawable.drawString(string, x-m.stringWidth(string)/2, y+m.getHeight() - taille_bouton_h/2);
+	}
+
 	@Override
 	public void miseAJour() {
 		repaint();
+	}
+
+	public void selectBouton(int index) {
+		selectBouton= index;
+		miseAJour();
+	}
+
+	public void unselectBouton() {
+		selectBouton = -1;
+		miseAJour();
+	}
+
+	public void setAffichage(int affichage){
+		this.affichage = affichage;
 	}
 }

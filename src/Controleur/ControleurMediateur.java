@@ -134,6 +134,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 	public void clicSourisBoutonMenu(int index){
 		switch (index){
 			case 0: //Nouvelle partie
+				vue.setAffichage(2);
 				break;
 			case 1: //Charger
 				break;
