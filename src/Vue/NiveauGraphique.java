@@ -404,7 +404,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		repaint();
 	}
 
-	public void decale(int l, int c) {
+	public void decale(int l, int c, double dl, double dc) {
+		if ((dl != 0) || (dc != 0)) {
 			Vecteur v = decalages[l][c];
 			if (v == null) {
 				v = new Vecteur();
