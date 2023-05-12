@@ -59,8 +59,9 @@ class JoueurEnLigne extends Joueur {
         try{
             PrintWriter outgoing = new PrintWriter(clientSocket.getOutputStream(), true);
             outgoing.println(jeu);
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
+            System.exit(1);
         }
     }
     
@@ -69,20 +70,11 @@ class JoueurEnLigne extends Joueur {
         System.out.println("En attente de l'autre machine...");
         
         try {
-            System.out.println("Client tempsEcoule thread : " + Thread.currentThread().getName());
             BufferedReader incoming = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String jeu_string = incoming.readLine();
-            
-            if (jeu_string == null){
-                System.err.println("Connection reset by peer??");
-                System.exit(1);
-            }
-            
             jeu.modifierJeu(jeu_string);
-            
-        }catch (IOException ioException){
-            System.err.println("IOException : " + ioException.getMessage());
-            System.err.println("Connection reset by peer??");
+        }catch (IOException | NullPointerException exception){
+            System.err.println("Connection reset by peer : " + exception.getMessage());
             System.exit(1);
         }
         

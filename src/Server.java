@@ -29,8 +29,6 @@ public class Server {
 		BufferedReader incoming = null;
 		try{
 			
-			
-			
 			server_socket = new ServerSocket(portNumber);
 			
 			client_socket = server_socket.accept();
