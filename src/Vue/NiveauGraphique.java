@@ -42,12 +42,13 @@ import java.util.LinkedList;
 import static java.lang.Math.min;
 
 public class NiveauGraphique extends JComponent implements Observateur {
-	Image carteVide, carteDos, carteDosR, bleu, rouge, violet, vert, clef, crane, papier, champignon,
+	Image carteVide, carteFond, carteDos, carteDosR, bleu, rouge, violet, vert, clef, crane, papier, champignon,
 			diamant, diamantVide,
 			codexBleu, codexVert, codexRouge, codexViolet, backCodex,
 			fleche, bouton, boutonBlocked, boutonSelected, carteSelect,
 			load, save, undo, redo,
-			sceptre0, sceptre1;
+			sceptre0, sceptre1,
+			message;
 	Jeu j;
 	int largeurCarte;
 	int hauteurCarte;
@@ -86,6 +87,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		carteDos = lisImage("Carte_dos");
 		carteDosR = lisImage("Carte_dos_R");
 		carteVide = lisImage("Carte_vide");
+		carteFond = lisImage("CarteFond");
 		vert = lisImage("Vert");
 		violet = lisImage("Violet");
 		bleu = lisImage("Bleu");
@@ -112,6 +114,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		backCodex = lisImage("BackCodex");
 		sceptre0 = lisImage("Sceptre0");
 		sceptre1 = lisImage("Sceptre1");
+
+		message = lisImage("BoutonL");
 	}
 
 	private Image lisImage(String nom) {
@@ -170,7 +174,24 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		
 		//couleur interdite
 		paintCouleurInterdite(drawable);
-		
+
+		//message
+		//gagnant
+
+		 if (j.getJoueurGagnant() != -1){
+
+			 g.setColor(new Color(100, 182, 176, 50));
+			 g.fillRect(0, 0, largeur,hauteur);
+			 g.setColor(new Color(0, 0, 0));
+
+			 Font fontMessage = new Font("Medieval English", Font.PLAIN, min(largeur/16, hauteur/8));
+			 g.setFont(fontMessage);
+			 FontMetrics m = g.getFontMetrics();
+//			 tracer(drawable, message, centre_largeur - , centre_hauteur - , largeurCarte);
+			 String string = "Joueur "+ j.getJoueurGagnant() + " gagne la partie !";
+			 g.drawString(string, centre_largeur-m.stringWidth(string)/2, centre_hauteur*3/2+m.getHeight()/2-padding);
+		 }
+
 		//bouton
 		deb_bouton = padding;
 		taille_bouton = largeurCarte*3/4;
@@ -322,6 +343,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 	protected void carteContinuum(Graphics2D g, Carte[] continuum){
 		int x, i;
+
+		//bordure carte select
 		if (indexCarteSelectionneeContinuum != null){
 			for (Integer elem : indexCarteSelectionneeContinuum){
 				x = centre_largeur + (elem-4) * (largeurCarte + padding);
@@ -329,15 +352,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 			}
 		}
 
-//		if (debParadoxInf >= 0){
-//			tracer(g, carteSelectL, centre_largeur + (debParadoxInf-4) * (largeurCarte + padding) + padding*3/4, centre_hauteur-hauteurCarte / 2 - padding/4, 3*largeurCarte + padding/2, hauteurCarte+padding/2);
-//		}
-//
-//		if (debParadoxSup >= 0){
-//			tracer(g, carteSelectL, centre_largeur + (debParadoxSup-4) * (largeurCarte + padding) + padding*3/4, centre_hauteur-hauteurCarte / 2 - padding/4, 3*largeurCarte + padding/2, hauteurCarte+padding/2);
-//		}
-		
-
+		//carte
 		for (i = -4; i < 5; i++) {
 			x = centre_largeur + i * (largeurCarte + padding);
 
