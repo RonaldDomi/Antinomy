@@ -474,6 +474,10 @@ public class Jeu extends Observable implements Cloneable{
 
 		//faire clash if exist
 		if (jeuBase.existeClash()){
+			// le codex il est avance, on le remet on place
+			jeuBase.codex.cycleCouleur();
+			jeuBase.codex.cycleCouleur();
+			jeuBase.codex.cycleCouleur();
 			if(jeuBase.egaliteClash())
 				return null;
 			jeuBase.coupClash();
