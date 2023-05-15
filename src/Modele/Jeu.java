@@ -39,7 +39,7 @@ public class Jeu extends Observable implements Cloneable{
 	Continuum continuum;
 	InfoJoueur[] infoJoueurs; //2 infoJoueurs
 	Codex codex;
-	Historique historique;
+	public Historique historique;
 	int joueurCourant; //0 ou 1
 	int joueurGagnant; //0 ou 1
 	int etape;

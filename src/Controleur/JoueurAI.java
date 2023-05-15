@@ -25,6 +25,7 @@ package Controleur;
  *          38401 Saint Martin d'Hères
  */
 
+import Global.Configuration;
 import Modele.*;
 import Vue.InterfaceUtilisateur;
 
@@ -64,7 +65,7 @@ class JoueurAI extends Joueur {
 
 
         Arbre arbre = new Arbre(jeu, null, true);
-        Coup bestCoup = arbre.getCoup(4, false);
+        Coup bestCoup = arbre.getCoup(Configuration.profondeurIA, false);
         jeu.coupEchangeCarteMainContinuum(bestCoup.getIndexMain(), bestCoup.getIndexContinuum());
         if(bestCoup.getParadox() != 0) jeu.coupParadox(bestCoup.getParadox());
         return true;

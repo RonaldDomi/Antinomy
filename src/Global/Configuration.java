@@ -36,13 +36,11 @@ import java.io.InputStream;
 
 public class Configuration {
 	static final int silence = 1;
-	public static final String typeInterface = "Graphique";
-	static final String typeSequences = "Liste";
 	public static final double vitesseAnimations = 0.15;
 	public static final int lenteurPas = 15;
 	public static final boolean animations = true;
-	public static final String IA = "Aleatoire";
-	public static int lenteurJeuAutomatique = 15;
+	public static int lenteurAttente = 0;
+	public static int profondeurIA = 6;
 
 	public static InputStream ouvre(String s) {
 		InputStream in = null;

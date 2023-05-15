@@ -156,12 +156,12 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-		menuPrincipale.setVisible(false);
-//		menuPrincipale.setVisible(true);
-		enJeu.setVisible(true);
-//		enJeu.setVisible(false);
-		courant = enJeu;
-//		courant = menuPrincipale;
+//		menuPrincipale.setVisible(false);
+		menuPrincipale.setVisible(true);
+//		enJeu.setVisible(true);
+		enJeu.setVisible(false);
+//		courant = enJeu;
+		courant = menuPrincipale;
 	}
 
 	public void decale(int l, int c, double dl, double dc) {
@@ -221,7 +221,27 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	}
 
 	@Override
-	public void setAffichage(int i) {
-		menu.setAffichage(i);
+	public void setAffichage(int fenetre, int sous_fenetre) {
+		switch (fenetre){
+			case 0:
+				menu.setAffichage(sous_fenetre);
+				if (courant != menuPrincipale){
+					courant = menuPrincipale;
+					enJeu.setVisible(false);
+					menuPrincipale.setVisible(true);
+				}
+				break;
+			case 1:
+				if (courant != enJeu){
+					courant = menuPrincipale;
+					menuPrincipale.setVisible(false);
+					enJeu.setVisible(true);
+				}
+		}
+	}
+
+	@Override
+	public void selectionnerMain(boolean b) {
+		niv.selectionnerMain(b);
 	}
 }

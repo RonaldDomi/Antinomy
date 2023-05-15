@@ -46,19 +46,25 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 				if (e.getX() >= m.centre_largeur - m.taille_bouton / 2 && e.getX() <= m.centre_largeur + m.taille_bouton / 2) {
 					//bouton
 					for (int i = 0; i < 5; i++) {
-						if (e.getY() >= m.deb_bouton + i * m.mesureLargeur + i * m.padding && e.getY() < m.deb_bouton + (i + 1) * m.mesureLargeur + i * m.padding) {
+						if (e.getY() >= m.deb_bouton_y + i * m.mesureLargeur + i * m.padding && e.getY() < m.deb_bouton_y + (i + 1) * m.mesureLargeur + i * m.padding) {
 							System.out.println("Bouton Clicked : " + i);
 							control.clicSourisBoutonMenu(i);
 							break;
 						}
 					}
 				}
+				m.unselectBouton();
 				break;
 			case 2:
-
+				if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() <= m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
+					if ( e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() <= m.centre_largeur + m.taille_bouton/2){
+						System.out.println("Bouton Nouvelle Partie clicked");
+						control.nouvellePartie(m.choix_type[0], m.choix_type[1]);
+					}
+				}
+				m.unselectBouton();
 				break;
 		}
-		m.unselectBouton();
 	}
 
 	@Override
@@ -68,8 +74,7 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 				if (e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() <= m.centre_largeur + m.taille_bouton/2 ){
 				//bouton
 					for (int i = 0; i < 5; i++) {
-						if (e.getY() >= m.deb_bouton + i*m.mesureLargeur + i*m.padding && e.getY() < m.deb_bouton + (i+1)*m.mesureLargeur + i*m.padding){
-							System.out.println("Bouton Clicked : " + i);
+						if (e.getY() >= m.deb_bouton_y + i*m.mesureLargeur + i*m.padding && e.getY() < m.deb_bouton_y + (i+1)*m.mesureLargeur + i*m.padding){
 							m.selectBouton(i);
 							return;
 						}
@@ -77,6 +82,25 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 				}
 				break;
 			case 2:
+				if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() <= m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
+					if ( e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() <= m.centre_largeur + m.taille_bouton/2)
+//						System.out.println("Bouton Nouvelle Partie clicked");
+					m.selectBouton(1);
+					break;
+				}
+
+				for (int j = 0; j < 2; j++) {
+					if (e.getY() >= m.deb_bouton_y + j*m.mesureHauteur + j*m.padding && e.getY() < m.deb_bouton_y + (j+1)*m.mesureHauteur + j*m.padding){
+						//bouton
+//						System.out.println("click Joueur : "+j);
+						for (int i = 0; i < 5; i++) {
+							if (e.getX() >= m.deb_bouton_x + i*m.taille_bouton + i*m.padding && e.getX() < m.deb_bouton_x + (i+1)*m.taille_bouton + i*m.padding){
+								m.selectBoutonChoixJoueur(j, i);
+//								System.out.println("Bouton clicked : "+i);
+							}
+						}
+					}
+				}
 				break;
 		}
 	}

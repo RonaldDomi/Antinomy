@@ -38,7 +38,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	Joueur[][] joueurs;
 	int [] typeJoueur;
-	int joueurCourant;
 
 	InterfaceUtilisateur vue;
 
@@ -48,25 +47,22 @@ public class ControleurMediateur implements CollecteurEvenements {
 	Animation mouvement;
 	boolean animationsSupportees, animationsActives;
 	int lenteurJeuAutomatique;
-	IA joueurAutomatique;
 	boolean IAActive;
-	AnimationJeuAutomatique animationIA;
 
 
-	final int lenteurAttente = 50;
+	final int lenteurAttente = Configuration.lenteurAttente;
 	int decompte;
 
 	public ControleurMediateur(Jeu j) {
 		jeu = j;
-		joueurs = new Joueur[2][2];
-		typeJoueur = new int[2];
+		joueurs = new Joueur[2][3];
+		typeJoueur = new int[3];
 		for (int i = 0; i < joueurs.length; i++) {
 			joueurs[i][0] = new JoueurHumain(i, jeu);
-//			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
-			joueurs[i][1] = new JoueurAI(i, jeu);
+			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
+			joueurs[i][2] = new JoueurAI(i, jeu);
 			typeJoueur[i] = 0;
 		}
-		typeJoueur[1] = 0;
 
 //		animations = Configuration.nouvelleSequence();
 		vitesseAnimations = Configuration.vitesseAnimations;
@@ -97,19 +93,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 		// Si un coup a effectivement été joué (humain, coup valide), on change de joueur.
 
 		if (jeu.getJoueurGagnant() == -1){
-			if (joueurs[joueurCourant][typeJoueur[joueurCourant]].jeu(l, c)) {
+			if (joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].jeu(l, c)) {
 				decompte = lenteurAttente;
-				changeJoueur();
 			}
 		}
 
-	}
-
-	void changeJoueur() {
-		joueurCourant = (joueurCourant + 1) % joueurs.length;
-		if (typeJoueur[joueurCourant] == 0){
-			joueurs[joueurCourant][0].afficherPreSelection();
-		}
 	}
 
 	@Override
@@ -130,6 +118,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 				jeu.redo();
 				resetSelection();
 				break;
+			case 4: //restart
+				jeu.charger(new Jeu(), false);
+				jeu.historique = new Historique(jeu);
+				resetSelection();
+				break;
 		}
 		jeu.metAJour();
 	}
@@ -139,7 +132,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 	public void clicSourisBoutonMenu(int index){
 		switch (index){
 			case 0: //Nouvelle partie
-				vue.setAffichage(2);
+				vue.setAffichage(0, 2);
 				break;
 			case 1: //Charger
 				break;
@@ -234,15 +227,14 @@ public class ControleurMediateur implements CollecteurEvenements {
 		if (jeu.getJoueurGagnant() == -1) {
 			if (decompte == 0) {
 //				System.out.println("tic");
-				int type = typeJoueur[joueurCourant];
+				int type = typeJoueur[jeu.getJoueurCourant()];
 				// Lorsque le temps est écoulé on le transmet au joueur courant.
 				// Si un coup a été joué (IA) on change de joueur.
-				if (joueurs[joueurCourant][type].tempsEcoule()) {
-					System.out.println("IA jouer");
-					changeJoueur();
+				if (joueurs[jeu.getJoueurCourant()][type].tempsEcoule()) {
+					decompte = lenteurAttente;
 				} else {
-					if (typeJoueur[joueurCourant] == 0){
-						joueurs[joueurCourant][0].afficherPreSelection();
+					if (typeJoueur[jeu.getJoueurCourant()] == 0){
+						joueurs[jeu.getJoueurCourant()][0].afficherPreSelection();
 					}
 					// Sinon on indique au joueur qui ne réagit pas au temps (humain) qu'on l'attend.
 //					System.out.println("On vous attend, joueur " + joueurs[joueurCourant][type].num());
@@ -260,16 +252,24 @@ public class ControleurMediateur implements CollecteurEvenements {
 	}
 
 	public void basculeIA() {
-		if (animationsSupportees) {
-			if (joueurAutomatique == null) {
-				joueurAutomatique = IA.nouvelle(jeu);
-				if (joueurAutomatique != null) {
-					lenteurJeuAutomatique = Configuration.lenteurJeuAutomatique;
-					animationIA = new AnimationJeuAutomatique(lenteurJeuAutomatique, joueurAutomatique, this);
-				}
-			}
-			if (joueurAutomatique != null)
-				IAActive = !IAActive;
-		}
+//		if (animationsSupportees) {
+//			if (joueurAutomatique == null) {
+//				joueurAutomatique = IA.nouvelle(jeu);
+//				if (joueurAutomatique != null) {
+//					animationIA = new AnimationJeuAutomatique(lenteurJeuAutomatique, joueurAutomatique, this);
+//				}
+//			}
+//			if (joueurAutomatique != null)
+//				IAActive = !IAActive;
+//		}
 	}
+
+
+
+	public void nouvellePartie(int type_j0, int type_j1){
+		typeJoueur[0] = type_j0;
+		typeJoueur[1] = type_j1;
+		vue.setAffichage(1, -1);
+	}
+
 }

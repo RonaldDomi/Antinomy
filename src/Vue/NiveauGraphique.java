@@ -46,8 +46,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 			diamant, diamantVide,
 			codexBleu, codexVert, codexRouge, codexViolet, backCodex,
 			fleche, bouton, boutonBlocked, boutonSelected, carteSelect,
-			load, save, undo, redo,
-			sceptre0, sceptre1,
+			load, save, undo, redo, restart,
+			sceptre0, sceptre1, etoiles,
 			message;
 	Jeu j;
 	int largeurCarte;
@@ -60,7 +60,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	int largeur, hauteur;
 
 	int indexCarteSelectionneeMain = -1;
-
+	boolean mainSelect = false;
 	int joueurCourant = 0;
 
 	int centre_largeur, centre_hauteur;
@@ -111,9 +111,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		save = lisImage("Save");
 		undo = lisImage("Undo");
 		redo = lisImage("Redo");
+		restart = lisImage("Restart");
 		backCodex = lisImage("BackCodex");
 		sceptre0 = lisImage("Sceptre0");
 		sceptre1 = lisImage("Sceptre1");
+		etoiles = lisImage("Etoiles");
 
 		message = lisImage("BoutonL");
 	}
@@ -195,7 +197,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		//bouton
 		deb_bouton = padding;
 		taille_bouton = largeurCarte*3/4;
-		for (int k = 0; k < 4; k++) {
+		for (int k = 0; k < 5; k++) {
 			switch (k){
 				case 0:
 					tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
@@ -219,6 +221,10 @@ public class NiveauGraphique extends JComponent implements Observateur {
 					else
 						tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					tracer(drawable, redo, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+					break;
+				case 4:
+					tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+					tracer(drawable, restart, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					break;
 			}
 		}
@@ -291,11 +297,19 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	
 	private void paintPositionJoueurs(Graphics g){
 		int x = centre_largeur + (j.getInfoJoueurs()[0].getSorcierIndice()-4) * (largeurCarte + padding);
-		tracer((Graphics2D) g, sceptre1, x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
+		tracer((Graphics2D) g, sceptre0, x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
+		if(joueurCourant == 0)
+			tracer((Graphics2D) g, etoiles, x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
+
 //		g.fillOval(x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
 		x = centre_largeur + (j.getInfoJoueurs()[1].getSorcierIndice()-4) * (largeurCarte + padding);
-		tracer((Graphics2D) g, sceptre0,x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
+		tracer((Graphics2D) g, sceptre1,x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
+		if(joueurCourant == 1)
+			tracer((Graphics2D) g, etoiles,x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
 //		g.fillOval(x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
+
+
+
 	}
 	
 	
@@ -329,6 +343,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 				Symbole symbole = mains[j][i+1].getSymbole();
 				int numero = mains[j][i+1].getNumero();
 				
+				if (mainSelect && j == this.j.getJoueurCourant()){
+					tracer(g, carteSelect, x-padding/4,  y - padding/4, largeurCarte + padding/2, hauteurCarte+padding/2);
+				}
 				if (i+1 == indexCarteSelectionneeMain && j == this.j.getJoueurCourant()){
 					dessinerCarte(g, x - padding/2, y - (1-j)*padding, largeurCarte+padding, hauteurCarte+padding, couleur, symbole, numero);
 				}
@@ -463,6 +480,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 	void selectionnerCarteMain(int index){
 		indexCarteSelectionneeMain = index;
+		miseAJour();
+	}
+
+	void selectionnerMain(boolean bool){
+		mainSelect = bool;
 		miseAJour();
 	}
 

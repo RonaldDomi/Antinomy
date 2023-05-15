@@ -69,12 +69,21 @@ class JoueurAIAleatoire extends Joueur {
                 int index_carte_main = r.nextInt(3);
                 Carte carte_main = jeu.getInfoJoueurCourant().getCarteMain(index_carte_main);
                 coup_possible =  jeu.getContinuum().getCoupsPossibles(carte_main, jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection());
-                coup_choisi = coup_possible.get(r.nextInt(coup_possible.size()));
 
-                while (!jeu.coupEchangeCarteMainContinuum(index_carte_main, coup_choisi)){
+                while (coup_possible.size() == 0){
                     index_carte_main = r.nextInt(3);
                     carte_main = jeu.getInfoJoueurCourant().getCarteMain(index_carte_main);
                     coup_possible =  jeu.getContinuum().getCoupsPossibles(carte_main, jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection());
+                }
+
+                coup_choisi = coup_possible.get(r.nextInt(coup_possible.size()));
+
+                while (!jeu.coupEchangeCarteMainContinuum(index_carte_main, coup_choisi)){
+                    while (coup_possible.size() == 0 ){
+                        index_carte_main = r.nextInt(3);
+                        carte_main = jeu.getInfoJoueurCourant().getCarteMain(index_carte_main);
+                        coup_possible =  jeu.getContinuum().getCoupsPossibles(carte_main, jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection());
+                    }
                     coup_choisi = coup_possible.get(r.nextInt(coup_possible.size()));
                 }
 

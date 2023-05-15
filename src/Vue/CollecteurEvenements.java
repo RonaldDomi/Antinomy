@@ -32,4 +32,5 @@ public interface CollecteurEvenements {
 	void toucheClavier(String t);
 	void ajouteInterfaceUtilisateur(InterfaceUtilisateur vue);
 	void tictac();
+	void nouvellePartie(int i, int j);
 }

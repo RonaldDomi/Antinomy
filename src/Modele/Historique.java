@@ -30,7 +30,7 @@ public class Historique {
         }
     }
 
-    Historique(Jeu jeu){
+    public Historique(Jeu jeu){
         listeJeu = new LinkedList<>();
         ajouterJeu(jeu);
     }

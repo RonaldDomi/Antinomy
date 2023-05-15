@@ -54,6 +54,11 @@ class JoueurHumain extends Joueur {
             case -2:
                 vue.selectionnerCarteContinuum(jeu.getContinuum().getIndexSorcierPossible(jeu.getCodex().getCouleurInterdite()));
                 break;
+            case 1:
+                if (indexCarteMain == -1) {
+                    vue.selectionnerMain(true);
+                }
+                break;
             case 2:
                 int debParInf = -1, finParInf = -1, debParSup = -1, finParSup = -1;
                 if (jeu.existeParadoxSuperieur() && jeu.getInfoJoueurCourant().getDirection() == -1
@@ -66,7 +71,7 @@ class JoueurHumain extends Joueur {
                     debParSup = jeu.getInfoJoueurCourant().getSorcierIndice() + 1;
                     finParSup = jeu.getInfoJoueurCourant().getSorcierIndice() + 4;
                 }
-                System.out.println(debParInf + " " + finParInf + " " + debParSup + " " + finParSup);
+//                System.out.println(debParInf + " " + finParInf + " " + debParSup + " " + finParSup);
                 vue.selectionnerParadox(debParInf, finParInf, debParSup, finParSup);
         }
     }
@@ -98,6 +103,7 @@ class JoueurHumain extends Joueur {
             case 1: //debut de tour
 //                System.out.println("Joueur " + jeu.getJoueurCourant() + " selectionne dans ça main la carte d'index " + indexCarte);
                 indexCarteMain = indexCarte;
+                vue.selectionnerMain(false);
                 vue.selectionnerCarteMain(indexCarte);
                 vue.selectionnerCarteContinuum(jeu.getContinuum().getCoupsPossibles(jeu.getInfoJoueurCourant().getCarteMain(indexCarte), jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection()));
                 return false;

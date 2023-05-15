@@ -40,5 +40,6 @@ public interface InterfaceUtilisateur {
 	void sauvegarder();
 	void charger();
 
-	void setAffichage(int i);
+	void setAffichage(int i, int j);
+	void selectionnerMain(boolean b);
 }
