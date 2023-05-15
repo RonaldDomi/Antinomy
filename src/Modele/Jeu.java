@@ -28,9 +28,7 @@ package Modele;
 
 import Patterns.Observable;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 
 public class Jeu extends Observable implements Cloneable{
@@ -196,7 +194,7 @@ public class Jeu extends Observable implements Cloneable{
 
 		int res = gagnantClash();
 		if (res != -1){
-			System.out.println("joueur " + res + " gagne le clash");
+//			System.out.println("joueur " + res + " gagne le clash");
 			if (infoJoueurs[1-res].getPoints() > 0){
 				infoJoueurs[1-res].remPoint();
 				infoJoueurs[res].addPoint();
@@ -206,10 +204,10 @@ public class Jeu extends Observable implements Cloneable{
 				metAJour();
 				return true;
 			}
-			System.out.println("Pas de point a voler");
+//			System.out.println("Pas de point a voler");
 			return true;
 		}
-		System.out.println("égalité");
+//		System.out.println("égalité");
 		return true;
 	}
 
@@ -255,43 +253,43 @@ public class Jeu extends Observable implements Cloneable{
 				return true;
 			case (1):
 				if (getInfoJoueurCourant().existeParadox(getCodex().getCouleurInterdite())) {
-					System.out.println();
-					System.out.println("Paradox :");
+//					System.out.println();
+//					System.out.println("Paradox :");
 					setEtape(2);
 					return false;
 				} else if (existeClash()) {
-					System.out.println();
-					System.out.println("Clash 1:");
+//					System.out.println();
+//					System.out.println("Clash 1:");
 					setEtape(3);
 					coupClash();
 					setEtape(1);
 					finTour();
-					System.out.println();
-					System.out.println("Debut Tour :");
+//					System.out.println();
+//					System.out.println("Debut Tour :");
 					return false;
 				} else {
 					setEtape(1);
-					System.out.println();
-					System.out.println("Debut Tour :");
+//					System.out.println();
+//					System.out.println("Debut Tour :");
 					finTour();
 					return true;
 				}
 			case (2):
 				if (existeClash()) {
-					System.out.println();
-					System.out.println("Clash 2:");
+//					System.out.println();
+//					System.out.println("Clash 2:");
 					setEtape(3);
 					coupClash();
 					setEtape(1);
 					finTour();
-					System.out.println();
-					System.out.println("Debut Tour :");
+//					System.out.println();
+//					System.out.println("Debut Tour :");
 					return true;
 				} else {
 					setEtape(1);
 					finTour();
-					System.out.println();
-					System.out.println("Debut Tour :");
+//					System.out.println();
+//					System.out.println("Debut Tour :");
 					return true;
 				}
 			default:
@@ -418,6 +416,76 @@ public class Jeu extends Observable implements Cloneable{
 	}
 
 	public Codex getCodex(){return codex;}
+
+	public List<Coup> getCoupsPossibles(){
+		List<Coup> coupsPossibles = new ArrayList<>();
+		for(int i = 0; i < getInfoJoueurCourant().getMain().length; i++){
+			// pour chaque carte Main
+			List<Integer> coupsCarteMain = continuum.getCoupsPossibles(getMainJoueurCourant()[i], getInfoJoueurCourant().getSorcierIndice(), getInfoJoueurCourant().getDirectionMouvement());
+			for(int c: coupsCarteMain){
+				// pour chaque carte Continuum
+				Jeu temp;
+				try {
+					temp = clone();
+					temp.historique = new Historique(this.historique);
+				} catch (CloneNotSupportedException e) {
+					throw new RuntimeException(e);
+				}
+
+				//faire echange
+				temp.coupEchangeCarteMainContinuum(i, c);
+				// if paradox
+				if (temp.infoJoueurs[temp.joueurCourant].existeParadox(temp.codex.getCouleurInterdite())){
+					// if paradox superieur
+					if (temp.existeParadoxSuperieur()) {
+						coupsPossibles.add(new Coup(i, c, 1));
+					}
+					if(temp.existeParadoxInferieur()){
+						coupsPossibles.add(new Coup(i, c, -1));
+					}
+				}else{
+					// no paradox
+					coupsPossibles.add(new Coup(i, c, 0));
+				}
+
+
+			}
+		}
+
+		return coupsPossibles;
+	}
+
+	public static Jeu faireCoupClone(Jeu jeu, Coup coup){
+		int indexMain = coup.indexMain;
+		int indexContinuum = coup.indexContinuum;
+		int dirParadox = coup.paradox;
+
+		//dirParadox -1, +1, or 0 for nothing
+		Jeu jeuBase;
+		try {
+			jeuBase = jeu.clone();
+			jeuBase.historique = new Historique(jeu.historique);
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+		jeuBase.coupEchangeCarteMainContinuum(indexMain, indexContinuum);
+		//faire paradox
+		if(dirParadox != 0) jeuBase.coupParadox(dirParadox);
+
+		//faire clash if exist
+		if (jeuBase.existeClash()){
+			// le codex il est avance, on le remet on place
+			jeuBase.codex.cycleCouleur();
+			jeuBase.codex.cycleCouleur();
+			jeuBase.codex.cycleCouleur();
+			if(jeuBase.egaliteClash())
+				return null;
+			jeuBase.coupClash();
+		}
+
+
+		return jeuBase;
+	}
 
 	@Override
 	public String toString() {

@@ -45,11 +45,11 @@ public class AdaptateurClavier extends KeyAdapter {
 			case KeyEvent.VK_RIGHT:
 				control.toucheClavier("Right");
 				break;
-			case KeyEvent.VK_UP:
-				control.toucheClavier("Up");
+			case KeyEvent.VK_I:
+				control.toucheClavier("Import");
 				break;
-			case KeyEvent.VK_DOWN:
-				control.toucheClavier("Down");
+			case KeyEvent.VK_S:
+				control.toucheClavier("Save");
 				break;
 			case KeyEvent.VK_Q:
 			case KeyEvent.VK_A:
@@ -57,9 +57,6 @@ public class AdaptateurClavier extends KeyAdapter {
 				break;
 			case KeyEvent.VK_P:
 				control.toucheClavier("Pause");
-				break;
-			case KeyEvent.VK_I:
-				control.toucheClavier("IA");
 				break;
 			case KeyEvent.VK_ESCAPE:
 				control.toucheClavier("Full");

@@ -62,7 +62,8 @@ public class ControleurMediateur implements CollecteurEvenements {
 		typeJoueur = new int[2];
 		for (int i = 0; i < joueurs.length; i++) {
 			joueurs[i][0] = new JoueurHumain(i, jeu);
-			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
+//			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
+			joueurs[i][1] = new JoueurAI(i, jeu);
 			typeJoueur[i] = 0;
 		}
 		typeJoueur[1] = 0;
@@ -176,12 +177,14 @@ public class ControleurMediateur implements CollecteurEvenements {
 				jeu.redo();
 				resetSelection();
 				break;
-//			case "Up":
-//				deplace(-1, 0);
-//				break;
-//			case "Down":
-//				deplace(1, 0);
-//				break;
+			case "Import":
+				vue.charger();
+				jeu.metAJour();
+				break;
+			case "Save":
+				vue.sauvegarder();
+				jeu.metAJour();
+				break;
 			case "Quit":
 				System.exit(0);
 				break;

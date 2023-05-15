@@ -25,7 +25,6 @@ package Controleur;
  *          38401 Saint Martin d'Hères
  */
 
-import Modele.Arbre;
 import Modele.Jeu;
 import Vue.InterfaceUtilisateur;
 
@@ -97,7 +96,7 @@ class JoueurHumain extends Joueur {
             case -2: //debut de jeu
                 return false;
             case 1: //debut de tour
-                System.out.println("Joueur " + jeu.getJoueurCourant() + " selectionne dans ça main la carte d'index " + indexCarte);
+//                System.out.println("Joueur " + jeu.getJoueurCourant() + " selectionne dans ça main la carte d'index " + indexCarte);
                 indexCarteMain = indexCarte;
                 vue.selectionnerCarteMain(indexCarte);
                 vue.selectionnerCarteContinuum(jeu.getContinuum().getCoupsPossibles(jeu.getInfoJoueurCourant().getCarteMain(indexCarte), jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection()));
@@ -121,7 +120,7 @@ class JoueurHumain extends Joueur {
                     for (Integer index:
                             indexPossible) {
                         if (index == indexCarte){
-                            System.out.println("Joueur " + jeu.getJoueurCourant() + " échange la carte de ça main " + indexCarteMain + " avec la carte du continuum " + indexCarte);
+//                            System.out.println("Joueur " + jeu.getJoueurCourant() + " échange la carte de ça main " + indexCarteMain + " avec la carte du continuum " + indexCarte);
                             jeu.coupEchangeCarteMainContinuum(indexCarteMain, indexCarte);
                             indexCarteMain = -1;
                             vue.selectionnerCarteMain(-1);
@@ -140,7 +139,7 @@ class JoueurHumain extends Joueur {
                     else if (jeu.getJoueurCourant() == 1 && jeu.existeParadoxInferieur()){
                         jeu.coupParadox(-1);
                     }
-                    System.out.println("Paradox, selection des carte dans le future");
+//                    System.out.println("Paradox, selection des carte dans le future");
                     vue.selectionnerParadox(-1, -1, -1, -1);
                     return getEtape() == 1;
                 }
@@ -151,7 +150,7 @@ class JoueurHumain extends Joueur {
                     else if (jeu.getJoueurCourant() == 1 && jeu.existeParadoxSuperieur()){
                         jeu.coupParadox(+1);
                     }
-                    System.out.println("Paradox, selection des carte dans le passé");
+//                    System.out.println("Paradox, selection des carte dans le passé");
                     vue.selectionnerParadox(-1, -1, -1, -1);
                     return true;
                 }
