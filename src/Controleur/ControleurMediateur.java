@@ -33,6 +33,10 @@ import Modele.*;
 import Vue.CollecteurEvenements;
 import Vue.InterfaceUtilisateur;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ControleurMediateur implements CollecteurEvenements {
@@ -117,7 +121,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 	}
 
 	void changeJoueur() {
-		joueurCourant = (joueurCourant + 1) % joueurs.length;
+		joueurCourant = jeu.getJoueurCourant();
 	}
 
 	@Override
@@ -128,12 +132,17 @@ public class ControleurMediateur implements CollecteurEvenements {
 				break;
 			case 1: //charger
 				vue.charger();
+				envoyerCommandeSocket("LOAD");
+				envoyerCommandeSocket(jeu.toString());
 				break;
 			case 2: //undo
 				jeu.undo();
+				System.out.println("peut annuler ? " + jeu.historique.peutAnnuler());
+				envoyerCommandeSocket("UNDO");
 				break;
 			case 3: //redo
 				jeu.redo();
+				envoyerCommandeSocket("REDO");
 				break;
 		}
 		jeu.metAJour();
@@ -223,6 +232,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 				if (joueurs[joueurCourant][type].tempsEcoule()) {
 					System.out.println("IA jouer");
 					changeJoueur();
+					decompte = lenteurAttente;
 				} else {
 					// Sinon on indique au joueur qui ne réagit pas au temps (humain) qu'on l'attend.
 //					System.out.println("On vous attend, joueur " + joueurs[joueurCourant][type].num());
@@ -250,6 +260,20 @@ public class ControleurMediateur implements CollecteurEvenements {
 			}
 			if (joueurAutomatique != null)
 				IAActive = !IAActive;
+		}
+	}
+	
+	public void envoyerCommandeSocket(String toSend) {
+		
+		if (clientSocket!=null){
+			System.out.println("En ligne");
+			PrintWriter outgoing;
+			try {
+				outgoing = new PrintWriter(clientSocket.getOutputStream(), true);
+				outgoing.println(toSend);
+			} catch (IOException ignored) {
+				;
+			}
 		}
 	}
 }

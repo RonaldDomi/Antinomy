@@ -31,6 +31,11 @@ public class Import {
             ioException.printStackTrace();
         }
     }
+    
+    
+    public Import(String importString, boolean isImport){
+        this.scanner = new Scanner(importString);
+    }
 
     public Jeu lire_fichier() {
         Jeu jeu = new Jeu();
@@ -53,5 +58,10 @@ public class Import {
         jeu.etape = historique.listeJeu.get(historique.courrant).etape;
         
         return jeu;
+    }
+    
+    
+    public String scan_fichier(){
+        return scanner.nextLine() + "\n" + scanner.nextLine();
     }
 }

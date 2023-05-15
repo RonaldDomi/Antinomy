@@ -42,7 +42,7 @@ public class Historique {
     }
 
 
-    void ajouterJeu(Jeu jeu){
+    public void ajouterJeu(Jeu jeu){
 
         // if we did a bunch of undos, we should remove them
         // being that we are rewriting history

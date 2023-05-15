@@ -1,4 +1,5 @@
 import Controleur.ControleurMediateur;
+import Controleur.Reception;
 import Global.Configuration;
 import Modele.Historique;
 import Modele.Jeu;
@@ -25,17 +26,17 @@ public class Client {
 		
 		Configuration.typeJoueur = 0;
 		Jeu jeu = null;
-		PrintWriter outgoing = null;
+		
 		BufferedReader incoming = null;
-		BufferedReader stdIn = null;
 		Socket client_socket=null;
 		
 		try{
 			client_socket = new Socket(nom_host, numero_port);
-			
-			outgoing = new PrintWriter(client_socket.getOutputStream(), true);
 			incoming = new BufferedReader(new InputStreamReader(client_socket.getInputStream()));
-			stdIn = new BufferedReader(new InputStreamReader(System.in));
+			
+			//Aucune utilitée
+			PrintWriter outgoing = new PrintWriter(client_socket.getOutputStream(), true);
+			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 			
 		} catch (UnknownHostException unknownHostException){
 			System.err.println("Unknown host : " + unknownHostException.getMessage());
@@ -48,17 +49,33 @@ public class Client {
 			System.exit(1);
 		}
 		
+		
 		try{
 			jeu = new Jeu(incoming.readLine());
+			jeu.historique = new Historique();
+			jeu.historique.ajouterJeu(jeu);
+			
 		}catch (IOException ioException){
 			System.err.println("Le serveur s'est déconnecté?? " + ioException.getMessage());
 			client_socket.close();
 			System.exit(1);
+		} finally {
+			CollecteurEvenements control = new ControleurMediateur(jeu);
+			InterfaceGraphique.demarrer(jeu, control, client_socket);
 		}
 		
-		System.out.println("Client main thread : " + Thread.currentThread().getName());
-		jeu.historique = new Historique();
-		CollecteurEvenements control = new ControleurMediateur(jeu);
-		InterfaceGraphique.demarrer(jeu, control, client_socket);
+		
+		//Initialisation du thread de reçu
+		//TODO: Le laisser Daemon?? Ne semble pas avoir de différence
+		Reception reception = new Reception(jeu, client_socket);
+		Thread threadReception = new Thread(reception, "==ReceptionClientThread==");
+		threadReception.setDaemon(true);
+		threadReception.start();
+		
+		if (Thread.activeCount() != 4){
+			System.err.println("Le nombre de thread est incorrect");
+		}else{
+			System.out.println("Il y a 4 threads actifs");
+		}
 	}
 }

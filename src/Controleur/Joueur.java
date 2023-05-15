@@ -68,13 +68,18 @@ abstract class Joueur {
         try{
             PrintWriter outgoing = new PrintWriter(clientSocket.getOutputStream(), true);
             outgoing.println(jeu);
+            outgoing.close();
         }catch(IOException e){
-            e.printStackTrace();
+            System.err.println("Connection reset by peer??");
+            System.exit(1);
         }
     }
+    
     // Méthode appelée pour tous les joueurs une fois le temps écoulé
     // Si un joueur n'est pas concerné, il lui suffit de l'ignorer
     boolean tempsEcoule() {
+        System.out.println("Il y a " + Thread.activeCount() + " threads actifs ");
+        System.out.println(Thread.currentThread().getName());
         return false;
     }
 
