@@ -159,12 +159,12 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-//		menuPrincipale.setVisible(false);
-		menuPrincipale.setVisible(true);
-//		enJeu.setVisible(true);
-		enJeu.setVisible(false);
-//		courant = enJeu;
-		courant = menuPrincipale;
+		menuPrincipale.setVisible(false);
+//		menuPrincipale.setVisible(true);
+		enJeu.setVisible(true);
+//		enJeu.setVisible(false);
+		courant = enJeu;
+//		courant = menuPrincipale;
 	}
 
 	public void decale(int l, int c, double dl, double dc) {

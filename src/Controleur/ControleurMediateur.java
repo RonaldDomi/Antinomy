@@ -62,7 +62,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	public ControleurMediateur(Jeu j) {
 		jeu = j;
-		joueurs = new Joueur[2][3];
+		joueurs = new Joueur[2][4];
 		typeJoueur = new int[4];
 		for (int i = 0; i < joueurs.length; i++) {
 			joueurs[i][0] = new JoueurHumain(i, jeu);
@@ -75,8 +75,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 //		typeJoueur[Configuration.typeJoueur] = 3;
 
 //		animations = Configuration.nouvelleSequence();
-		vitesseAnimations = Configuration.vitesseAnimations;
-		lenteurPas = Configuration.lenteurPas;
 //		animations.insereTete(new AnimationPousseur(lenteurPas, this));
 		mouvement = null;
 		// Tant qu'on ne reçoit pas d'évènement temporel, on n'est pas sur que les
@@ -101,7 +99,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 	public void ajouteSocket(Socket clientSocket){
 		this.clientSocket = clientSocket;
 		for (Joueur[] joueur: joueurs) {
-			joueur[1].ajouteSocket(clientSocket);
+			joueur[3].ajouteSocket(clientSocket);
 			joueur[0].ajouteSocket(clientSocket);
 		}
 	}
@@ -314,4 +312,9 @@ public class ControleurMediateur implements CollecteurEvenements {
 			}
 		}
 	}
+	
+	public void setTypeJoueur(int joueur, int i){
+		typeJoueur[joueur] = i;
+	}
+	
 }

@@ -37,10 +37,8 @@ import java.io.InputStream;
 public class Configuration {
 	static final int silence = 1;
 	public static final double vitesseAnimations = 0.15;
-	public static final int lenteurPas = 15;
-	public static final boolean animations = true;
-	public static final String IA = "Aleatoire";
-	public static int lenteurJeuAutomatique = 15;
+	public static int lenteurAttente = 15;
+	public static int profondeurIA = 4;
 	public static int typeJoueur;
 	
 	public static InputStream ouvre(String s) {

@@ -38,4 +38,5 @@ public interface CollecteurEvenements {
 	void tictac();
 	void nouvellePartie(int i, int j);
 	
+	void setTypeJoueur(int typeJoueur, int i);
 }

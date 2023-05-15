@@ -52,6 +52,8 @@ public class Server {
 			System.exit(1);
 		} finally {
 			CollecteurEvenements control = new ControleurMediateur(jeu);
+			
+			control.setTypeJoueur(Configuration.typeJoueur, 3);
 			InterfaceGraphique.demarrer(jeu, control, client_socket);
 		}
 		
