@@ -134,10 +134,12 @@ class JoueurHumain extends Joueur {
             case 2: //paradox droite/gauche
                 if (indexCarte > jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte <= jeu.getInfoJoueurCourant().getSorcierIndice()+3){
                     if (jeu.getJoueurCourant() == 0 && jeu.existeParadoxSuperieur()){
-                        jeu.coupParadox(+1);
+                        int[] ordre = jeu.generateOrdre(1);
+                        jeu.coupParadox(ordre);
                     }
                     else if (jeu.getJoueurCourant() == 1 && jeu.existeParadoxInferieur()){
-                        jeu.coupParadox(-1);
+                        int[] ordre = jeu.generateOrdre(-1);
+                        jeu.coupParadox(ordre);
                     }
 //                    System.out.println("Paradox, selection des carte dans le future");
                     vue.selectionnerParadox(-1, -1, -1, -1);
@@ -145,10 +147,12 @@ class JoueurHumain extends Joueur {
                 }
                 else if (indexCarte < jeu.getInfoJoueurCourant().getSorcierIndice() && indexCarte >= jeu.getInfoJoueurCourant().getSorcierIndice()-3){
                     if (jeu.getJoueurCourant() == 0 && jeu.existeParadoxInferieur()){
-                        jeu.coupParadox(-1);
+                        int[] ordre = jeu.generateOrdre(-1);
+                        jeu.coupParadox(ordre);
                     }
                     else if (jeu.getJoueurCourant() == 1 && jeu.existeParadoxSuperieur()){
-                        jeu.coupParadox(+1);
+                        int[] ordre = jeu.generateOrdre(1);
+                        jeu.coupParadox(ordre);
                     }
 //                    System.out.println("Paradox, selection des carte dans le passé");
                     vue.selectionnerParadox(-1, -1, -1, -1);

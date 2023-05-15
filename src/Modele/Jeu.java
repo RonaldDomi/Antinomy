@@ -150,7 +150,7 @@ public class Jeu extends Observable implements Cloneable{
 		return false;
 	}
 
-	public boolean coupParadox(int direction){
+	public boolean coupParadox(int[] ordre){
 
 		if (getEtape() != 2)
 			return false;
@@ -158,25 +158,26 @@ public class Jeu extends Observable implements Cloneable{
 		if(!getInfoJoueurCourant().existeParadox(codex.getCouleurInterdite()))
 			return false;
 
-		if(!((direction == 1 && existeParadoxSuperieur()) || (direction == -1 && existeParadoxInferieur())))
-			return false;
+//		if(!((direction == 1 && existeParadoxSuperieur()) || (direction == -1 && existeParadoxInferieur())))
+//			return false;
 
-		Collections.shuffle(Arrays.asList(getInfoJoueurCourant().getMain()));
-		if (direction == 1){
-			int indexMain=0;
-			for (int i = 0; i < 3; i++) {
-				echangerCarteMainContinuum(indexMain,
-						getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction * getInfoJoueurCourant().getDirectionMouvement()));
-				indexMain++;
-			}
-
-		}else{
-			int indexMain=2;
-			for (int i = 0; i < 3; i++) {
-				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction* getInfoJoueurCourant().getDirectionMouvement()));
-				indexMain--;
-			}
+//		Collections.shuffle(Arrays.asList(getInfoJoueurCourant().getMain()));
+//		if (direction == 1){
+		for (int i = 0; i < 3; i++) {
+			echangerCarteMainContinuum(
+					i,
+//					getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction * getInfoJoueurCourant().getDirectionMouvement())
+					ordre[i]
+			);
 		}
+
+//		}else{
+//			int indexMain=2;
+//			for (int i = 0; i < 3; i++) {
+//				echangerCarteMainContinuum(indexMain, getInfoJoueurCourant().getSorcierIndice() + ((i+1) * direction* getInfoJoueurCourant().getDirectionMouvement()));
+//				indexMain--;
+//			}
+//		}
 
 		infoJoueurs[joueurCourant].addPoint();
 		codex.cycleCouleur();
@@ -417,6 +418,18 @@ public class Jeu extends Observable implements Cloneable{
 
 	public Codex getCodex(){return codex;}
 
+	public int[] generateOrdre(int dirParadox){
+		int[] res = new int[]{-1, -1, -1};
+		// -3, -2, -1,    1, 2, 3
+
+		for(int i = 0; i < 3; i++){
+			int decalage = ((i+1) * dirParadox * getInfoJoueurCourant().getDirectionMouvement());
+			res[i] = getInfoJoueurCourant().getSorcierIndice() + decalage;
+		}
+		return res;
+	}
+
+
 	public List<Coup> getCoupsPossibles(){
 		List<Coup> coupsPossibles = new ArrayList<>();
 		for(int i = 0; i < getInfoJoueurCourant().getMain().length; i++){
@@ -438,14 +451,17 @@ public class Jeu extends Observable implements Cloneable{
 				if (temp.infoJoueurs[temp.joueurCourant].existeParadox(temp.codex.getCouleurInterdite())){
 					// if paradox superieur
 					if (temp.existeParadoxSuperieur()) {
-						coupsPossibles.add(new Coup(i, c, 1));
+						int[] ordre = temp.generateOrdre(1);
+						coupsPossibles.add(new Coup(i, c, ordre));
 					}
 					if(temp.existeParadoxInferieur()){
-						coupsPossibles.add(new Coup(i, c, -1));
+						int[] ordre = temp.generateOrdre(-1);
+						coupsPossibles.add(new Coup(i, c, ordre));
 					}
 				}else{
 					// no paradox
-					coupsPossibles.add(new Coup(i, c, 0));
+					int[] ordre = new int[]{-1, -1, -1};
+					coupsPossibles.add(new Coup(i, c, ordre));
 				}
 
 
@@ -458,7 +474,7 @@ public class Jeu extends Observable implements Cloneable{
 	public static Jeu faireCoupClone(Jeu jeu, Coup coup){
 		int indexMain = coup.indexMain;
 		int indexContinuum = coup.indexContinuum;
-		int dirParadox = coup.paradox;
+//		int dirParadox = coup.paradox;
 
 		//dirParadox -1, +1, or 0 for nothing
 		Jeu jeuBase;
@@ -470,7 +486,8 @@ public class Jeu extends Observable implements Cloneable{
 		}
 		jeuBase.coupEchangeCarteMainContinuum(indexMain, indexContinuum);
 		//faire paradox
-		if(dirParadox != 0) jeuBase.coupParadox(dirParadox);
+//		int[] ordre = jeu.generateOrdre(dirParadox);
+//		if(dirParadox != 0) jeuBase.coupParadox(ordre);
 
 		//faire clash if exist
 		if (jeuBase.existeClash()){

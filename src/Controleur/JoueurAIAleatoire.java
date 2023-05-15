@@ -84,13 +84,16 @@ class JoueurAIAleatoire extends Joueur {
                 return true;
             case 2:
                 if (jeu.existeParadoxSuperieur() && jeu.existeParadoxInferieur()){
-                    jeu.coupParadox(-1 + 2 * r.nextInt(1));
+                    int[] ordre = jeu.generateOrdre(-1 + 2 * r.nextInt(1));
+                    jeu.coupParadox(ordre);
                 }
                 else if (jeu.existeParadoxInferieur()){
-                    jeu.coupParadox(-1);
+                    int[] ordre = jeu.generateOrdre(-1);
+                    jeu.coupParadox(ordre);
                 }
                 else {
-                    jeu.coupParadox(1);
+                    int[] ordre = jeu.generateOrdre(1);
+                    jeu.coupParadox(ordre);
                 }
 
                 if (getEtape() != 1)

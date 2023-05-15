@@ -26,13 +26,12 @@ public class Arbre {
     }
 
     public Coup getCoup(int depth, boolean withAlphaBeta){
-        if(withAlphaBeta) SearchAlphaBeta(depth, this, -1000, 1000);
-        else Search(depth);
+        Search(depth, withAlphaBeta, -1000, 1000);
         return bestCoup;
     }
 
 
-    float Search(int depth){
+    float Search(int depth, boolean withAlphaBeta, float alpha, float beta){
         Statistics.incrementConfigurationsLookedAt();
         if(depth == 0 || jeuCourant.joueurGagnant != -1){
             bestEval = Evaluate(jeuCourant);
@@ -58,15 +57,18 @@ public class Arbre {
                 Arbre newFils = new Arbre(jeuBase, moves.get(i), false);
 
                 //evaluation
-                float evaluation = newFils.Search(depth - 1);
+                float evaluation = newFils.Search(depth - 1, withAlphaBeta, alpha, beta);
                 fils.add(newFils);
 
                 maxEval = Math.max(maxEval, evaluation);
+                alpha = Math.max(alpha, evaluation);
                 if (evaluation > bestEval) {
                     bestCoup = moves.get(i);
                     bestEval = maxEval;
                 }
-
+                if (beta <= alpha && withAlphaBeta) {
+                    break; // Beta cutoff
+                }
             }
             return maxEval;
         }else{
@@ -87,76 +89,16 @@ public class Arbre {
                 Arbre newFils = new Arbre(jeuBase, moves.get(i), true);
 
                 //evaluation
-                float evaluation = newFils.Search(depth - 1);
+                float evaluation = newFils.Search(depth - 1, withAlphaBeta, alpha, beta);
                 fils.add(newFils);
 
                 minEval = Math.min(minEval, evaluation);
+                beta = Math.min(beta, evaluation);
                 if (evaluation < bestEval) {
                     bestCoup = moves.get(i);
                     bestEval = minEval;
                 }
-            }
-
-            return minEval;
-        }
-
-    }
-
-    float SearchAlphaBeta(int depth, Arbre arbreCourant, float alpha, float beta){
-        Statistics.incrementConfigurationsLookedAt();
-        if(depth == 0){
-            arbreCourant.bestEval = Evaluate(arbreCourant.jeuCourant);
-            return arbreCourant.bestEval;
-        }
-
-        List<Coup> moves = arbreCourant.jeuCourant.getCoupsPossibles();
-        if(isMaximizingPlayer){
-            float maxEval = -1000;
-            for(int i = 0; i < moves.size(); i++) {
-                //faire coup
-                Jeu jeuBase = faireCoupClone(arbreCourant.jeuCourant, moves.get(i));
-                // si clash, saute au prochain coup
-                if(jeuBase == null) continue;
-
-                Arbre newFils = new Arbre(jeuBase, moves.get(i), false);
-
-                //evaluation
-                float evaluation = SearchAlphaBeta(depth - 1, newFils, alpha, beta);
-                arbreCourant.fils.add(newFils);
-
-                maxEval = Math.max(maxEval, evaluation);
-                alpha = Math.max(alpha, evaluation);
-                if (evaluation > arbreCourant.bestEval) {
-                    arbreCourant.bestCoup = moves.get(i);
-                    arbreCourant.bestEval = maxEval;
-                }
-
-                if (beta <= alpha) {
-                    break; // Beta cutoff
-                }
-            }
-            return maxEval;
-        }else{
-            float minEval = 1000;
-            for(int i = 0; i < moves.size(); i++) {
-                //faire coup
-                Jeu jeuBase = faireCoupClone(arbreCourant.jeuCourant, moves.get(i));
-                // si clash, saute au prochain coup
-                if(jeuBase == null) continue;
-                Arbre newFils = new Arbre(jeuBase, moves.get(i), true);
-
-                //evaluation
-                float evaluation = SearchAlphaBeta(depth - 1, newFils, alpha, beta);
-                arbreCourant.fils.add(newFils);
-
-                minEval = Math.min(minEval, evaluation);
-                beta = Math.min(beta, evaluation);
-                if (evaluation < arbreCourant.bestEval) {
-                    arbreCourant.bestCoup = moves.get(i);
-                    arbreCourant.bestEval = minEval;
-                }
-
-                if (beta <= alpha) {
+                if (beta <= alpha && withAlphaBeta) {
                     break; // Alpha cutoff
                 }
             }
@@ -165,7 +107,6 @@ public class Arbre {
         }
 
     }
-
 
     float Evaluate(Jeu jeu){
         float evaluation = 0;

@@ -66,7 +66,7 @@ class JoueurAI extends Joueur {
         Arbre arbre = new Arbre(jeu, null, true);
         Coup bestCoup = arbre.getCoup(4, false);
         jeu.coupEchangeCarteMainContinuum(bestCoup.getIndexMain(), bestCoup.getIndexContinuum());
-        if(bestCoup.getParadox() != 0) jeu.coupParadox(bestCoup.getParadox());
+        if(bestCoup.getOrdre()[0] != -1) jeu.coupParadox(bestCoup.getOrdre());
         return true;
     }
 }

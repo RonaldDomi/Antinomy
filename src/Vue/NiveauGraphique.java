@@ -87,7 +87,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		carteDos = lisImage("Carte_dos");
 		carteDosR = lisImage("Carte_dos_R");
 		carteVide = lisImage("Carte_vide");
-		carteFond = lisImage("CarteFond");
+//		carteFond = lisImage("CarteFond");
 		vert = lisImage("Vert");
 		violet = lisImage("Violet");
 		bleu = lisImage("Bleu");

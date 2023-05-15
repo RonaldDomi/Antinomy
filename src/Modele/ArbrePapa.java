@@ -86,14 +86,17 @@ public class ArbrePapa {
                             } catch (CloneNotSupportedException e) {
                                 throw new RuntimeException(e);
                             }
-                            temp2.coupParadox(-1);
+                            int[] ordre = temp2.generateOrdre(-1);
+                            temp2.coupParadox(ordre);
                         }
                         //ici, on donne juste sens de paradox
-                        temp.coupParadox(1);
+                        int[] ordre = temp.generateOrdre(1);
+                        temp.coupParadox(ordre);
                     }
                     else {
                         paradoxBas = true;
-                        temp.coupParadox(-1);
+                        int[] ordre = temp.generateOrdre(-1);
+                        temp.coupParadox(ordre);
                     }
                 }
 

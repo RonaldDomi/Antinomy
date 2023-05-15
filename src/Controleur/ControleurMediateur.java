@@ -66,7 +66,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 			joueurs[i][1] = new JoueurAI(i, jeu);
 			typeJoueur[i] = 0;
 		}
-		typeJoueur[1] = 0;
+		typeJoueur[1] = 1;
 
 //		animations = Configuration.nouvelleSequence();
 		vitesseAnimations = Configuration.vitesseAnimations;
