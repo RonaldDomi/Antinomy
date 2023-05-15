@@ -41,6 +41,7 @@ import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import java.util.LinkedList;
 
 import static java.lang.Math.min;
@@ -56,30 +57,32 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	NiveauGraphique niv;
 	MenuGraphique menu;
 	JFrame courant;
+	Socket clientSocket;
 
 	static Font h1;
 	static Font h2 = new Font("TimesRoman", Font.PLAIN, 15);
 	Font h2MenuJeu;
 
-	InterfaceGraphique(Jeu jeu, CollecteurEvenements c) {
+	InterfaceGraphique(Jeu jeu, CollecteurEvenements c, Socket clientSocket) {
 		j = jeu;
 		control = c;
-
+		this.clientSocket = clientSocket;
 
 		try {
 			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT, new File("res/Fonts/Medieval-English.ttf"));
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(medievalFont);
-		} catch (FontFormatException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		} catch (FontFormatException fontFormatException) {
+			throw new RuntimeException(fontFormatException);
+		} catch (IOException ioException) {
+			throw new RuntimeException(ioException);
 		}
 	}
 
-	public static void demarrer(Jeu j, CollecteurEvenements c) {
-		InterfaceGraphique vue = new InterfaceGraphique(j, c);
+	public static void demarrer(Jeu j, CollecteurEvenements c, Socket clientSocket) {
+		InterfaceGraphique vue = new InterfaceGraphique(j, c, clientSocket);
 		c.ajouteInterfaceUtilisateur(vue);
+		c.ajouteSocket(clientSocket);
 		SwingUtilities.invokeLater(vue);
 	}
 

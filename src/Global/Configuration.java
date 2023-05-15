@@ -39,9 +39,10 @@ public class Configuration {
 	public static final double vitesseAnimations = 0.15;
 	public static final int lenteurPas = 15;
 	public static final boolean animations = true;
-	public static int lenteurAttente = 0;
-	public static int profondeurIA = 6;
-
+	public static final String IA = "Aleatoire";
+	public static int lenteurJeuAutomatique = 15;
+	public static int typeJoueur;
+	
 	public static InputStream ouvre(String s) {
 		InputStream in = null;
 		try {

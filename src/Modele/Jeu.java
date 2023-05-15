@@ -85,6 +85,8 @@ public class Jeu extends Observable implements Cloneable{
 		this.joueurGagnant = Integer.parseInt(stringJeuSep[6]);
 		this.etape = Integer.parseInt(stringJeuSep[7]);
 	}
+	
+	
 
 	public Jeu(Jeu j){
 		this.r = j.r;
@@ -384,13 +386,38 @@ public class Jeu extends Observable implements Cloneable{
 	public int getJoueurCourant(){
 		return joueurCourant;
 	}
-
+	
+	public int getTour(){
+		return tour;
+	}
+	
 	public int getJoueurGagnant(){
 		return joueurGagnant;
 	}
 	public Jeu clone() throws CloneNotSupportedException {
 		Jeu jClone = new Jeu(this);
 		return jClone;
+	}
+	
+	public void modifierJeu(String stringJeu) {
+		synchronized (this) {
+			Jeu jeuClone = new Jeu(stringJeu);
+			historique.ajouterJeu(jeuClone);
+			
+			this.r = new Random();
+			String[] stringJeuSep = stringJeu.split(";");
+			this.continuum = new Continuum(stringJeuSep[0]);
+			this.infoJoueurs = new InfoJoueur[2];
+			this.infoJoueurs[0] = new InfoJoueur(stringJeuSep[1]);
+			this.infoJoueurs[1] = new InfoJoueur(stringJeuSep[2]);
+			this.tour = Integer.parseInt(stringJeuSep[3]);
+			this.codex = new Codex(stringJeuSep[4]);
+			this.joueurCourant = Integer.parseInt(stringJeuSep[5]);
+			System.out.println("ici" + joueurCourant);
+			this.joueurGagnant = Integer.parseInt(stringJeuSep[6]);
+			this.etape = Integer.parseInt(stringJeuSep[7]);
+			
+		}
 	}
 
 	public void charger(Jeu j, boolean isImport){

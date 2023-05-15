@@ -11,7 +11,7 @@ public class Historique {
     // insert en tete
     int courrant=0;
 
-    Historique(){
+    public Historique(){
         listeJeu = new LinkedList<>();
     }
     Historique(Historique hist){
@@ -46,7 +46,7 @@ public class Historique {
     }
 
 
-    void ajouterJeu(Jeu jeu){
+    public void ajouterJeu(Jeu jeu){
 
         // if we did a bunch of undos, we should remove them
         // being that we are rewriting history

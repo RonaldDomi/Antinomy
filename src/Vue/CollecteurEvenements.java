@@ -1,4 +1,7 @@
 package Vue;
+
+import java.net.Socket;
+
 /*
  * Sokoban - Encore une nouvelle version (à but pédagogique) du célèbre jeu
  * Copyright (C) 2018 Guillaume Huard
@@ -30,7 +33,9 @@ public interface CollecteurEvenements {
 	void clicSourisBouton(int i);
 	void clicSourisBoutonMenu(int i);
 	void toucheClavier(String t);
+	void ajouteSocket(Socket clientSocket);
 	void ajouteInterfaceUtilisateur(InterfaceUtilisateur vue);
 	void tictac();
 	void nouvellePartie(int i, int j);
+	
 }

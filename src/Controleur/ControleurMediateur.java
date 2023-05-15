@@ -33,6 +33,12 @@ import Modele.*;
 import Vue.CollecteurEvenements;
 import Vue.InterfaceUtilisateur;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 public class ControleurMediateur implements CollecteurEvenements {
 	Jeu jeu;
 
@@ -49,6 +55,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 	int lenteurJeuAutomatique;
 	boolean IAActive;
 
+	Socket clientSocket;
 
 	final int lenteurAttente = Configuration.lenteurAttente;
 	int decompte;
@@ -56,13 +63,16 @@ public class ControleurMediateur implements CollecteurEvenements {
 	public ControleurMediateur(Jeu j) {
 		jeu = j;
 		joueurs = new Joueur[2][3];
-		typeJoueur = new int[3];
+		typeJoueur = new int[4];
 		for (int i = 0; i < joueurs.length; i++) {
 			joueurs[i][0] = new JoueurHumain(i, jeu);
 			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
 			joueurs[i][2] = new JoueurAI(i, jeu);
+			joueurs[i][3] = new JoueurEnLigne(i, jeu);
 			typeJoueur[i] = 0;
 		}
+//		if (Configuration.typeJoueur == 3)
+//		typeJoueur[Configuration.typeJoueur] = 3;
 
 //		animations = Configuration.nouvelleSequence();
 		vitesseAnimations = Configuration.vitesseAnimations;
@@ -81,11 +91,22 @@ public class ControleurMediateur implements CollecteurEvenements {
 		vue = v;
 		for (Joueur[] joueur : joueurs) {
 			joueur[0].ajouteInterfaceUtilisateur(vue);
+			
 //			joueurs[i][1].ajouteInterfaceUtilisateur(vue);
 		}
 	}
 
-
+	
+	
+	public void ajouteSocket(Socket clientSocket){
+		this.clientSocket = clientSocket;
+		for (Joueur[] joueur: joueurs) {
+			joueur[1].ajouteSocket(clientSocket);
+			joueur[0].ajouteSocket(clientSocket);
+		}
+	}
+	
+	
 	@Override
 	public void clicSouris(int l, int c) {
 
@@ -95,6 +116,10 @@ public class ControleurMediateur implements CollecteurEvenements {
 		if (jeu.getJoueurGagnant() == -1){
 			if (joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].jeu(l, c)) {
 				decompte = lenteurAttente;
+			}
+			if (typeJoueur[jeu.getJoueurCourant()] == 3){
+				joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].envoyerJeu();
+				
 			}
 		}
 
@@ -108,14 +133,18 @@ public class ControleurMediateur implements CollecteurEvenements {
 				break;
 			case 1: //charger
 				vue.charger();
+				envoyerCommandeSocket("LOAD");
+				envoyerCommandeSocket(jeu.toString());
 				resetSelection();
 				break;
-			case 2: //undo;
+			case 2: //undo
 				jeu.undo();
+				envoyerCommandeSocket("UNDO");
 				resetSelection();
 				break;
 			case 3: //redo
 				jeu.redo();
+				envoyerCommandeSocket("REDO");
 				resetSelection();
 				break;
 			case 4: //restart
@@ -271,5 +300,18 @@ public class ControleurMediateur implements CollecteurEvenements {
 		typeJoueur[1] = type_j1;
 		vue.setAffichage(1, -1);
 	}
-
+	
+	public void envoyerCommandeSocket(String toSend) {
+		
+		if (clientSocket!=null){
+			System.out.println("En ligne");
+			PrintWriter outgoing;
+			try {
+				outgoing = new PrintWriter(clientSocket.getOutputStream(), true);
+				outgoing.println(toSend);
+			} catch (IOException ignored) {
+				;
+			}
+		}
+	}
 }

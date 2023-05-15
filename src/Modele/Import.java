@@ -1,7 +1,7 @@
 package Modele;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.net.Socket;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -17,14 +17,33 @@ public class Import {
         }
 
     }
+    
+    public Import(Socket clientSocket){
+        try{
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            
+            System.out.println("En attente de l'autre machine...");
+            this.scanner = new Scanner(in.readLine());
+            
+            System.out.println("Hors attente");
+        }catch (IOException ioException){
+            System.err.println("IOException : " + ioException.getMessage());
+            ioException.printStackTrace();
+        }
+    }
+    
+    
+    public Import(String importString, boolean isImport){
+        this.scanner = new Scanner(importString);
+    }
 
     public Jeu lire_fichier() {
         Jeu jeu = new Jeu();
-
+        System.out.println("Dans lire fichier");
         int currentJeuIndex = Integer.parseInt(scanner.nextLine());
         Historique historique = new Historique(scanner.nextLine());
         historique.courrant = currentJeuIndex;
-
+        
         jeu.historique = historique;
         jeu.r = new Random();
         jeu.infoJoueurs[0] = historique.listeJeu.get(historique.courrant).infoJoueurs[0];
@@ -37,7 +56,12 @@ public class Import {
         jeu.joueurGagnant = historique.listeJeu.get(historique.courrant).joueurGagnant;
         jeu.joueurCourant = historique.listeJeu.get(historique.courrant).joueurCourant;
         jeu.etape = historique.listeJeu.get(historique.courrant).etape;
-
+        
         return jeu;
+    }
+    
+    
+    public String scan_fichier(){
+        return scanner.nextLine() + "\n" + scanner.nextLine();
     }
 }

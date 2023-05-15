@@ -1,3 +1,4 @@
+//
 //package Modele;
 //
 //import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@
 //	}
 //
 //
-//	boolean isIn(Carte[] liste, Carte carte){
+//	private boolean isIn(Carte[] liste, Carte carte){
 //		for (Carte value : liste) {
 //			if (value.sontEquivalentes(carte)) {
 //				return true;

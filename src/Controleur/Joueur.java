@@ -29,6 +29,10 @@ package Controleur;
 import Modele.Jeu;
 import Vue.InterfaceUtilisateur;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 // Classe commune à tous les joueurs : IA ou humain
 // L'idée est que, en ayant la même interface, tous les joueurs sont traités de la même
 // manière par le moteur de jeu. C'est plus simple et permet toutes les combinaisons.
@@ -42,7 +46,8 @@ abstract class Joueur {
     int num;
 
     InterfaceUtilisateur vue;
-
+    Socket clientSocket;
+    
     // Le joueur connait son numéro, cela lui permet d'inspecter le plateau en
     // sachant
     // repérer ses pions et évaluer où il en est
@@ -54,11 +59,27 @@ abstract class Joueur {
     void ajouteInterfaceUtilisateur(InterfaceUtilisateur vue){
         this.vue = vue;
     }
-
-
+    
+    void ajouteSocket(Socket clientSocket){
+        this.clientSocket = clientSocket;
+    }
+    
+    void envoyerJeu(){
+        try{
+            PrintWriter outgoing = new PrintWriter(clientSocket.getOutputStream(), true);
+            outgoing.println(jeu);
+            outgoing.close();
+        }catch(IOException e){
+            System.err.println("Connection reset by peer??");
+            System.exit(1);
+        }
+    }
+    
     // Méthode appelée pour tous les joueurs une fois le temps écoulé
     // Si un joueur n'est pas concerné, il lui suffit de l'ignorer
     boolean tempsEcoule() {
+        System.out.println("Il y a " + Thread.activeCount() + " threads actifs ");
+        System.out.println(Thread.currentThread().getName());
         return false;
     }
 
