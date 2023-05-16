@@ -78,8 +78,6 @@ abstract class Joueur {
     // Méthode appelée pour tous les joueurs une fois le temps écoulé
     // Si un joueur n'est pas concerné, il lui suffit de l'ignorer
     boolean tempsEcoule() {
-        System.out.println("Il y a " + Thread.activeCount() + " threads actifs ");
-        System.out.println(Thread.currentThread().getName());
         return false;
     }
 

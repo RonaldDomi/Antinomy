@@ -41,6 +41,8 @@ public class Configuration {
 	public static int profondeurIA = 4;
 	public static int typeJoueur;
 	
+	public static int numeroPort = 6969;
+	
 	public static InputStream ouvre(String s) {
 		InputStream in = null;
 		try {

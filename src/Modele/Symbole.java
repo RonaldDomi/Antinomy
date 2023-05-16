@@ -2,10 +2,12 @@ package Modele;
 
 import java.util.Random;
 
+/**
+ * <P> Représentation du symbole sur les cartes. Chaque carte dispose d'un symbole. </P>
+ * <P> Chaque symbole est représenté comme une constante. </P>
+ */
 public enum Symbole {
     CHAMPIGNON, CLEF, PAPIER, CRANE;
-    
-    
     private static final Symbole[] valeurs = values();
     private static final int taille = valeurs.length;
     private static final Random random = new Random();
@@ -13,16 +15,20 @@ public enum Symbole {
     public static Symbole getRandomSymbole(){
         return valeurs[random.nextInt(taille)];
     }
-
+    
+    /**
+     * <P>Convertit une chaîne de caractères en un symbole, par exemple "Clef" -> CLEF .</P>
+     * @param symbole Chaîne de caractères à parse.
+     * @return Le symbole correspondant à la chaîne de caractères.
+     */
     public static Symbole parseSymbole(String symbole){
-        Symbole mySymbole;
+        Symbole my_symbole;
         try {
-            mySymbole = Symbole.valueOf(symbole);
+            my_symbole = Symbole.valueOf(symbole);
         } catch (IllegalArgumentException e) {
-            // handle invalid input
             System.err.println("Invalid enum string: " + symbole);
-            mySymbole = null; // or set a default value
+            my_symbole = null;
         }
-        return mySymbole;
+        return my_symbole;
     }
 }

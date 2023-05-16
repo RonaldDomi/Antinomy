@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/** Représente le continuum, avec ses 9 cartes
+ *
+ */
 public class Continuum implements Cloneable {
 	private Carte[] continuum; //9 cartes
 
@@ -13,6 +16,11 @@ public class Continuum implements Cloneable {
 
 	Continuum(){}
 
+	/**
+	 * Reconstruit un Continuum à partir de sa représentation textuelle.
+	 *
+	 * @param stringContinuum Représentation textuelle du Continuum
+	 * */
 	Continuum(String stringContinuum){
 //		Continuum: carte1,carte2,carte3,....
 		String[] strings = stringContinuum.split(",");
@@ -41,8 +49,7 @@ public class Continuum implements Cloneable {
 
 	/**
 	 * Renvoie les déplacements possibles pour toutes les cartes en main.
-	 * <BR> L'élément renvoyé est un tableau de taille 3 contenant un sous tableau de tous les
-	 *  indices valides pour un déplacement.
+	 *
 	 *
 	 * @param cartes Une liste correspondant aux 3 cartes en main
 	 * @param indice_sorcier l'index du sorcier sur le Continuum
@@ -99,7 +106,12 @@ public class Continuum implements Cloneable {
 
 		return index_coups_possibles;
 	}
-
+	
+	/**
+	 * <P> Représentation textuelle du Continuum. </P>
+	 * <P> Suite de cartes séparées par des ,</P>
+	 * @return Chaîne de caractères représentant le Continuum.
+	 */
 	@Override
 	public String toString() {
 		String res = "";
@@ -108,21 +120,12 @@ public class Continuum implements Cloneable {
 		}
 		return res;
 	}
-
-	public static Carte[] mockContinuum(){
-		Carte[] res = new Carte[9];
-		res[0] = new Carte(1, Couleur.ROUGE, Symbole.CLEF);
-		res[1] = new Carte(2, Couleur.VERT, Symbole.PAPIER);
-		res[2] = new Carte(3, Couleur.BLEU, Symbole.CRANE);
-		res[3] = new Carte(2, Couleur.VERT, Symbole.CRANE);
-		res[4] = new Carte(1, Couleur.VIOLET, Symbole.PAPIER);
-		res[5] = new Carte(3, Couleur.VERT, Symbole.CHAMPIGNON);
-		res[6] = new Carte(3, Couleur.ROUGE, Symbole.CHAMPIGNON);
-		res[7] = new Carte(2, Couleur.VERT, Symbole.CLEF);
-		res[8] = new Carte(1, Couleur.BLEU, Symbole.PAPIER);
-		return res;
-	}
-
+	
+	/**
+	 * Clone le Continuum dans un nouvel objet.
+	 * @return Le Continuum cloné
+	 * @throws CloneNotSupportedException Si le clonage n'est pas supporté
+	 */
 	@Override
 	public Continuum clone() throws CloneNotSupportedException {
 //		Continuum c = (Continuum) super.clone();
@@ -135,6 +138,12 @@ public class Continuum implements Cloneable {
 	}
 
 
+	/**
+	* Calcule les indexes où le sorcier peut se déplacer au tour initial.
+	 *
+	 * @param couleur_interdite La couleur interdite au tour initial.
+	 * @return Une liste chaînée d'indexes possibles.
+	*/
 	public LinkedList<Integer> getIndexSorcierPossible(Couleur couleur_interdite){
 		LinkedList<Integer> tabIndex = new LinkedList<>();
 

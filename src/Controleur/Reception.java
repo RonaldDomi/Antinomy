@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+/**
+ * <P> Reception d'un message à travers un Socket </P>
+ * <P> Code à exécuter pour un Thread de reception </P>*/
 public class Reception implements Runnable{
 	
 	Jeu jeu;
@@ -54,7 +57,7 @@ public class Reception implements Runnable{
 			System.exit(1);
 		}
 		
-		/* Arrive seulement si la machine distante se déconnecte, on arrête la JVM totalement dans ce cas */
+		/* Arrive seulement si la machine distante se déconnecte, on arrête la JVM dans ce cas */
 		System.out.println("Bye bye reception !");
 		System.exit(1);
 	}

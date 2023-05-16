@@ -10,19 +10,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+
+
+/**
+ * <P> Initialise un client, tente de se connecter à un serveur, reçoit un jeu le cas échéant. </P>
+ * <P> Initialisé par défaut sur le port 6969, configurable dans {@link Configuration}. </P>
+ * <P> Initialise également l'interface graphique et le thread de {@link Reception}. </P>
+ */
 public class Client {
 	
 	public static void main(String[] args) throws IOException {
-		if (args.length != 2) {
-			System.err.println("Usage : Client <host name> <port number>");
+		if (args.length != 1) {
+			System.err.println("Usage : Client <host name>");
 			System.exit(1);
 		}
 		
 		String nom_host = args[0];
-		int numero_port = Integer.parseInt(args[1]);
 		
 		Configuration.typeJoueur = 0;
 		Jeu jeu = null;
@@ -31,12 +38,13 @@ public class Client {
 		Socket client_socket=null;
 		
 		try{
-			client_socket = new Socket(nom_host, numero_port);
+			client_socket = new Socket(nom_host, Configuration.numeroPort);
 			incoming = new BufferedReader(new InputStreamReader(client_socket.getInputStream()));
 			
 			//Aucune utilitée
-			PrintWriter outgoing = new PrintWriter(client_socket.getOutputStream(), true);
-			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+			//PrintWriter outgoing = new PrintWriter(client_socket.getOutputStream(), true);
+			//BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+			System.out.println(InetAddress.getLocalHost().getHostName());
 			
 		} catch (UnknownHostException unknownHostException){
 			System.err.println("Unknown host : " + unknownHostException.getMessage());
@@ -45,7 +53,7 @@ public class Client {
 			System.err.println("IOException : " + ioException.getMessage());
 			System.exit(1);
 		} catch (IllegalArgumentException illegalArgumentException){
-			System.err.println("illegal port number : " + illegalArgumentException.getMessage());
+			System.err.println("Illegal port number : " + illegalArgumentException.getMessage());
 			System.exit(1);
 		}
 		

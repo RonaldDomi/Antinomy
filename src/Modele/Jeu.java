@@ -455,7 +455,7 @@ public class Jeu extends Observable implements Cloneable{
 				Jeu temp;
 				try {
 					temp = clone();
-					temp.historique = new Historique(this.historique);
+					temp.historique = new Historique();
 				} catch (CloneNotSupportedException e) {
 					throw new RuntimeException(e);
 				}
@@ -492,7 +492,7 @@ public class Jeu extends Observable implements Cloneable{
 		Jeu jeuBase;
 		try {
 			jeuBase = jeu.clone();
-			jeuBase.historique = new Historique(jeu.historique);
+			jeuBase.historique = new Historique();
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}

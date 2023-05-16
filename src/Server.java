@@ -12,15 +12,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
+/**
+ * <P> Initialise un serveur, attend une connexion entrante et lui envoie le Jeu. </P>
+ * <P> Initialisé par défaut sur le port 6969, configurable dans {@link Configuration}. </P>
+ * <P> Initialise également l'interface graphique et le thread de {@link Reception}. </P>
+ */
 public class Server {
 	
 	public static void main(String[] args) {
-		if (args.length != 1) {
-			System.err.println("Usage : Server <port number>");
-			System.exit(1);
-		}
-		
-		int portNumber = Integer.parseInt(args[0]);
 		
 		Configuration.typeJoueur = 1;
 		ServerSocket server_socket;
@@ -30,7 +29,7 @@ public class Server {
 		
 		try{
 			
-			server_socket = new ServerSocket(portNumber);
+			server_socket = new ServerSocket(Configuration.numeroPort);
 			client_socket = server_socket.accept();
 			outgoing = new PrintWriter(client_socket.getOutputStream(), true);
 			
