@@ -197,10 +197,11 @@ public class Jeu extends Observable implements Cloneable{
 				infoJoueurs[1-res].remPoint();
 				infoJoueurs[res].addPoint();
 				codex.cycleCouleur();
-				etapeSuivante();
+//				etapeSuivante();
 				jeuGagnant();
 				return true;
 			}
+
 //			System.out.println("Pas de point a voler");
 			return true;
 		}
@@ -428,6 +429,19 @@ public class Jeu extends Observable implements Cloneable{
 		int previousSorcierIndice = getInfoJoueurCourant().getSorcierIndice();
 		getInfoJoueurCourant().setSorcierIndice(coup.indexContinuum);
 		echangerCarteMainContinuum(coup.indexMain, coup.indexContinuum);
+
+		//faire echange paradox
+		if(coup.getOrdre()[0] != -1) {
+			for (int i = 0; i < 3; i++) {
+				echangerCarteMainContinuum(
+						i,
+						coup.getOrdre()[i]
+				);
+			}
+			infoJoueurs[joueurCourant].addPoint();
+		}
+
+
 		if(existeClash()){
 			int sommeJ0 = infoJoueurs[0].sommeMain(codex.getCouleurInterdite());
 			int sommeJ1 = infoJoueurs[1].sommeMain(codex.getCouleurInterdite());
@@ -435,19 +449,29 @@ public class Jeu extends Observable implements Cloneable{
 			if (sommeJ0 == sommeJ1){
 				// clash et egalite dans la somme de main
 				getInfoJoueurCourant().setSorcierIndice(previousSorcierIndice);
+				if(coup.getOrdre()[0] != -1) {
+					for (int i = 0; i < 3; i++) {
+						echangerCarteMainContinuum(
+								i,
+								coup.getOrdre()[i]
+						);
+					}
+				}
+
 				echangerCarteMainContinuum(coup.indexMain, coup.indexContinuum);
 				return true;
 			}
-		}
-
-		if(getInfoJoueurCourant().existeParadox(getCodex().getCouleurInterdite())){
-			setEtape(2);
-			coupParadox(coup.ordre);
+			// il va avoir de clash sans egalite
+			setEtape(3);
+			coupClash();
+			finTour();
 			// finTour() deja appelle
 			return false;
+
 		}
 		finTour();
 		return false;
+
 	}
 
 	public void undoCoup(Coup coup){

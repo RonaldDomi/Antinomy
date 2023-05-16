@@ -47,11 +47,11 @@ public class ArbreOld {
                 Jeu jeuBase = faireCoupClone(jeuCourant, moves.get(i));
                 // si clash, saute au prochain coup
                 if(jeuBase == null){
-                    if( Evaluate(jeuCourant) > bestEval) {
-                        maxEval = Evaluate(jeuCourant);
-                        bestCoup = moves.get(i);
-                        bestEval = Evaluate(jeuCourant);
-                    }
+//                    if( Evaluate(jeuCourant) > bestEval) {
+//                        maxEval = Evaluate(jeuCourant);
+//                        bestCoup = moves.get(i);
+//                        bestEval = Evaluate(jeuCourant);
+//                    }
                     continue;
                 }
 
@@ -76,11 +76,11 @@ public class ArbreOld {
                 Jeu jeuBase = faireCoupClone(jeuCourant, moves.get(i));
                 // si clash, saute au prochain coup
                 if(jeuBase == null){
-                    if( Evaluate(jeuCourant) < bestEval) {
-                        minEval = Evaluate(jeuCourant);
-                        bestCoup = moves.get(i);
-                        bestEval = Evaluate(jeuCourant);
-                    }
+//                    if( Evaluate(jeuCourant) < bestEval) {
+//                        minEval = Evaluate(jeuCourant);
+//                        bestCoup = moves.get(i);
+//                        bestEval = Evaluate(jeuCourant);
+//                    }
                     continue;
                 }
 

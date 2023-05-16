@@ -53,6 +53,7 @@ public class Arbre {
                 float evaluation = newFils.Search(jeuCourant, depth - 1, withAlphaBeta, alpha, beta);
                 fils.add(newFils);
 
+                // undo coup
                 jeuCourant.historique.listeJeu.remove(0);
                 Historique currentHistorique = jeuCourant.historique;
                 jeuCourant.charger(jeuCourant.historique.listeJeu.get(0), true);
@@ -84,6 +85,7 @@ public class Arbre {
                 float evaluation = newFils.Search(jeuCourant,depth - 1, withAlphaBeta, alpha, beta);
                 fils.add(newFils);
 
+                // undo coup
                 jeuCourant.historique.listeJeu.remove(0);
                 Historique currentHistorique = jeuCourant.historique;
                 jeuCourant.charger(jeuCourant.historique.listeJeu.get(0), true);
