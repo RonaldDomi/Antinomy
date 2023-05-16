@@ -113,8 +113,8 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		}
 
 
-		enJeu.setSize(1000, 600);
-		menuPrincipale.setSize(1000, 600);
+		enJeu.setSize(700, 500);
+		menuPrincipale.setSize(700, 500);
 //		h2MenuJeu = new Font("Medieval English", Font.PLAIN, enJeu.getWidth()/10);
 
 		menu = new MenuGraphique();

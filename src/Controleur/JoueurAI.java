@@ -50,9 +50,11 @@ class JoueurAI extends Joueur {
     boolean tempsEcoule() {
         //jouer indice sorcier
         switch (getEtape()) {
+            case -1:
             case -2:
                 int sorcier = jeu.getContinuum().getIndexSorcierPossible(jeu.getCodex().getCouleurInterdite()).get(0);
                 jeu.coupChangerPositionSorcier(sorcier);
+                jeu.metAJour();
                 return true;
         }
 
@@ -63,10 +65,13 @@ class JoueurAI extends Joueur {
 //        System.out.println("total for this configuration: " + Statistics.getNbTotalConfigurations());
 
 
-        Arbre arbre = new Arbre(jeu, null, true);
-        Coup bestCoup = arbre.getCoup(4, false);
+        ArbreOld arbreOld = new ArbreOld(jeu, null, true);
+        Coup bestCoupOld = arbreOld.getCoup(6, false);
+        Arbre arbre = new Arbre( null, true);
+        Coup bestCoup = arbre.getCoup(jeu,6, false);
         jeu.coupEchangeCarteMainContinuum(bestCoup.getIndexMain(), bestCoup.getIndexContinuum());
         if(bestCoup.getOrdre()[0] != -1) jeu.coupParadox(bestCoup.getOrdre());
+        jeu.metAJour();
         return true;
     }
 }

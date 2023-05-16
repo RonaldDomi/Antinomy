@@ -9,15 +9,13 @@ import static Modele.InfoJoueur.getEvaluationSommeMain;
 import static Modele.Jeu.faireCoupClone;
 
 public class Arbre {
-    Jeu jeuCourant;
     List<Arbre> fils;
     float bestEval;
     Coup bestCoup;
     Coup coupDeParent;
     boolean isMaximizingPlayer;
 
-    public Arbre(Jeu jeuCourant, Coup coupDeParent, boolean isMaximizingPlayer){
-        this.jeuCourant = jeuCourant;
+    public Arbre(Coup coupDeParent, boolean isMaximizingPlayer){
         this.coupDeParent = coupDeParent;
         this.isMaximizingPlayer = isMaximizingPlayer;
         if(isMaximizingPlayer) this.bestEval = -1000;
@@ -25,13 +23,13 @@ public class Arbre {
         fils = new ArrayList<>();
     }
 
-    public Coup getCoup(int depth, boolean withAlphaBeta){
-        Search(depth, withAlphaBeta, -1000, 1000);
+    public Coup getCoup(Jeu jeuCourant, int depth, boolean withAlphaBeta){
+        Search(jeuCourant, depth, withAlphaBeta, -1000, 1000);
         return bestCoup;
     }
 
 
-    float Search(int depth, boolean withAlphaBeta, float alpha, float beta){
+    float Search(Jeu jeuCourant, int depth, boolean withAlphaBeta, float alpha, float beta){
         Statistics.incrementConfigurationsLookedAt();
         if(depth == 0 || jeuCourant.joueurGagnant != -1){
             bestEval = Evaluate(jeuCourant);
@@ -42,23 +40,24 @@ public class Arbre {
         if(isMaximizingPlayer){
             float maxEval = -1000;
             for(int i = 0; i < moves.size(); i++) {
-                //faire coup
-                Jeu jeuBase = faireCoupClone(jeuCourant, moves.get(i));
-                // si clash, saute au prochain coup
-                if(jeuBase == null){
-                    if( Evaluate(jeuCourant) > bestEval) {
-                        maxEval = Evaluate(jeuCourant);
-                        bestCoup = moves.get(i);
-                        bestEval = Evaluate(jeuCourant);
-                    }
-                    continue;
-                }
+//                int previousSorcierIndice = jeuCourant.getInfoJoueurCourant().getSorcierIndice();
 
-                Arbre newFils = new Arbre(jeuBase, moves.get(i), false);
+                //faire coup
+                boolean clashEgalite = jeuCourant.faireCoup(moves.get(i));
+                if(clashEgalite)
+                    continue;
+
+                Arbre newFils = new Arbre(moves.get(i), false);
 
                 //evaluation
-                float evaluation = newFils.Search(depth - 1, withAlphaBeta, alpha, beta);
+                float evaluation = newFils.Search(jeuCourant, depth - 1, withAlphaBeta, alpha, beta);
                 fils.add(newFils);
+
+                jeuCourant.historique.listeJeu.remove(0);
+                Historique currentHistorique = jeuCourant.historique;
+                jeuCourant.charger(jeuCourant.historique.listeJeu.get(0), true);
+                jeuCourant.historique = currentHistorique;
+//                jeuCourant.undoCoup(moves.get(i));
 
                 maxEval = Math.max(maxEval, evaluation);
                 alpha = Math.max(alpha, evaluation);
@@ -75,22 +74,21 @@ public class Arbre {
             float minEval = 1000;
             for(int i = 0; i < moves.size(); i++) {
                 //faire coup
-                Jeu jeuBase = faireCoupClone(jeuCourant, moves.get(i));
-                // si clash, saute au prochain coup
-                if(jeuBase == null){
-                    if( Evaluate(jeuCourant) < bestEval) {
-                        minEval = Evaluate(jeuCourant);
-                        bestCoup = moves.get(i);
-                        bestEval = Evaluate(jeuCourant);
-                    }
+                boolean clashEgalite = jeuCourant.faireCoup(moves.get(i));
+                if(clashEgalite)
                     continue;
-                }
 
-                Arbre newFils = new Arbre(jeuBase, moves.get(i), true);
+                Arbre newFils = new Arbre(moves.get(i), true);
 
                 //evaluation
-                float evaluation = newFils.Search(depth - 1, withAlphaBeta, alpha, beta);
+                float evaluation = newFils.Search(jeuCourant,depth - 1, withAlphaBeta, alpha, beta);
                 fils.add(newFils);
+
+                jeuCourant.historique.listeJeu.remove(0);
+                Historique currentHistorique = jeuCourant.historique;
+                jeuCourant.charger(jeuCourant.historique.listeJeu.get(0), true);
+                jeuCourant.historique = currentHistorique;
+//                jeuCourant.undoCoup(moves.get(i));
 
                 minEval = Math.min(minEval, evaluation);
                 beta = Math.min(beta, evaluation);

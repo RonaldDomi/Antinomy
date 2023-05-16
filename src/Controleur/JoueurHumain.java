@@ -82,6 +82,7 @@ class JoueurHumain extends Joueur {
             case 2: //continuum
                 if (clicContinuum(indexCarte)){
                     vue.selectionnerCarteContinuum(null);
+                    jeu.metAJour();
                     return true;
                 }
                 return false;
@@ -112,8 +113,8 @@ class JoueurHumain extends Joueur {
 //                    System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
             case -2: //debut de jeu
 //                    System.out.println("Joueur " + jeu.getJoueurCourant() + " pose son sorcier en " + indexCarte);
-
-                return jeu.coupChangerPositionSorcier(indexCarte);
+                boolean res = jeu.coupChangerPositionSorcier(indexCarte);
+                return res;
             case 1: //debut de tour
                 if (indexCarteMain != -1){
                     java.util.LinkedList<Integer> indexPossible = jeu.getContinuum().getCoupsPossibles(jeu.getInfoJoueurCourant().getCarteMain(indexCarteMain), jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection());

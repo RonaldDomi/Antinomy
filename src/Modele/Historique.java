@@ -62,7 +62,6 @@ public class Historique {
 //        System.out.println();
     }
 
-
     Jeu annuler(){
         if (!peutAnnuler()){
             System.err.println("Impossible d'annuler le coup. Aucun coup n'a été joué !");

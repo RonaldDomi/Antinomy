@@ -64,6 +64,7 @@ class JoueurAIAleatoire extends Joueur {
                 while (!jeu.coupChangerPositionSorcier(coup_choisi)){
                     coup_choisi = coup_possible.get(r.nextInt(coup_possible.size()));
                 }
+                jeu.metAJour();
                 return true;
             case 1:
                 int index_carte_main = r.nextInt(3);
@@ -77,7 +78,7 @@ class JoueurAIAleatoire extends Joueur {
                     coup_possible =  jeu.getContinuum().getCoupsPossibles(carte_main, jeu.getInfoJoueurCourant().getSorcierIndice(), jeu.getInfoJoueurCourant().getDirection());
                     coup_choisi = coup_possible.get(r.nextInt(coup_possible.size()));
                 }
-
+                jeu.metAJour();
                 if (getEtape() != 1)
                     return false;
 
@@ -95,13 +96,14 @@ class JoueurAIAleatoire extends Joueur {
                     int[] ordre = jeu.generateOrdre(1);
                     jeu.coupParadox(ordre);
                 }
-
+                jeu.metAJour();
                 if (getEtape() != 1)
                     return false;
 
                 return true;
             case 3:
                 jeu.coupClash();
+                jeu.metAJour();
                 return true;
         }
         return false;
