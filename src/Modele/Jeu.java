@@ -409,11 +409,12 @@ public class Jeu extends Observable implements Cloneable{
 			this.continuum = new Continuum(stringJeuSep[0]);
 			this.infoJoueurs = new InfoJoueur[2];
 			this.infoJoueurs[0] = new InfoJoueur(stringJeuSep[1]);
+			this.infoJoueurs[0].r = r;
 			this.infoJoueurs[1] = new InfoJoueur(stringJeuSep[2]);
+			this.infoJoueurs[1].r = r;
 			this.tour = Integer.parseInt(stringJeuSep[3]);
 			this.codex = new Codex(stringJeuSep[4]);
 			this.joueurCourant = Integer.parseInt(stringJeuSep[5]);
-			System.out.println("ici" + joueurCourant);
 			this.joueurGagnant = Integer.parseInt(stringJeuSep[6]);
 			this.etape = Integer.parseInt(stringJeuSep[7]);
 			

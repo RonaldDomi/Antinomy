@@ -114,13 +114,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 		if (jeu.getJoueurGagnant() == -1){
 			if (joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].jeu(l, c)) {
 				decompte = lenteurAttente;
-			}
-			if (typeJoueur[jeu.getJoueurCourant()] == 3){
-				joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].envoyerJeu();
-				
+				if (typeJoueur[jeu.getJoueurCourant()] == 3){
+					joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].envoyerJeu();
+				}
 			}
 		}
-
 	}
 
 	@Override

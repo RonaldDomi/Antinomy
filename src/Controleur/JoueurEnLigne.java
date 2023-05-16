@@ -67,20 +67,6 @@ class JoueurEnLigne extends Joueur {
     
     @Override
     boolean tempsEcoule() {
-//        System.out.println("En attente de l'autre machine...");
-//
-//        try {
-//            BufferedReader incoming = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//            String jeu_string = incoming.readLine();
-//            jeu.modifierJeu(jeu_string);
-//        }catch (IOException | NullPointerException exception){
-//            System.err.println("Connection reset by peer : " + exception.getMessage());
-//            System.exit(1);
-//        }
-//
-//        System.out.println("Fin de l'attente");
-//        jeu.metAJour();
-//
         return true;
     }
 }
