@@ -7,6 +7,7 @@ import Modele.Jeu;
 import Vue.CollecteurEvenements;
 import Vue.InterfaceGraphique;
 
+import javax.naming.ldap.Control;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
@@ -21,8 +22,8 @@ import java.net.SocketTimeoutException;
  */
 public class Server {
 	
-	public static Socket initServer(Jeu jeu) {
-		
+	public static Socket initServer(Jeu jeu, ControleurMediateur controleur) {
+
 		Configuration.typeJoueur = 1;
 		ServerSocket server_socket;
 		Socket client_socket = null;
@@ -32,6 +33,7 @@ public class Server {
 			
 			server_socket = new ServerSocket(Configuration.numeroPort);
 			client_socket = server_socket.accept();
+			controleur.enAttenteConnexion = false;
 			outgoing = new PrintWriter(client_socket.getOutputStream(), true);
 			
 		}
@@ -59,13 +61,17 @@ public class Server {
 		threadReception.start();
 		
 		
-		if (Thread.activeCount() != 4){
+		if (Thread.activeCount() != 5){
 			System.err.println("Le nombre de thread est incorrect");
+			System.err.println("Il y en a " + Thread.activeCount() + " à la place");
 		}else{
-			System.out.println("Il y a 4 threads actifs");
+			System.out.println("Il y a 5 threads actifs");
 		}
-		
-		
+
+		controleur.ajouteSocket(client_socket);
+		controleur.typeJoueur[1] = 3;
+		controleur.getVue().setAffichage(1, -1);
+
 		return client_socket;
 	}
 	

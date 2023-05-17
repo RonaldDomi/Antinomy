@@ -42,4 +42,5 @@ public interface InterfaceUtilisateur {
 
 	void setAffichage(int i, int j);
 	void selectionnerMain(boolean b);
+	MenuGraphique getMenu();
 }
