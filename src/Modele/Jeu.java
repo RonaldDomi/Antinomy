@@ -553,17 +553,21 @@ public class Jeu extends Observable implements Cloneable{
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
+
+		Couleur codexVieux = jeuBase.getCodex().getCouleurInterdite();
+
 		jeuBase.coupEchangeCarteMainContinuum(indexMain, indexContinuum);
 		//faire paradox
 		if(coup.getOrdre()[0] != -1) jeuBase.coupParadox(coup.getOrdre());
 
 		//faire clash if exist
 		if (jeuBase.existeClash()){
-
-			// decycle codex, if point vole
-			jeuBase.codex.cycleCouleur();
-			jeuBase.codex.cycleCouleur();
-			jeuBase.codex.cycleCouleur();
+			if(jeuBase.getCodex().getCouleurInterdite() != codexVieux){
+				// decycle codex, if point vole
+				jeuBase.codex.cycleCouleur();
+				jeuBase.codex.cycleCouleur();
+				jeuBase.codex.cycleCouleur();
+			}
 			if(jeuBase.egaliteClash())
 				return null;
 			jeuBase.coupClash();
