@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import static java.lang.Math.min;
 
@@ -76,13 +77,16 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		this.clientSocket = clientSocket;
 
 		try {
-			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT, new File("res/Fonts/Medieval-English.ttf"));
+			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT,
+					Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream("Medieval-English.ttf")));
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(medievalFont);
 		} catch (FontFormatException fontFormatException) {
 			throw new RuntimeException(fontFormatException);
 		} catch (IOException ioException) {
+			System.out.println(ioException.getMessage());
 			throw new RuntimeException(ioException);
+			
 		}
 	}
 
@@ -111,14 +115,17 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		enJeu = new JFrame("Antinomy");
 
 		Image icon;
-		InputStream in = Configuration.ouvre("Images/Diamant.png");
+		InputStream in = Configuration.ouvre("Diamant");
 		Configuration.info("Chargement de l'image " + "Icon");
+		
 		try {
 			icon = ImageIO.read(in);
 			menuPrincipale.setIconImage(icon);
 			enJeu.setIconImage(icon);
-		} catch (Exception e) {
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
 			Configuration.erreur("Impossible de charger l'image " + "Icon");
+			
 		}
 
 		Timer chrono = new Timer(16, new AdaptateurTemps(control));

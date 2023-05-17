@@ -121,7 +121,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	}
 
 	private Image lisImage(String nom) {
-		InputStream in = Configuration.ouvre("Images/" + nom + ".png");
+		InputStream in = Configuration.ouvre(nom);
 		Configuration.info("Chargement de l'image " + nom);
 		try {
 			// Chargement d'une image utilisable dans Swing
