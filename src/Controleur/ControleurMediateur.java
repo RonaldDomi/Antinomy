@@ -30,9 +30,12 @@ import Global.Configuration;
 import Modele.*;
 //import Structures.Iterateur;
 //import Structures.Sequence;
+import Reseau.Client;
+import Reseau.Server;
 import Vue.CollecteurEvenements;
 import Vue.InterfaceUtilisateur;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -55,6 +58,12 @@ public class ControleurMediateur implements CollecteurEvenements {
 	int lenteurJeuAutomatique;
 	boolean IAActive;
 
+	boolean enLigne;
+
+	JTextField hostName;
+
+	int joueursCourant = -1;
+
 	Socket clientSocket;
 
 	final int lenteurAttente = Configuration.lenteurAttente;
@@ -71,8 +80,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 			joueurs[i][3] = new JoueurEnLigne(i, jeu);
 			typeJoueur[i] = 0;
 		}
-//		if (Configuration.typeJoueur == 3)
-//		typeJoueur[Configuration.typeJoueur] = 3;
 
 //		animations = Configuration.nouvelleSequence();
 //		animations.insereTete(new AnimationPousseur(lenteurPas, this));
@@ -97,13 +104,20 @@ public class ControleurMediateur implements CollecteurEvenements {
 	
 	
 	public void ajouteSocket(Socket clientSocket){
-		this.clientSocket = clientSocket;
-		for (Joueur[] joueur: joueurs) {
-			joueur[3].ajouteSocket(clientSocket);
-			joueur[0].ajouteSocket(clientSocket);
+		if (clientSocket != null){
+			this.clientSocket = clientSocket;
+			for (Joueur[] joueur: joueurs) {
+				joueur[3].ajouteSocket(clientSocket);
+				joueur[0].ajouteSocket(clientSocket);
+			}
+			enLigne = true;
 		}
 	}
-	
+
+	@Override
+	public void ajouteTextFieldHostName(JTextField textField) {
+		hostName = textField;
+	}
 	
 	@Override
 	public void clicSouris(int l, int c) {
@@ -113,10 +127,16 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 		if (jeu.getJoueurGagnant() == -1){
 			if (joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].jeu(l, c)) {
-				decompte = lenteurAttente;
-				if (typeJoueur[jeu.getJoueurCourant()] == 3){
+				if (typeJoueur[jeu.getJoueurCourant()] == 3){ // adversaire en ligne
+					joueursCourant = 1;
 					joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].envoyerJeu();
 				}
+				resetSelection();
+				if (typeJoueur[jeu.getJoueurCourant()] == 0){
+					resetSelection();
+					joueurs[jeu.getJoueurCourant()][0].afficherPreSelection();
+				}
+				decompte = lenteurAttente;
 			}
 		}
 	}
@@ -132,21 +152,25 @@ public class ControleurMediateur implements CollecteurEvenements {
 				envoyerCommandeSocket("LOAD");
 				envoyerCommandeSocket(jeu.toString());
 				resetSelection();
+				afficherPreSelection();
 				break;
 			case 2: //undo
 				jeu.undo();
 				envoyerCommandeSocket("UNDO");
 				resetSelection();
+				afficherPreSelection();
 				break;
 			case 3: //redo
 				jeu.redo();
 				envoyerCommandeSocket("REDO");
 				resetSelection();
+				afficherPreSelection();
 				break;
 			case 4: //restart
 				jeu.charger(new Jeu(), false);
 				jeu.historique = new Historique(jeu);
 				resetSelection();
+				afficherPreSelection();
 				break;
 		}
 		jeu.metAJour();
@@ -154,18 +178,44 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 
 	@Override
-	public void clicSourisBoutonMenu(int index){
-		switch (index){
-			case 0: //Nouvelle partie
-				vue.setAffichage(0, 2);
+	public void clicSourisBoutonMenu(int fenetre, int index){
+			System.out.println("Fenetre "+fenetre);
+		switch (fenetre){
+			case 1:
+				switch (index){
+					case 0: //Nouvelle partie
+						vue.setAffichage(0, 2);
+						break;
+					case 1: //En ligne
+						vue.setAffichage(0, 3);
+						break;
+					case 2: //Charger
+						break;
+					case 3: //Tutoriel
+						break;
+				}
 				break;
-			case 1: //Charger
-				break;
-			case 2: //En ligne;
-				break;
-			case 3: //Tutoriel
+			case 3:
+				System.out.println("index "+fenetre);
+					switch (index){
+					case 0: //Server
+						clientSocket = Server.initServer(jeu);
+						ajouteSocket(clientSocket);
+						typeJoueur[1] = 3;
+						vue.setAffichage(1, -1);
+						break;
+					case 1: //Client
+						clientSocket = Client.initClient(hostName.getText(), jeu);
+						ajouteSocket(clientSocket);
+						typeJoueur[0] = 3;
+						vue.setAffichage(1, -1);
+						break;
+				}
 				break;
 		}
+
+
+
 
 	}
 
@@ -173,6 +223,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 		vue.selectionnerParadox(-1, -1, -1, -1);
 		vue.selectionnerCarteContinuum(null);
 		vue.selectionnerCarteMain(-1);
+		vue.selectionnerMain(false);
 	}
 
 	private void testFin() {
@@ -190,18 +241,22 @@ public class ControleurMediateur implements CollecteurEvenements {
 			case "Left":
 				jeu.undo();
 				resetSelection();
+				afficherPreSelection();
 				break;
 			case "Right":
 				jeu.redo();
 				resetSelection();
+				afficherPreSelection();
 				break;
 			case "Import":
 				vue.charger();
 				jeu.metAJour();
+				afficherPreSelection();
 				break;
 			case "Save":
 				vue.sauvegarder();
 				jeu.metAJour();
+				afficherPreSelection();
 				break;
 			case "Quit":
 				System.exit(0);
@@ -250,20 +305,28 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	public void tictac() {
 		if (jeu.getJoueurGagnant() == -1) {
+
+			if(enLigne){
+				if (joueursCourant != jeu.getJoueurCourant()){
+					joueursCourant = jeu.getJoueurCourant();
+					afficherPreSelection();
+				}
+			}
+
 			if (decompte == 0) {
 //				System.out.println("tic");
 				int type = typeJoueur[jeu.getJoueurCourant()];
 				// Lorsque le temps est écoulé on le transmet au joueur courant.
 				// Si un coup a été joué (IA) on change de joueur.
 				if (joueurs[jeu.getJoueurCourant()][type].tempsEcoule()) {
-					decompte = lenteurAttente;
+					resetSelection();
+					if (!afficherPreSelection())
+						decompte = lenteurAttente;
+
 				} else {
-					if (typeJoueur[jeu.getJoueurCourant()] == 0){
+					if (jeu.getEtape() < 0){
 						joueurs[jeu.getJoueurCourant()][0].afficherPreSelection();
 					}
-					// Sinon on indique au joueur qui ne réagit pas au temps (humain) qu'on l'attend.
-//					System.out.println("On vous attend, joueur " + joueurs[joueurCourant][type].num());
-					decompte = lenteurAttente;
 				}
 			} else {
 				decompte--;
@@ -289,6 +352,14 @@ public class ControleurMediateur implements CollecteurEvenements {
 //		}
 	}
 
+
+	public boolean afficherPreSelection(){
+		if (typeJoueur[jeu.getJoueurCourant()] == 0){ //prochain joueur est un humain
+			joueurs[jeu.getJoueurCourant()][0].afficherPreSelection();
+			return true;
+		}
+		return false;
+	}
 
 
 	public void nouvellePartie(int type_j0, int type_j1){

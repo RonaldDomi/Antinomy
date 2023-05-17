@@ -41,6 +41,7 @@ import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.LinkedList;
 
@@ -58,6 +59,12 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	MenuGraphique menu;
 	JFrame courant;
 	Socket clientSocket;
+
+	String hostName;
+
+	JComponent[] afficherEnLigne;
+
+	final Color background_color = new Color(100, 182, 176, 255);
 
 	static Font h1;
 	static Font h2 = new Font("TimesRoman", Font.PLAIN, 15);
@@ -103,7 +110,6 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		menuPrincipale = new JFrame("Antinomy");
 		enJeu = new JFrame("Antinomy");
 
-
 		Image icon;
 		InputStream in = Configuration.ouvre("Images/Diamant.png");
 		Configuration.info("Chargement de l'image " + "Icon");
@@ -115,62 +121,103 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 			Configuration.erreur("Impossible de charger l'image " + "Icon");
 		}
 
+		Timer chrono = new Timer(16, new AdaptateurTemps(control));
+		chrono.start();
 
-		enJeu.setSize(1000, 600);
+		setMenuPrincipal();
+		setEnJeu();
+
+//		menuPrincipale.setVisible(false);
+		menuPrincipale.setVisible(true);
+//		enJeu.setVisible(true);
+		enJeu.setVisible(false);
+//		courant = enJeu;
+		courant = menuPrincipale;
+	}
+
+	void setMenuPrincipal(){
 		menuPrincipale.setSize(1000, 600);
-//		h2MenuJeu = new Font("Medieval English", Font.PLAIN, enJeu.getWidth()/10);
+
+		JLayeredPane layeredPane = new JLayeredPane();
+		layeredPane.setSize(new Dimension(1000, 600));
 
 		menu = new MenuGraphique();
 		menu.addMouseListener(new AdaptateurSourisMenu(menu, control));
 
+		hostName = "Unknown";
+		try{
+			hostName = InetAddress.getLocalHost().getHostName();
+		}
+		catch (Exception e){
+			System.out.println("Erreur : getHostName() " + e);
+		}
+
+		afficherEnLigne = new JComponent[2];
+
+		JLabel label = new JLabel(hostName);
+
+		afficherEnLigne[0] = label;
+
+		JTextField textField = new JTextField("");
+		textField.setBounds(layeredPane.getSize().width, layeredPane.getSize().height /2, 100, 100); // Définir les coordonnées et les dimensions du deuxième bouton
+
+
+		afficherEnLigne[1] = textField;
+
+		menu.setSize(layeredPane.getSize());
+
+		layeredPane.add(menu, JLayeredPane.DEFAULT_LAYER);
+		layeredPane.add(textField, JLayeredPane.PALETTE_LAYER);
+		layeredPane.add(label, JLayeredPane.PALETTE_LAYER);
+
+		layeredPane.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				Font font = new Font("TimesRoman", Font.PLAIN, menu.getH2Size());
+
+				menu.setSize(menuPrincipale.getSize());
+				label.setFont(font);
+				textField.setFont(font);
+
+				FontMetrics m = menu.getFontMetrics();
+
+				textField.setSize(m.stringWidth("im2ag-F123-12"), m.getHeight());
+				label.setSize(label.getPreferredSize().width, m.getHeight());
+
+				textField.setLocation(menuPrincipale.getSize().width*3/4 - textField.getSize().width*5/8 , menuPrincipale.getSize().height/2-m.getHeight()/2);
+				label.setLocation(menuPrincipale.getSize().width*1/4 - label.getSize().width*5/8 , menuPrincipale.getSize().height/2-m.getHeight()/2);
+			}
+		});
+
+		textField.setVisible(false);
+		label.setVisible(false);
+
+		menuPrincipale.add(layeredPane);
+
+		menuPrincipale.getContentPane().setBackground(background_color);
+
+		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		control.ajouteTextFieldHostName(textField);
+	}
+
+	void setEnJeu(){
+		enJeu.setSize(1000, 600);
+
 		niv = new NiveauGraphique(j);
 		niv.addMouseListener(new AdaptateurSouris(niv, control));
 
-//		menuPrincipale.addKeyListener(new AdaptateurClavier(control));
 		enJeu.addKeyListener(new AdaptateurClavier(control));
-
-//		h1 = new Font("Medieval English", Font.PLAIN, menuPrincipale.getWidth()/2);
-
-//		Box enJeuListe = Box.createVerticalBox();
-//
-//		Box menuJeu = Box.createHorizontalBox();
-//		JLabel name = new JLabel("Antinomy");
-//		name.setFont(h2MenuJeu);
-
-
-//		menuJeu.add(name);
-
-//		enJeuListe.add(menuJeu);
-//		enJeuListe.add(niv);
-
-
-		Timer chrono = new Timer(16, new AdaptateurTemps(control));
-		chrono.start();
 
 		enJeu.add(niv);
 
-		menuPrincipale.add(menu);
-
 		enJeu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		Color background_color = new Color(62, 129, 125, 255);
-		Color background_color = new Color(100, 182, 176, 255);
 		enJeu.getContentPane().setBackground(background_color);
-		menuPrincipale.getContentPane().setBackground(background_color);
-		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-		menuPrincipale.setVisible(false);
-//		menuPrincipale.setVisible(true);
-		enJeu.setVisible(true);
-//		enJeu.setVisible(false);
-		courant = enJeu;
-//		courant = menuPrincipale;
 	}
 
 	public void decale(int l, int c, double dl, double dc) {
 //		niv.decale(l, c, dl, dc);
 	}
-
 
 	public void metAJourDirection(int dL, int dC) {
 
@@ -228,6 +275,11 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		switch (fenetre){
 			case 0:
 				menu.setAffichage(sous_fenetre);
+				for (JComponent compond:
+						afficherEnLigne) {
+					compond.setVisible(sous_fenetre != 2);
+				}
+
 				if (courant != menuPrincipale){
 					courant = menuPrincipale;
 					enJeu.setVisible(false);
