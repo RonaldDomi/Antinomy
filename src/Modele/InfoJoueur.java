@@ -112,7 +112,8 @@ public class InfoJoueur implements Cloneable{
 		float valeur = 0;
 		for(int carteI = 0; carteI < main.length; carteI++){
 			if(main[carteI].getCouleur() != couleurInterdite){
-				valeur += main[carteI].getNumero() - 2;
+//				valeur += main[carteI].getNumero() - 2;
+				valeur += main[carteI].getNumero();
 			}
 		}
 		return valeur;

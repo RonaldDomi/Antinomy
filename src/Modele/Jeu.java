@@ -309,8 +309,10 @@ public class Jeu extends Observable implements Cloneable{
 		int sommeJ1 = infoJoueurs[1].sommeMain(codex.getCouleurInterdite());
 
 		if (sommeJ0 == sommeJ1){
-			sommeJ0 = infoJoueurs[0].getCarteAleatoire().getNumero();
-			sommeJ1 = infoJoueurs[1].getCarteAleatoire().getNumero();
+			Carte carteJ0 = infoJoueurs[0].getCarteAleatoire();
+			sommeJ0 = carteJ0.getCouleur() != codex.getCouleurInterdite() ? carteJ0.getNumero() : 0;
+			Carte carteJ1 = infoJoueurs[1].getCarteAleatoire();
+			sommeJ1 = carteJ1.getCouleur() != codex.getCouleurInterdite() ? carteJ1.getNumero() : 0;
 		}
 
 		if (sommeJ0 == sommeJ1){
@@ -496,16 +498,22 @@ public class Jeu extends Observable implements Cloneable{
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
+
+		Couleur codexVieux = jeuBase.getCodex().getCouleurInterdite();
+
 		jeuBase.coupEchangeCarteMainContinuum(indexMain, indexContinuum);
+
 		//faire paradox
 		if(dirParadox != 0) jeuBase.coupParadox(dirParadox);
-
 		//faire clash if exist
 		if (jeuBase.existeClash()){
 			// le codex il est avance, on le remet on place
-			jeuBase.codex.cycleCouleur();
-			jeuBase.codex.cycleCouleur();
-			jeuBase.codex.cycleCouleur();
+			if(jeuBase.getCodex().getCouleurInterdite() != codexVieux){
+				jeuBase.codex.cycleCouleur();
+				jeuBase.codex.cycleCouleur();
+				jeuBase.codex.cycleCouleur();
+			}
+
 			if(jeuBase.egaliteClash())
 				return null;
 			jeuBase.coupClash();

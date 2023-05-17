@@ -63,7 +63,7 @@ class JoueurAI extends Joueur {
 
 //        System.out.println("total for this configuration: " + Statistics.getNbTotalConfigurations());
 
-
+        System.out.println("la couleur interdite est " + jeu.getCodex().getCouleurInterdite());
         Arbre arbre = new Arbre(jeu, null, true);
         Coup bestCoup = arbre.getCoup(Configuration.profondeurIA, false);
         jeu.coupEchangeCarteMainContinuum(bestCoup.getIndexMain(), bestCoup.getIndexContinuum());

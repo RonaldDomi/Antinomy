@@ -177,8 +177,8 @@ public class Arbre {
         // difference de points
         evaluation += (IAInfo.getPoints() - AdversaireInfo.getPoints()) * 100;
         // somme main
-        evaluation += getEvaluationSommeMain(IAInfo.getMain(), jeu.getCodex().getCouleurInterdite());
-        evaluation += getEvaluationDuosMain(IAInfo.getMain(), jeu.getCodex().getCouleurInterdite());
+        evaluation += getEvaluationSommeMain(IAInfo.getMain(), jeu.getCodex().getCouleurInterdite())*10;
+//        evaluation += getEvaluationDuosMain(IAInfo.getMain(), jeu.getCodex().getCouleurInterdite());
 
         if(IAInfo.getPoints() >= 5) evaluation = 99999;
         if(AdversaireInfo.getPoints() >= 5) evaluation = -99999;
