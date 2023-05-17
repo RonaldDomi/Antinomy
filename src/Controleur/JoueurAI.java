@@ -64,11 +64,13 @@ class JoueurAI extends Joueur {
 
 //        System.out.println("total for this configuration: " + Statistics.getNbTotalConfigurations());
 
-        System.out.println("la couleur interdite est " + jeu.getCodex().getCouleurInterdite());
         Arbre arbre = new Arbre(jeu, null, true);
         Coup bestCoup = arbre.getCoup(Configuration.profondeurIA, true, this.num);
         //Coup bestCoupF = arbre.getCoup(Configuration.profondeurIA, false);
         jeu.coupEchangeCarteMainContinuum(bestCoup.getIndexMain(), bestCoup.getIndexContinuum());
+        System.out.println("la couleur interdite est " + jeu.getCodex().getCouleurInterdite());
+        System.out.println("somme main IA : " + jeu.getInfoJoueurs()[jeu.getJoueurCourant()].sommeMain(jeu.getCodex().getCouleurInterdite()));
+        System.out.println("somme main adversaire : " + jeu.getInfoJoueurs()[1-jeu.getJoueurCourant()].sommeMain(jeu.getCodex().getCouleurInterdite()));
         if(bestCoup.getParadox() != 0) jeu.coupParadox(bestCoup.getParadox());
         return true;
     }

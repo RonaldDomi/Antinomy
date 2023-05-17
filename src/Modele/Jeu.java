@@ -509,9 +509,12 @@ public class Jeu extends Observable implements Cloneable{
 		if (jeuBase.existeClash()){
 			// le codex il est avance, on le remet on place
 			if(jeuBase.getCodex().getCouleurInterdite() != codexVieux){
+//				System.out.println("avant couleur " + codexVieux);
+//				System.out.println("apres couleur " + jeuBase.getCodex().getCouleurInterdite());
 				jeuBase.codex.cycleCouleur();
 				jeuBase.codex.cycleCouleur();
 				jeuBase.codex.cycleCouleur();
+//				System.out.println("apres2 couleur " + jeuBase.getCodex().getCouleurInterdite());
 			}
 
 			if(jeuBase.egaliteClash())
