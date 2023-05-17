@@ -153,18 +153,21 @@ public class ControleurMediateur implements CollecteurEvenements {
 				envoyerCommandeSocket(jeu.toString());
 				resetSelection();
 				afficherPreSelection();
+				decompte = lenteurAttente;
 				break;
 			case 2: //undo
 				jeu.undo();
 				envoyerCommandeSocket("UNDO");
 				resetSelection();
 				afficherPreSelection();
+				decompte = lenteurAttente;
 				break;
 			case 3: //redo
 				jeu.redo();
 				envoyerCommandeSocket("REDO");
 				resetSelection();
 				afficherPreSelection();
+				decompte = lenteurAttente;
 				break;
 			case 4: //restart
 				jeu.charger(new Jeu(), false);
@@ -244,16 +247,19 @@ public class ControleurMediateur implements CollecteurEvenements {
 				jeu.undo();
 				resetSelection();
 				afficherPreSelection();
+				decompte = lenteurAttente;
 				break;
 			case "Right":
 				jeu.redo();
 				resetSelection();
 				afficherPreSelection();
+				decompte = lenteurAttente;
 				break;
 			case "Import":
 				vue.charger();
 				jeu.metAJour();
 				afficherPreSelection();
+				decompte = lenteurAttente;
 				break;
 			case "Save":
 				vue.sauvegarder();

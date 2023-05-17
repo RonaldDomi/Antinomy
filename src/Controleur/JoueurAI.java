@@ -52,6 +52,7 @@ class JoueurAI extends Joueur {
         //jouer indice sorcier
         switch (getEtape()) {
             case -2:
+            case -1:
                 int sorcier = jeu.getContinuum().getIndexSorcierPossible(jeu.getCodex().getCouleurInterdite()).get(0);
                 jeu.coupChangerPositionSorcier(sorcier);
                 return true;
@@ -65,7 +66,8 @@ class JoueurAI extends Joueur {
 
         System.out.println("la couleur interdite est " + jeu.getCodex().getCouleurInterdite());
         Arbre arbre = new Arbre(jeu, null, true);
-        Coup bestCoup = arbre.getCoup(Configuration.profondeurIA, false);
+        Coup bestCoup = arbre.getCoup(Configuration.profondeurIA, true, this.num);
+        //Coup bestCoupF = arbre.getCoup(Configuration.profondeurIA, false);
         jeu.coupEchangeCarteMainContinuum(bestCoup.getIndexMain(), bestCoup.getIndexContinuum());
         if(bestCoup.getParadox() != 0) jeu.coupParadox(bestCoup.getParadox());
         return true;

@@ -37,8 +37,8 @@ import java.io.InputStream;
 public class Configuration {
 	static final int silence = 1;
 	public static final double vitesseAnimations = 0.15;
-	public static int lenteurAttente = 40;
-	public static int profondeurIA = 4;
+	public static int lenteurAttente = 0;
+	public static int profondeurIA = 3;
 	public static int typeJoueur;
 	
 	public static int numeroPort = 6969;
