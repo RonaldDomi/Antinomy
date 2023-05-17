@@ -173,6 +173,9 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		layeredPane.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
+				if (menu.h2 == null)
+					return;
+
 				Font font = new Font("TimesRoman", Font.PLAIN, menu.getH2Size());
 
 				menu.setSize(menuPrincipale.getSize());
@@ -298,5 +301,10 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	@Override
 	public void selectionnerMain(boolean b) {
 		niv.selectionnerMain(b);
+	}
+
+	@Override
+	public MenuGraphique getMenu(){
+		return menu;
 	}
 }

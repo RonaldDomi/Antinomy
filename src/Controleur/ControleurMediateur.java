@@ -27,17 +27,15 @@ package Controleur;
  */
 
 import Global.Configuration;
-import Modele.*;
-//import Structures.Iterateur;
-//import Structures.Sequence;
+import Modele.Historique;
+import Modele.Jeu;
 import Reseau.Client;
 import Reseau.Server;
 import Vue.CollecteurEvenements;
 import Vue.InterfaceUtilisateur;
+import Vue.MenuGraphique;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -46,19 +44,28 @@ public class ControleurMediateur implements CollecteurEvenements {
 	Jeu jeu;
 
 	Joueur[][] joueurs;
-	int [] typeJoueur;
+	public int [] typeJoueur;
 
 	InterfaceUtilisateur vue;
+
+	MenuGraphique menuGraphique;
 
 //	Sequence<Animation> animations;
 	double vitesseAnimations;
 	int lenteurPas;
+
+	public boolean enAttenteConnexion = false;
+
 	Animation mouvement;
 	boolean animationsSupportees, animationsActives;
 	int lenteurJeuAutomatique;
 	boolean IAActive;
 
 	boolean enLigne;
+
+	int etapeAnimation = 0;
+
+	String[] animationChargement = {".", "..", "..."};
 
 	JTextField hostName;
 
@@ -68,6 +75,10 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	final int lenteurAttente = Configuration.lenteurAttente;
 	int decompte;
+
+	int animationDecompte;
+
+	Thread threadServer;
 
 	public ControleurMediateur(Jeu j) {
 		jeu = j;
@@ -89,8 +100,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 		animationsSupportees = false;
 		animationsActives = false;
 	}
-
-
 
 	public void ajouteInterfaceUtilisateur(InterfaceUtilisateur v) {
 		vue = v;
@@ -182,7 +191,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	@Override
 	public void clicSourisBoutonMenu(int fenetre, int index){
-			System.out.println("Fenetre "+fenetre);
+		//	System.out.println("Fenetre "+fenetre);
 		switch (fenetre){
 			case 1:
 				switch (index){
@@ -199,15 +208,20 @@ public class ControleurMediateur implements CollecteurEvenements {
 				}
 				break;
 			case 3:
-				System.out.println("index "+fenetre);
+				//System.out.println("index "+fenetre);
 					switch (index){
 					case 0: //Server
-						clientSocket = Server.initServer(jeu);
-						ajouteSocket(clientSocket);
-						typeJoueur[1] = 3;
-						vue.setAffichage(1, -1);
+						if (enAttenteConnexion)
+							break;
+						System.out.println("En attente.");
+						enAttenteConnexion = true;
+						threadServer = new Thread(() -> clientSocket = Server.initServer(jeu, this));
+						threadServer.start();
 						break;
 					case 1: //Client
+						if (enAttenteConnexion)
+							break;
+
 						clientSocket = Client.initClient(hostName.getText(), jeu);
 						if (clientSocket != null){
 							ajouteSocket(clientSocket);
@@ -339,6 +353,20 @@ public class ControleurMediateur implements CollecteurEvenements {
 			} else {
 				decompte--;
 			}
+
+			if (animationDecompte == 0){
+//				System.out.println("anim");
+				if (enAttenteConnexion){
+//					System.out.println("Chargement"+animationChargement[etapeAnimation%3]);
+					vue.getMenu().changerTexteBouton("En attente"+animationChargement[etapeAnimation%3]);
+					vue.getMenu().repaint();
+				}
+				etapeAnimation ++;
+				animationDecompte = 40;
+			}
+			else {
+				animationDecompte--;
+			}
 		}
 	}
 
@@ -393,5 +421,8 @@ public class ControleurMediateur implements CollecteurEvenements {
 	public void setTypeJoueur(int joueur, int i){
 		typeJoueur[joueur] = i;
 	}
-	
+
+	public InterfaceUtilisateur getVue() {
+		return vue;
+	}
 }

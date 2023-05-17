@@ -24,8 +24,8 @@ public class Client {
 		
 		Configuration.typeJoueur = 0;
 		
-		BufferedReader incoming = null;
-		Socket client_socket=null;
+		BufferedReader incoming;
+		Socket client_socket;
 		
 		try{
 			client_socket = new Socket(nom_host, Configuration.numeroPort);
