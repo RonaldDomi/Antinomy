@@ -206,9 +206,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 						break;
 					case 1: //Client
 						clientSocket = Client.initClient(hostName.getText(), jeu);
-						ajouteSocket(clientSocket);
-						typeJoueur[0] = 3;
-						vue.setAffichage(1, -1);
+						if (clientSocket != null){
+							ajouteSocket(clientSocket);
+							typeJoueur[0] = 3;
+							vue.setAffichage(1, -1);
+						}
 						break;
 				}
 				break;

@@ -34,13 +34,13 @@ public class Client {
 			
 		} catch (UnknownHostException unknownHostException){
 			System.err.println("Unknown host : " + unknownHostException.getMessage());
-			System.exit(1);
+			return null;
 		} catch (IOException ioException) {
 			System.err.println("IOException : " + ioException.getMessage());
-			System.exit(1);
+			return null;
 		} catch (IllegalArgumentException illegalArgumentException){
 			System.err.println("Illegal port number : " + illegalArgumentException.getMessage());
-			System.exit(1);
+			return null;
 		}
 		
 		try{
