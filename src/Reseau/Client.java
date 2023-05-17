@@ -1,16 +1,13 @@
-import Controleur.ControleurMediateur;
+package Reseau;
+
 import Controleur.Reception;
 import Global.Configuration;
 import Modele.Historique;
 import Modele.Jeu;
-import Vue.CollecteurEvenements;
-import Vue.InterfaceGraphique;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -23,16 +20,9 @@ import java.net.UnknownHostException;
  */
 public class Client {
 	
-	public static void main(String[] args) throws IOException {
-		if (args.length != 1) {
-			System.err.println("Usage : Client <host name>");
-			System.exit(1);
-		}
-		
-		String nom_host = args[0];
+	public static Socket initClient(String nom_host, Jeu jeu){
 		
 		Configuration.typeJoueur = 0;
-		Jeu jeu = null;
 		
 		BufferedReader incoming = null;
 		Socket client_socket=null;
@@ -41,10 +31,6 @@ public class Client {
 			client_socket = new Socket(nom_host, Configuration.numeroPort);
 			incoming = new BufferedReader(new InputStreamReader(client_socket.getInputStream()));
 			
-			//Aucune utilitée
-			//PrintWriter outgoing = new PrintWriter(client_socket.getOutputStream(), true);
-			//BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println(InetAddress.getLocalHost().getHostName());
 			
 		} catch (UnknownHostException unknownHostException){
 			System.err.println("Unknown host : " + unknownHostException.getMessage());
@@ -57,22 +43,15 @@ public class Client {
 			System.exit(1);
 		}
 		
-		
 		try{
-			jeu = new Jeu(incoming.readLine());
+			jeu.modifierJeu(incoming.readLine());
 			jeu.historique = new Historique();
 			jeu.historique.ajouterJeu(jeu);
 			
 		}catch (IOException ioException){
 			System.err.println("Le serveur s'est déconnecté?? " + ioException.getMessage());
-			client_socket.close();
 			System.exit(1);
-		} finally {
-			CollecteurEvenements control = new ControleurMediateur(jeu);
-			control.setTypeJoueur(Configuration.typeJoueur, 3);
-			InterfaceGraphique.demarrer(jeu, control, client_socket);
 		}
-		
 		
 		//Initialisation du thread de reçu
 		//TODO: Le laisser Daemon?? Ne semble pas avoir de différence
@@ -86,5 +65,7 @@ public class Client {
 		}else{
 			System.out.println("Il y a 4 threads actifs");
 		}
+		
+		return client_socket;
 	}
 }

@@ -1,3 +1,5 @@
+package Reseau;
+
 import Controleur.ControleurMediateur;
 import Controleur.Reception;
 import Global.Configuration;
@@ -19,23 +21,18 @@ import java.net.SocketTimeoutException;
  */
 public class Server {
 	
-	public static void main(String[] args) {
+	public static Socket initServer(Jeu jeu) {
 		
 		Configuration.typeJoueur = 1;
 		ServerSocket server_socket;
 		Socket client_socket = null;
 		PrintWriter outgoing = null;
-		Jeu jeu = new Jeu();
 		
 		try{
 			
 			server_socket = new ServerSocket(Configuration.numeroPort);
 			client_socket = server_socket.accept();
 			outgoing = new PrintWriter(client_socket.getOutputStream(), true);
-			
-			//Aucune utilitée
-			//BufferedReader incoming = null;
-			//incoming = new BufferedReader(new InputStreamReader(client_socket.getInputStream()));
 			
 		}
 		catch(SocketTimeoutException socketTimeoutException){
@@ -49,11 +46,6 @@ public class Server {
 		catch(IllegalArgumentException illegalArgumentException){
 			System.err.println("Illegal port number : " + illegalArgumentException.getMessage());
 			System.exit(1);
-		} finally {
-			CollecteurEvenements control = new ControleurMediateur(jeu);
-			
-			control.setTypeJoueur(Configuration.typeJoueur, 3);
-			InterfaceGraphique.demarrer(jeu, control, client_socket);
 		}
 		
 		//Envoie le jeu à l'autre machine distante
@@ -67,13 +59,14 @@ public class Server {
 		threadReception.start();
 		
 		
-//		Thread dummyThread = new Thread(new DumbWork());
-//		dummyThread.start();
 		if (Thread.activeCount() != 4){
 			System.err.println("Le nombre de thread est incorrect");
 		}else{
 			System.out.println("Il y a 4 threads actifs");
 		}
+		
+		
+		return client_socket;
 	}
 	
 }
