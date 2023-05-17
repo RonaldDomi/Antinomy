@@ -43,12 +43,12 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 	public void mouseReleased(MouseEvent e){
 		switch (m.affichage) {
 			case 1:
-				if (e.getX() >= m.centre_largeur - m.taille_bouton / 2 && e.getX() <= m.centre_largeur + m.taille_bouton / 2) {
+				if (e.getX() >= m.centre_largeur - m.taille_bouton / 2 && e.getX() < m.centre_largeur + m.taille_bouton / 2) {
 					//bouton
 					for (int i = 0; i < 5; i++) {
 						if (e.getY() >= m.deb_bouton_y + i * m.mesureLargeur + i * m.padding && e.getY() < m.deb_bouton_y + (i + 1) * m.mesureLargeur + i * m.padding) {
 							System.out.println("Bouton Clicked : " + i);
-							control.clicSourisBoutonMenu(i);
+							control.clicSourisBoutonMenu(m.affichage, i);
 							break;
 						}
 					}
@@ -56,10 +56,22 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 				m.unselectBouton();
 				break;
 			case 2:
-				if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() <= m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
-					if ( e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() <= m.centre_largeur + m.taille_bouton/2){
+				if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() < m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
+					if ( e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() < m.centre_largeur + m.taille_bouton/2){
 						System.out.println("Bouton Nouvelle Partie clicked");
 						control.nouvellePartie(m.choix_type[0], m.choix_type[1]);
+					}
+				}
+				m.unselectBouton();
+				break;
+			case 3:
+				if ( e.getY() >= m.deb_bouton_y - m.mesureHauteur/2 && e.getY() < m.deb_bouton_y + m.mesureHauteur/2){
+					System.out.println("clicked");
+					for (int i = 0; i < 2; i++) {
+						if (e.getX() >= m.deb_bouton_x + i * m.centre_largeur && e.getX() < m.deb_bouton_x + i * m.centre_largeur + m.taille_bouton) {
+							System.out.println("clicked " + i);
+							control.clicSourisBoutonMenu(m.affichage, i);
+						}
 					}
 				}
 				m.unselectBouton();
@@ -98,6 +110,18 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 								m.selectBoutonChoixJoueur(j, i);
 //								System.out.println("Bouton clicked : "+i);
 							}
+						}
+					}
+				}
+				break;
+			case 3:
+				if ( e.getY() >= m.deb_bouton_y - m.mesureHauteur/2 && e.getY() < m.deb_bouton_y + m.mesureHauteur/2){
+//					System.out.println("clicked");
+					for (int i = 0; i < 2; i++) {
+						if (e.getX() >= m.deb_bouton_x + i * m.centre_largeur && e.getX() < m.deb_bouton_x + i * m.centre_largeur + m.taille_bouton) {
+//							System.out.println("clicked " + i);
+							m.selectBouton(i);
+							return;
 						}
 					}
 				}

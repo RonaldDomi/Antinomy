@@ -44,7 +44,7 @@ public class AdaptateurSouris extends MouseAdapter {
 			//bouton
 			for (int i = 0; i < 5; i++) {
 				if (e.getX() >= n.deb_bouton + i*n.taille_bouton + i*n.padding && e.getX() < n.deb_bouton + (i+1)*n.taille_bouton + i*n.padding && n.selectBouton == i){
-					System.out.println("Bouton Clicked : " + i);
+//					System.out.println("Bouton Clicked : " + i);
 					control.clicSourisBouton(i);
 					break;
 				}
@@ -52,7 +52,7 @@ public class AdaptateurSouris extends MouseAdapter {
 		}  else if (e.getY() >= n.centre_hauteur - n.hauteurCarte/2 - (n.joueurCourant) * (n.largeurCarte + n.padding) && e.getY() <= n.centre_hauteur + n.hauteurCarte/2 + (1-n.joueurCourant) * (n.largeurCarte + n.padding)) {
 			for (int i = 0; i < 9; i++) {
 				if (e.getX() >= n.deb_continuum + i*n.largeurCarte + i*n.padding && e.getX() < n.deb_continuum + (i+1)*n.largeurCarte + i*n.padding){
-					System.out.println("Continium Clicked : " + i);
+//					System.out.println("Continium Clicked : " + i);
 					control.clicSouris(2, i);
 					break;
 				}
@@ -66,7 +66,7 @@ public class AdaptateurSouris extends MouseAdapter {
 		if (e.getY() >= n.hauteur - n.hauteurCarte - n.padding && e.getY() <= n.hauteur - n.padding && n.joueurCourant == 0) {
 			for (int i = 0; i < 3; i++) {
 				if (e.getX() >= n.deb_joueur + i * n.largeurCarte + i * n.padding && e.getX() < n.deb_joueur + (i + 1) * n.largeurCarte + i * n.padding) {
-					System.out.println("Joueur0 Clicked : " + i);
+//					System.out.println("Joueur0 Clicked : " + i);
 					control.clicSouris(1, i);
 					return;
 				}
@@ -75,7 +75,7 @@ public class AdaptateurSouris extends MouseAdapter {
 		if (e.getY() >= n.padding && e.getY() <= n.padding + n.hauteurCarte && n.joueurCourant == 1) {
 			for (int i = 0; i < 3; i++) {
 				if (e.getX() >= n.deb_joueur + i * n.largeurCarte + i * n.padding && e.getX() < n.deb_joueur + (i + 1) * n.largeurCarte + i * n.padding) {
-					System.out.println("Joueur1 Clicked : " + i);
+//					System.out.println("Joueur1 Clicked : " + i);
 					control.clicSouris(1, i);
 					return;
 				}

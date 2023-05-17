@@ -37,6 +37,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.LinkedList;
 
 import static java.lang.Math.min;
@@ -66,7 +67,7 @@ public class MenuGraphique extends JComponent implements Observateur {
 
 	int[] choix_type;
 
-	MenuGraphique() {
+	public MenuGraphique() {
 		bouton = lisImage("BoutonL");
 		boutonSelected = lisImage("BoutonSelectedL");
 		choix_type = new int[2];
@@ -94,6 +95,7 @@ public class MenuGraphique extends JComponent implements Observateur {
 	
 	@Override
 	public void paintComponent(Graphics g) {
+
 		Graphics2D drawable = (Graphics2D) g;
 
 		g.setColor(new Color(0, 0, 0));
@@ -109,6 +111,10 @@ public class MenuGraphique extends JComponent implements Observateur {
 				break;
 			case 2:
 				nouvellePartie(g);
+				break;
+			case 3:
+				enLigne(g);
+				break;
 		}
 	}
 
@@ -154,6 +160,47 @@ public class MenuGraphique extends JComponent implements Observateur {
 		bouton((Graphics2D) g, selectBouton == 1 ? boutonSelected : bouton, "Nouvelle Partie", centre_largeur, hauteur*3/4, taille_bouton, mesureHauteur);
 	}
 
+	void enLigne(Graphics g){
+
+		mesureLargeur = min(largeur/(4*5+4), hauteur/10);
+		mesureHauteur = min(hauteur/10, largeur/(4*5+4));
+		padding = mesureLargeur / 4;
+
+		centre_largeur = largeur / 2;
+		centre_hauteur = hauteur / 2;
+
+		h2 = new Font("Medieval English", Font.PLAIN, min(largeur/36, hauteur/18));
+
+		int x;
+		int y;
+
+		g.setFont(h2);
+		m = g.getFontMetrics();
+
+		taille_bouton = 5*mesureLargeur;
+
+		deb_bouton_y = hauteur*3/4;
+		deb_bouton_x = centre_largeur/4;
+
+		g.drawLine(centre_largeur, hauteur/4, centre_largeur, hauteur * 3/4);
+
+		for (int j = 0; j < 2; j++) {
+			x = centre_largeur/4 + j * centre_largeur + taille_bouton / 2;
+			switch (j){
+				case 0:
+					g.drawString("Serveur", x - m.stringWidth("Serveur")/2, hauteur/4);
+					g.drawString("Nom de la machine :", x - m.stringWidth("Nom de la machine :")/2, hauteur/2- m.getHeight() - padding);
+					break;
+				case 1:
+					g.drawString("Client", x - m.stringWidth("Client")/2, hauteur/4);
+					g.drawString("Nom de la machine :", x - m.stringWidth("Nom de la machine :")/2, hauteur/2- m.getHeight() - padding);
+					break;
+
+			}
+			bouton((Graphics2D) g, selectBouton == j ? boutonSelected : bouton, "Lancer", x, hauteur*3/4, taille_bouton, mesureHauteur);
+		}
+	}
+
 	void menuPrincipale(Graphics g){
 		mesureLargeur = min(largeur/6, hauteur/10);
 		mesureHauteur = min(hauteur/10, largeur/6);
@@ -185,6 +232,7 @@ public class MenuGraphique extends JComponent implements Observateur {
 		String[] bouton_string = {"Nouvelle Partie", "En ligne", "Charger", "Tutoriel"};
 
 		int y;
+
 		deb_bouton_y = centre_hauteur - mesureHauteur/2;
 		for (int i = 0; i < 4; i++) {
 			y = centre_hauteur + i*(mesureHauteur+padding);
@@ -221,5 +269,13 @@ public class MenuGraphique extends JComponent implements Observateur {
 	public void selectBoutonChoixJoueur(int j, int i) {
 		choix_type[j] = i;
 		miseAJour();
+	}
+
+	public int getH2Size() {
+		return h2.getSize();
+	}
+
+	public FontMetrics getFontMetrics() {
+		return m;
 	}
 }
