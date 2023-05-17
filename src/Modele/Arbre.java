@@ -20,13 +20,13 @@ public class Arbre {
         this.jeuCourant = jeuCourant;
         this.coupDeParent = coupDeParent;
         this.isMaximizingPlayer = isMaximizingPlayer;
-        if(isMaximizingPlayer) this.bestEval = -1000;
-        else this.bestEval = 1000;
+        if(isMaximizingPlayer) this.bestEval = -100000;
+        else this.bestEval = 100000;
         fils = new ArrayList<>();
     }
 
     public Coup getCoup(int depth, boolean withAlphaBeta, int joueur){
-        Search(depth, withAlphaBeta,-1000,1000, joueur);
+        Search(depth, withAlphaBeta,-100000,100000, joueur);
         return bestCoup;
     }
 
