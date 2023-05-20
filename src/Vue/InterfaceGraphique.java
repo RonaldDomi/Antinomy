@@ -139,7 +139,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		menuPrincipale.setSize(1000, 600);
 
 		JLayeredPane layeredPane = new JLayeredPane();
-		layeredPane.setSize(new Dimension(1000, 600));
+		layeredPane.setSize(menuPrincipale.getSize());
 
 		menu = new MenuGraphique();
 		menu.addMouseListener(new AdaptateurSourisMenu(menu, control));
@@ -280,7 +280,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 				menu.setAffichage(sous_fenetre);
 				for (JComponent compond:
 						afficherEnLigne) {
-					compond.setVisible(sous_fenetre != 2);
+					compond.setVisible(sous_fenetre == 3);
 				}
 
 				if (courant != menuPrincipale){

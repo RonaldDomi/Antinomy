@@ -45,7 +45,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	Image carteVide, carteFond, carteDos, carteDosR, bleu, rouge, violet, vert, clef, crane, papier, champignon,
 			diamant, diamantVide,
 			codexBleu, codexVert, codexRouge, codexViolet, backCodex,
-			fleche, bouton, boutonBlocked, boutonSelected, carteSelect,
+			bouton, boutonBlocked, boutonSelected, carteSelect,
 			load, save, undo, redo, restart,
 			sceptre0, sceptre1, etoiles,
 			message;
@@ -102,7 +102,6 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		codexRouge = lisImage("CodexRouge");
 		codexVert = lisImage("CodexVert");
 		codexViolet = lisImage("CodexViolet");
-		fleche = lisImage("Fleche");
 		bouton = lisImage("Bouton");
 		boutonBlocked = lisImage("BoutonBlocked");
 		boutonSelected = lisImage("BoutonSelected");
@@ -200,16 +199,16 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		for (int k = 0; k < 5; k++) {
 			switch (k){
 				case 0:
-					tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+					tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					tracer(drawable, save, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					break;
 				case 1:
-					tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+					tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					tracer(drawable, load, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					break;
 				case 2:
 					if (j.getHistorique().peutAnnuler())
-						tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					else
 						tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 
@@ -217,13 +216,13 @@ public class NiveauGraphique extends JComponent implements Observateur {
 					break;
 				case 3:
 					if (j.getHistorique().peutRefaire())
-						tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					else
 						tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					tracer(drawable, redo, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					break;
 				case 4:
-					tracer(drawable, selectBouton == k ? bouton : boutonSelected, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+					tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					tracer(drawable, restart, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					break;
 			}
@@ -266,6 +265,13 @@ public class NiveauGraphique extends JComponent implements Observateur {
 //		tracer(drawable, diamant, m.stringWidth(StringJoueur[0]) + 2*padding, hauteur-padding-largeurCarte/2,
 //				largeurCarte/2, largeurCarte/2);
 
+		if (j.getJoueurCourant() == 0) {
+			g.setColor(new Color(238, 211, 101));
+			g.drawString(StringJoueur[0], largeur - m.stringWidth(StringJoueur[0]) - 2 * padding + padding/6, hauteur - padding/6 - 2 * padding - largeurCarte / 2);
+			g.drawString(StringJoueur[0], largeur - m.stringWidth(StringJoueur[0]) - 2 * padding - padding/6, hauteur + padding/6 - 2 * padding - largeurCarte / 2);
+		}
+
+		g.setColor(new Color( 0, 0, 0));
 		g.drawString(StringJoueur[0], largeur - m.stringWidth(StringJoueur[0]) - 2*padding, hauteur - 2*padding - largeurCarte/2);
 
 		//V1
@@ -280,6 +286,13 @@ public class NiveauGraphique extends JComponent implements Observateur {
 //		tracer(drawable, diamant, largeur - padding - largeurCarte/2, hauteur - largeurCarte/2 - padding, largeurCarte/2, largeurCarte/2);
 
 		//Texte joueur 1
+		if (j.getJoueurCourant() == 1){
+			g.setColor(new Color( 238, 211, 101));
+			g.drawString(StringJoueur[1], largeur - m.stringWidth(StringJoueur[1]) - 2*padding + padding/6, m.getHeight()-padding/6);
+			g.drawString(StringJoueur[1], largeur - m.stringWidth(StringJoueur[1]) - 2*padding - padding/6, m.getHeight()+padding/6);
+		}
+
+		g.setColor(new Color( 0, 0, 0));
 		g.drawString(StringJoueur[1], largeur - m.stringWidth(StringJoueur[1]) - 2*padding, m.getHeight());
 
 		//V1
@@ -329,7 +342,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 				tracer(drawable, codexViolet, largeur/8 - largeurCarte, centre_hauteur - largeurCarte,largeurCarte*2, largeurCarte*2);
 				break;
 		}
-		tracer(drawable, fleche, largeur/8 - largeurCarte*5/2, centre_hauteur - largeurCarte,largeurCarte*2, largeurCarte*2);
+//		tracer(drawable, fleche, largeur/8 - largeurCarte*5/2, centre_hauteur - largeurCarte,largeurCarte*2, largeurCarte*2);
 	}
 	
 	

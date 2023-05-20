@@ -43,7 +43,8 @@ import java.util.LinkedList;
 import static java.lang.Math.min;
 
 public class MenuGraphique extends JComponent implements Observateur {
-	Image bouton, boutonSelected;
+	Image bouton, boutonSelected, boutonS, boutonSelectedS,
+	exit, back;
 	int mesureLargeur;
 	int mesureHauteur;
 	int padding;
@@ -53,15 +54,21 @@ public class MenuGraphique extends JComponent implements Observateur {
 
 	int taille_bouton;
 
+	int taille_bouton_s;
+
 	int deb_bouton_x;
 	int deb_bouton_y;
 	int deb_bouton_nouvelle_partie_y;
 
 	int affichage = 1;
 
+	boolean selectBoutonExit;
+
 	Font h1, h2;
 
 	FontMetrics m;
+
+	String[] type_possible = {"Humain", "IA Aleatoire", "IA Facile", "IA Moyenne", "IA Difficile"};
 
 	int selectBouton = -1;
 
@@ -72,6 +79,10 @@ public class MenuGraphique extends JComponent implements Observateur {
 	public MenuGraphique() {
 		bouton = lisImage("BoutonL");
 		boutonSelected = lisImage("BoutonSelectedL");
+		boutonS = lisImage("Bouton");
+		boutonSelectedS = lisImage("BoutonSelected");
+		exit = lisImage("Exit");
+		back = lisImage("Back");
 		choix_type = new int[2];
 		choix_type[0] = 0;
 		choix_type[1] = 0;
@@ -107,6 +118,8 @@ public class MenuGraphique extends JComponent implements Observateur {
 		largeur = getSize().width;
 		hauteur = getSize().height;
 
+		taille_bouton_s = min(largeur/17, hauteur/6 * 54 / 84)*3/4;
+
 		switch (affichage){
 			case 1:
 				menuPrincipale(g);
@@ -118,11 +131,22 @@ public class MenuGraphique extends JComponent implements Observateur {
 				enLigne(g);
 				break;
 		}
+
+		boutonRetour(g);
+	}
+
+	private void boutonRetour(Graphics g) {
+		if (affichage == 1){
+			//quitter
+			bouton((Graphics2D) g, selectBoutonExit ? boutonSelectedS : boutonS, exit, taille_bouton_s/3+taille_bouton_s/2, taille_bouton_s/3+taille_bouton_s/2, taille_bouton_s, taille_bouton_s);
+		}
+		else {
+			//retour
+			bouton((Graphics2D) g, selectBoutonExit ? boutonSelectedS : boutonS, back, taille_bouton_s/3+taille_bouton_s/2, taille_bouton_s/3+taille_bouton_s/2, taille_bouton_s, taille_bouton_s);
+		}
 	}
 
 	void nouvellePartie(Graphics g){
-
-		String[] type_possible = {"Humain", "IA Aleatoire", "IA Difficile"};
 
 		mesureLargeur = min(largeur/(4*5+4), hauteur/10);
 		mesureHauteur = min(hauteur/10, largeur/(4*5+4));
@@ -132,34 +156,39 @@ public class MenuGraphique extends JComponent implements Observateur {
 		centre_hauteur = hauteur / 2;
 
 		h2 = new Font("Medieval English", Font.PLAIN, min(largeur/36, hauteur/18));
-
+		Font h3 = new Font("Medieval English", Font.PLAIN, min(largeur/54, hauteur/24));
 		int x;
 		int y;
 
 		g.setFont(h2);
 		m = g.getFontMetrics();
 
-		taille_bouton = 5*mesureLargeur;
+		taille_bouton = 5*mesureLargeur/2;
 
-		deb_bouton_y = centre_hauteur + (-1) * (mesureHauteur + padding) - mesureHauteur/2;
-		deb_bouton_x = centre_largeur + (-2) * (taille_bouton + padding) + (taille_bouton + padding);
+		deb_bouton_y = centre_hauteur + (-1) * (mesureHauteur + padding) - mesureHauteur/6;
+		deb_bouton_x = centre_largeur + (-2) * (taille_bouton + padding)  + (taille_bouton + padding)/2 - taille_bouton/2;
 
+		g.setFont(h3);
 		for (int j = 0; j < 2; j++) {
 			y = centre_hauteur + (j-1) * (mesureHauteur + padding);
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i <= type_possible.length; i++) {
 				if (i==0){
-					x = centre_largeur - 2*(5 * mesureLargeur+padding) + (taille_bouton + padding)/2;
-					g.drawString("Joueur " + j + " :", x-m.stringWidth("Joueur " + j + " :")/2, y+m.getHeight() - mesureHauteur/2);
+					x = centre_largeur - 3*(taille_bouton+padding) + (taille_bouton + padding)/2;
+					g.drawString("Joueur " + (j+1) + " :", x-m.stringWidth("Joueur " + (j+1) + " :")/2, y+m.getHeight() - mesureHauteur/4);
 				}
 				else {
-					x = centre_largeur + (i-2) * (5 * mesureLargeur + padding) + (taille_bouton + padding)/2;
-					bouton((Graphics2D) g, choix_type[j] == i-1 ? boutonSelected : bouton, type_possible[i-1], x, y, taille_bouton, mesureHauteur);
+					x = centre_largeur + (i-3) * (taille_bouton+padding) + (taille_bouton + padding)/2;
+//					bouton((Graphics2D) g, choix_type[j] == i-1 ? boutonSelected : bouton, type_possible[i-1], x, y, taille_bouton, mesureHauteur/2);
+					tracer((Graphics2D) g, choix_type[j] == i-1 ? boutonSelected : bouton, x - taille_bouton/2, y - mesureHauteur/6, taille_bouton, mesureHauteur);
+					g.drawString(type_possible[i-1], x-m.stringWidth(type_possible[i-1])/3, y+m.getHeight() - mesureHauteur/4);
+
 				}
 			}
 		}
 
+		g.setFont(h2);
 		deb_bouton_nouvelle_partie_y = hauteur*3/4 - mesureHauteur/2;
-		bouton((Graphics2D) g, selectBouton == 1 ? boutonSelected : bouton, "Nouvelle Partie", centre_largeur, hauteur*3/4, taille_bouton, mesureHauteur);
+		bouton((Graphics2D) g, selectBouton == 1 ? boutonSelected : bouton, "Nouvelle Partie", centre_largeur, hauteur*3/4, taille_bouton*2, mesureHauteur);
 	}
 
 	void enLigne(Graphics g){
@@ -234,12 +263,12 @@ public class MenuGraphique extends JComponent implements Observateur {
 		g.setFont(h2);
 		m = g.getFontMetrics();
 
-		String[] bouton_string = {"Nouvelle Partie", "En ligne", "Charger", "Tutoriel"};
+		String[] bouton_string = {"Local", "En ligne"};
 
 		int y;
 
 		deb_bouton_y = centre_hauteur - mesureHauteur/2;
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < bouton_string.length; i++) {
 			y = centre_hauteur + i*(mesureHauteur+padding);
 			bouton(drawable, selectBouton == i ? boutonSelected : bouton, bouton_string[i], centre_largeur, y, taille_bouton, mesureHauteur);
 		}
@@ -250,6 +279,11 @@ public class MenuGraphique extends JComponent implements Observateur {
 	private void bouton(Graphics2D drawable, Image bouton,String string, int x, int y, int taille_bouton_l, int taille_bouton_h){
 		tracer(drawable, bouton, x - taille_bouton_l/2, y - taille_bouton_h/2, taille_bouton_l, taille_bouton_h);
 		drawable.drawString(string, x-m.stringWidth(string)/2, y+m.getHeight() - taille_bouton_h/2);
+	}
+
+	private void bouton(Graphics2D drawable, Image bouton,Image image, int x, int y, int taille_bouton_l, int taille_bouton_h){
+		tracer(drawable, bouton, x - taille_bouton_l/2, y - taille_bouton_h/2, taille_bouton_l, taille_bouton_h);
+		tracer(drawable, image, x - taille_bouton_l/2, y - taille_bouton_h/2, taille_bouton_l, taille_bouton_h);
 	}
 
 	@Override
@@ -263,6 +297,7 @@ public class MenuGraphique extends JComponent implements Observateur {
 	}
 
 	public void unselectBouton() {
+		selectBoutonExit = false;
 		selectBouton = -1;
 		miseAJour();
 	}
@@ -287,7 +322,11 @@ public class MenuGraphique extends JComponent implements Observateur {
 
 	public void changerTexteBouton(String string){
 		boutonString = string;
-		System.out.println("ici " + string);
 		repaint();
+	}
+
+	public void selectBoutonExit(Boolean bool){
+		selectBoutonExit = bool;
+		miseAJour();
 	}
 }

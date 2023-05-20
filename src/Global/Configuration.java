@@ -38,9 +38,10 @@ public class Configuration {
 	static final int silence = 1;
 	public static final double vitesseAnimations = 0.15;
 	public static int lenteurAttente = 0;
-	public static int profondeurIA = 7;
+	public static int profondeurIAFacile = 1;
+	public static int profondeurIAMedium = 5;
+	public static int profondeurIADifficile = 9;
 	public static int typeJoueur;
-	
 	public static int numeroPort = 6969;
 	
 	public static InputStream ouvre(String s) {

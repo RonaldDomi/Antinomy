@@ -63,6 +63,8 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	boolean enLigne;
 
+	public int joueurEnLigne;
+
 	int etapeAnimation = 0;
 
 	String[] animationChargement = {".", "..", "..."};
@@ -82,14 +84,16 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	public ControleurMediateur(Jeu j) {
 		jeu = j;
-		joueurs = new Joueur[2][4];
-		typeJoueur = new int[4];
+		joueurs = new Joueur[2][6];
+		typeJoueur = new int[6];
 		for (int i = 0; i < joueurs.length; i++) {
 			joueurs[i][0] = new JoueurHumain(i, jeu);
-//			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
-			joueurs[i][1] = new JoueurAI(i, jeu, 3);
-			joueurs[i][2] = new JoueurAI(i, jeu, 7);
-			joueurs[i][3] = new JoueurEnLigne(i, jeu);
+			joueurs[i][1] = new JoueurAIAleatoire(i, jeu);
+			joueurs[i][2] = new JoueurAI(i, jeu, Configuration.profondeurIAFacile);
+			joueurs[i][3] = new JoueurAI(i, jeu, Configuration.profondeurIAMedium);
+			joueurs[i][4] = new JoueurAI(i, jeu, Configuration.profondeurIADifficile);
+			joueurs[i][5] = new JoueurEnLigne(i, jeu);
+			joueurEnLigne = 5;
 			typeJoueur[i] = 0;
 		}
 
@@ -117,7 +121,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 		if (clientSocket != null){
 			this.clientSocket = clientSocket;
 			for (Joueur[] joueur: joueurs) {
-				joueur[3].ajouteSocket(clientSocket);
+				joueur[joueurEnLigne].ajouteSocket(clientSocket);
 				joueur[0].ajouteSocket(clientSocket);
 			}
 			enLigne = true;
@@ -137,7 +141,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 		if (jeu.getJoueurGagnant() == -1){
 			if (joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].jeu(l, c)) {
-				if (typeJoueur[jeu.getJoueurCourant()] == 3){ // adversaire en ligne
+				if (typeJoueur[jeu.getJoueurCourant()] == joueurEnLigne){ // adversaire en ligne
 					joueursCourant = 1;
 					joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].envoyerJeu();
 				}
@@ -196,6 +200,8 @@ public class ControleurMediateur implements CollecteurEvenements {
 		switch (fenetre){
 			case 1:
 				switch (index){
+					case -2: //Quitter
+						System.exit(0);
 					case 0: //Nouvelle partie
 						vue.setAffichage(0, 2);
 						break;
@@ -208,9 +214,19 @@ public class ControleurMediateur implements CollecteurEvenements {
 						break;
 				}
 				break;
+			case 2:
+				switch (index){
+					case -2: //Quitter
+						vue.setAffichage(0, 1);
+						break;
+				}
+				break;
 			case 3:
 				//System.out.println("index "+fenetre);
 					switch (index){
+						case -2: //Quitter
+							vue.setAffichage(0, 1);
+							break;
 					case 0: //Server
 						if (enAttenteConnexion)
 							break;
@@ -226,7 +242,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 						clientSocket = Client.initClient(hostName.getText(), jeu);
 						if (clientSocket != null){
 							ajouteSocket(clientSocket);
-							typeJoueur[0] = 3;
+							typeJoueur[0] = joueurEnLigne;
 							vue.setAffichage(1, -1);
 						}
 						break;
