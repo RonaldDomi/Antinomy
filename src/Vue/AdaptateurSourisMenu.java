@@ -64,7 +64,8 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 				break;
 			case 2:
 				if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() < m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
-					if ( e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() < m.centre_largeur + m.taille_bouton/2){
+					if (e.getX() >= m.centre_largeur - m.taille_bouton && e.getX() <= m.centre_largeur + m.taille_bouton)
+					{
 //						System.out.println("Bouton Nouvelle Partie clicked");
 						control.nouvellePartie(m.choix_type[0], m.choix_type[1]);
 					}
@@ -108,10 +109,12 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 				}
 				break;
 			case 2:
-				if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() <= m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
-					if ( e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() <= m.centre_largeur + m.taille_bouton/2)
+				if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() <= m.deb_bouton_nouvelle_partie_y + m.mesureHauteur) {
+					if (e.getX() >= m.centre_largeur - m.taille_bouton && e.getX() <= m.centre_largeur + m.taille_bouton)
+					{
 //						System.out.println("Bouton Nouvelle Partie clicked");
-					m.selectBouton(1);
+						m.selectBouton(1);
+					}
 					break;
 				}
 

@@ -39,8 +39,8 @@ public class Configuration {
 	public static final double vitesseAnimations = 0.15;
 	public static int lenteurAttente = 0;
 	public static int profondeurIAFacile = 1;
-	public static int profondeurIAMedium = 5;
-	public static int profondeurIADifficile = 9;
+	public static int profondeurIAMedium = 3;
+	public static int profondeurIADifficile = 7;
 	public static int typeJoueur;
 	public static int numeroPort = 6969;
 	
