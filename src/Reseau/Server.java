@@ -70,6 +70,8 @@ public class Server {
 
 		controleur.ajouteSocket(client_socket);
 		controleur.typeJoueur[1] = controleur.joueurEnLigne;
+
+		controleur.getVue().typeJoueur(controleur.typeJoueur);
 		controleur.getVue().setAffichage(1, -1);
 
 		return client_socket;

@@ -243,6 +243,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 						if (clientSocket != null){
 							ajouteSocket(clientSocket);
 							typeJoueur[0] = joueurEnLigne;
+							vue.typeJoueur(typeJoueur);
 							vue.setAffichage(1, -1);
 						}
 						break;
@@ -371,19 +372,24 @@ public class ControleurMediateur implements CollecteurEvenements {
 				decompte--;
 			}
 
-			if (animationDecompte == 0){
+			if (animationDecompte == 0 && Configuration.tempsAnimation!=0){
 //				System.out.println("anim");
 				if (enAttenteConnexion){
 //					System.out.println("Chargement"+animationChargement[etapeAnimation%3]);
 					vue.getMenu().changerTexteBouton("En attente"+animationChargement[etapeAnimation%3]);
 					vue.getMenu().repaint();
 				}
+
+				vue.changeEtape();
+
 				etapeAnimation ++;
-				animationDecompte = 40;
+				animationDecompte = Configuration.tempsAnimation;
 			}
 			else {
 				animationDecompte--;
 			}
+
+			vue.decale();
 		}
 	}
 
@@ -418,6 +424,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 	public void nouvellePartie(int type_j0, int type_j1){
 		typeJoueur[0] = type_j0;
 		typeJoueur[1] = type_j1;
+		vue.typeJoueur(typeJoueur);
 		vue.setAffichage(1, -1);
 	}
 	

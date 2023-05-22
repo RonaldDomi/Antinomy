@@ -218,8 +218,8 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		enJeu.getContentPane().setBackground(background_color);
 	}
 
-	public void decale(int l, int c, double dl, double dc) {
-//		niv.decale(l, c, dl, dc);
+	public void decale() {
+		niv.decale();
 	}
 
 	public void metAJourDirection(int dL, int dC) {
@@ -228,7 +228,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	}
 
 	public void changeEtape() {
-//		niv.changeEtape();
+ 		niv.changeEtape();
 	}
 
 
@@ -306,5 +306,10 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	@Override
 	public MenuGraphique getMenu(){
 		return menu;
+	}
+
+	@Override
+	public void typeJoueur(int[] typeJoueur){
+		niv.typeJoueur(typeJoueur);
 	}
 }

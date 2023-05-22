@@ -230,7 +230,7 @@ public class MenuGraphique extends JComponent implements Observateur {
 				case 1:
 					g.drawString("Client", x - m.stringWidth("Client")/2, hauteur/4);
 					g.drawString("Nom de la machine :", x - m.stringWidth("Nom de la machine :")/2, hauteur/2- m.getHeight() - padding);
-					bouton((Graphics2D) g, selectBouton == j ? boutonSelected : bouton, "Lancer", x, hauteur*3/4, taille_bouton, mesureHauteur);
+					bouton((Graphics2D) g, selectBouton == j ? boutonSelected : bouton, "Se connecter", x, hauteur*3/4, taille_bouton, mesureHauteur);
 					break;
 			}
 		}

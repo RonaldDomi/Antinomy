@@ -27,10 +27,7 @@ package Vue;
  */
 
 import Global.Configuration;
-import Modele.Carte;
-import Modele.Couleur;
-import Modele.Jeu;
-import Modele.Symbole;
+import Modele.*;
 import Patterns.Observateur;
 
 import javax.imageio.ImageIO;
@@ -47,8 +44,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 			codexBleu, codexVert, codexRouge, codexViolet, backCodex,
 			bouton, boutonBlocked, boutonSelected, carteSelect,
 			load, save, undo, redo, restart,
-			sceptre0, sceptre1, etoiles,
+			sceptre0, sceptre1,
 			message;
+
+	Image[] etoiles;
+	int etoilesEtape = 0;
 	Jeu j;
 	int largeurCarte;
 	int hauteurCarte;
@@ -63,6 +63,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	boolean mainSelect = false;
 	int joueurCourant = 0;
 
+	Deplacement[] sceptreDep;
+
 	int centre_largeur, centre_hauteur;
 
 	int taille_bouton;
@@ -72,11 +74,10 @@ public class NiveauGraphique extends JComponent implements Observateur {
 
 	int selectBouton=-1;
 
-	// Décalage des éléments (pour pouvoir les animer)
-	Vecteur [][] decalages;
-	// Images du pousseur (pour l'animation)
-	Image [][] pousseurs;
-	int direction, etape;
+
+	int[] typeJoueur;
+
+	boolean carteCachee = Configuration.mainAdverseCachee;
 
 	Font h1, fontCarte;
 	LinkedList<Integer> indexCarteSelectionneeContinuum;
@@ -114,9 +115,14 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		backCodex = lisImage("BackCodex");
 		sceptre0 = lisImage("Sceptre0");
 		sceptre1 = lisImage("Sceptre1");
-		etoiles = lisImage("Etoiles");
+
+		etoiles = new Image[4];
+		for (int d = 0; d < etoiles.length; d++)
+			etoiles[d] = lisImage("Etoiles_" + d);
 
 		message = lisImage("BoutonL");
+
+		sceptreDep = new Deplacement[2];
 	}
 
 	private Image lisImage(String nom) {
@@ -139,6 +145,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	
 	@Override
 	public void paintComponent(Graphics g) {
+
 		Graphics2D drawable = (Graphics2D) g;
 
 		g.setColor(new Color(0, 0, 0));
@@ -160,7 +167,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		h1 = new Font("Medieval English", Font.PLAIN, min(largeur/25, hauteur/12));
 		fontCarte = new Font("Medieval English", Font.PLAIN, min(largeur/62, hauteur/30));
 		//h2 = new Font("Medieval English", Font.PLAIN, min(largeur/12, hauteur/6));
-		
+
 		//Main
 		paintMain(drawable);
 		
@@ -168,6 +175,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		paintContinuum(drawable);
 
 		//Poisitions joueurs
+		calcSeptre();
 		paintPositionJoueurs(g);
 		
 		//Titre joueurs
@@ -229,7 +237,25 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		}
 	}
 
-	
+	private void calcSeptre() {
+		for (int i = 0; i < sceptreDep.length; i++) {
+			if (sceptreDep[i] == null){
+				sceptreDep[i] = new Deplacement(new Position(centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
+						centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2)), new Position(centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
+						centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2)), 9, true);
+			}
+			else {
+//				if (sceptreDep[i].est_arrive())
+////					sceptreDep[i] = new Deplacement(new Position(centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
+////						centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2)),
+////							new Position(centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
+////									centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2)),
+////									j.getInfoJoueurs()[i].getSorcierIndice(), true);
+			}
+		}
+	}
+
+
 	private void paintMain(Graphics2D drawable){
 		//Joueurs
 		Carte[][] mains = new Carte[2][3];
@@ -309,20 +335,24 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	
 	
 	private void paintPositionJoueurs(Graphics g){
-		int x = centre_largeur + (j.getInfoJoueurs()[0].getSorcierIndice()-4) * (largeurCarte + padding);
-		tracer((Graphics2D) g, sceptre0, x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
+		tracer((Graphics2D) g, sceptre0,  sceptreDep[0].getActuel().getX(), sceptreDep[0].getActuel().getY(), largeurCarte, largeurCarte);
 		if(joueurCourant == 0)
-			tracer((Graphics2D) g, etoiles, x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
+			tracer((Graphics2D) g, etoiles[etoilesEtape], sceptreDep[0].getActuel().getX(), sceptreDep[0].getActuel().getY(), largeurCarte, largeurCarte);
 
 //		g.fillOval(x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
-		x = centre_largeur + (j.getInfoJoueurs()[1].getSorcierIndice()-4) * (largeurCarte + padding);
-		tracer((Graphics2D) g, sceptre1,x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
+
+		tracer((Graphics2D) g, sceptre1, sceptreDep[1].getActuel().getX(), sceptreDep[1].getActuel().getY(), largeurCarte, largeurCarte);
 		if(joueurCourant == 1)
-			tracer((Graphics2D) g, etoiles,x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
+			tracer((Graphics2D) g, etoiles[etoilesEtape], sceptreDep[1].getActuel().getX(), sceptreDep[1].getActuel().getY(), largeurCarte, largeurCarte);
+
 //		g.fillOval(x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
 
 
 
+//		int x = centre_largeur + (j.getInfoJoueurs()[0].getSorcierIndice()-4) * (largeurCarte + padding);
+//		tracer((Graphics2D) g, sceptre0, x, centre_hauteur+hauteurCarte/2 + padding, largeurCarte, largeurCarte);
+//		x = centre_largeur + (j.getInfoJoueurs()[1].getSorcierIndice()-4) * (largeurCarte + padding);
+//		tracer((Graphics2D) g, sceptre1,x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
 	}
 	
 	
@@ -360,10 +390,16 @@ public class NiveauGraphique extends JComponent implements Observateur {
 					tracer(g, carteSelect, x-padding/4,  y - padding/4, largeurCarte + padding/2, hauteurCarte+padding/2);
 				}
 				if (i+1 == indexCarteSelectionneeMain && j == this.j.getJoueurCourant()){
-					dessinerCarte(g, x - padding/2, y - (1-j)*padding, largeurCarte+padding, hauteurCarte+padding, couleur, symbole, numero);
+					if (carteCachee && ((joueurCourant == j && typeJoueur[j]==0) || (typeJoueur[1-j] > 0)))
+						dessinerCarte(g, x - padding/2, y - (1-j)*padding, largeurCarte+padding, hauteurCarte+padding, couleur, symbole, numero);
+					else
+						tracer(g, carteDos, x - padding/2, y - (1-j)*padding, largeurCarte+padding, hauteurCarte+padding);
 				}
 				else{
-					dessinerCarte(g, x, y, largeurCarte, hauteurCarte, couleur, symbole, numero);
+					if (carteCachee && ((joueurCourant == j && typeJoueur[j]==0) || (typeJoueur[1-j] > 0)))
+						dessinerCarte(g, x, y, largeurCarte, hauteurCarte, couleur, symbole, numero);
+					else
+						tracer(g, carteDos, x, y, largeurCarte, hauteurCarte);
 				}
 			}
 			y = padding;
@@ -449,46 +485,17 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		repaint();
 	}
 
-	public void decale(int l, int c, double dl, double dc) {
-		if ((dl != 0) || (dc != 0)) {
-			Vecteur v = decalages[l][c];
-			if (v == null) {
-				v = new Vecteur();
-				decalages[l][c] = v;
+	public void decale() {
+		for (int i = 0; i < sceptreDep.length; i++) {
+			if (sceptreDep[i] != null){
+				if (sceptreDep[i].teste(j.getInfoJoueurs()[i].getSorcierIndice(), centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
+						centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2), j.getInfoJoueurs()[i].getSorcierIndice())) {
+					sceptreDep[i].decale();
+					System.out.println(sceptreDep[i]);
+					miseAJour();
+				}
 			}
-			v.x = dc;
-			v.y = dl;
-		} else {
-			decalages[l][c] = null;
 		}
-		miseAJour();
-	}
-
-	public void metAJourDirection(int dL, int dC) {
-		switch (dL + 2 * dC) {
-			case -2:
-				direction = 1;
-				break;
-			case -1:
-				direction = 0;
-				break;
-			case 0:
-				// Rien, pas de mouvement, direction inchangée
-				break;
-			case 1:
-				direction = 2;
-				break;
-			case 2:
-				direction = 3;
-				break;
-			default:
-				Configuration.erreur("Bug interne, direction invalide");
-		}
-	}
-
-	public void changeEtape() {
-		etape = (etape + 1) % pousseurs[direction].length;
-		miseAJour();
 	}
 
 	void selectionnerCarteMain(int index){
@@ -521,5 +528,16 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	public void unselectBouton() {
 		selectBouton = -1;
 		miseAJour();
+	}
+
+	public void changeEtape(){
+		etoilesEtape = (etoilesEtape + 1)%4;
+
+		miseAJour();
+	}
+
+
+	void typeJoueur(int[] typeJoueur){
+		this.typeJoueur = typeJoueur;
 	}
 }

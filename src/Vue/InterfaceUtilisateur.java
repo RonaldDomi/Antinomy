@@ -32,7 +32,7 @@ public interface InterfaceUtilisateur {
 	void toggleFullscreen();
 	void changeEtape();
 	void metAJourDirection(int dL, int dC);
-	void decale(int versL, int versC, double dL, double dC);
+	void decale();
 	void selectionnerCarteMain(int indice);
 	void selectionnerCarteContinuum(LinkedList<Integer> indices);
 	void selectionnerParadox(int debParadoxInf, int finParadoxInf, int debParadoxSup, int finParadoxSup);
@@ -40,7 +40,10 @@ public interface InterfaceUtilisateur {
 	void sauvegarder();
 	void charger();
 
+
 	void setAffichage(int i, int j);
 	void selectionnerMain(boolean b);
 	MenuGraphique getMenu();
+
+	void typeJoueur(int[] typeJoueur);
 }
