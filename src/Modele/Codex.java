@@ -28,9 +28,11 @@ public class Codex implements Cloneable{
 	Carte getCarte(){
 		return this.carte;
 	}
+
 	public Couleur getCouleurInterdite(){
 		return this.couleurInterdite;
 	}
+
 	void setCarte(Carte carte){ this.carte = carte;}
 	void setCouleurInterdite(Couleur couleurInterdite){this.couleurInterdite = couleurInterdite;}
 	
@@ -78,6 +80,3 @@ public class Codex implements Cloneable{
 		}
 	}
 }
-
-
-

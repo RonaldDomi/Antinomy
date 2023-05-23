@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Statistiques pour l'évaluation de l'IA
+ */
 public class Statistics {
     public static int currentDepthTotalConfigurations = 0;
     private static Map<Integer, List<Integer>> statistics = new HashMap<>();

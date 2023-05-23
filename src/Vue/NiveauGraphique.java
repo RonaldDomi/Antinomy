@@ -1,30 +1,4 @@
 package Vue;
-/*
- * Antinomy - Encore une nouvelle version (à but pédagogique) du célèbre jeu
- * Copyright (C) 2018 Guillaume Huard
- *
- * Ce programme est libre, vous pouvez le redistribuer et/ou le
- * modifier selon les termes de la Licence Publique Générale GNU publiée par la
- * Free Software Foundation (version 2 ou bien toute autre version ultérieure
- * choisie par vous).
- *
- * Ce programme est distribué car potentiellement utile, mais SANS
- * AUCUNE GARANTIE, ni explicite ni implicite, y compris les garanties de
- * commercialisation ou d'adaptation dans un but spécifique. Reportez-vous à la
- * Licence Publique Générale GNU pour plus de détails.
- *
- * Vous devez avoir reçu une copie de la Licence Publique Générale
- * GNU en même temps que ce programme ; si ce n'est pas le cas, écrivez à la Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
- * États-Unis.
- *
- * Contact:
- *          Guillaume.Huard@imag.fr
- *          Laboratoire LIG
- *          700 avenue centrale
- *          Domaine universitaire
- *          38401 Saint Martin d'Hères
- */
 
 import Global.Configuration;
 import Modele.*;
@@ -38,6 +12,9 @@ import java.util.LinkedList;
 
 import static java.lang.Math.min;
 
+/**
+ * Implémentation du niveau graphique du plateau de Jeu
+ * */
 public class NiveauGraphique extends JComponent implements Observateur {
 	Image carteVide, carteFond, carteDos, carteDosR, bleu, rouge, violet, vert, clef, crane, papier, champignon,
 			diamant, diamantVide,
@@ -82,6 +59,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	Font h1, fontCarte;
 	LinkedList<Integer> indexCarteSelectionneeContinuum;
 
+	/** Charge toutes les images nécessaires
+	 */
 	NiveauGraphique(Jeu jeu) {
 		j = jeu;
 		j.ajouteObservateur(this);
@@ -126,6 +105,12 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		sceptreDep = new Deplacement[2];
 	}
 
+	/**
+	 * Lit une image. TODO: Adapter pour une archive JAR
+	 * ClassLoader.getSystemClassLoader().getResourceAsStream("filename");
+	 * @param nom Nom de l'image
+	 * @return Objet de l'image ouverte
+	 */
 	private Image lisImage(String nom) {
 		InputStream in = Configuration.ouvre("Images/" + nom + ".png");
 		Configuration.info("Chargement de l'image " + nom);
@@ -138,12 +123,26 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		return null;
 	}
 	
-	
+
+	/**
+	 * Affiche une image suivant les coordonnées
+	 * @param x Coordonnée X où afficher l'image
+	 * @param y Coordonnée Y où afficher l'image
+	 * @param l Longueur de l'image
+	 * @param h Hauteur de l'image
+	 * @param i L'image à afficher
+	 * @param g Objet Graphics2D
+	 * */
 	protected void tracer(Graphics2D g, Image i, int x, int y, int l, int h) {
 		g.drawImage(i, x, y, l, h, null);
 	}
 	
-	
+
+	/**
+	 *  <P> Dessine tout le plateau de jeu </P>
+	 *  <P> Les différentes composantes du plateau ont leur propre méthode </P>
+	 * @param g Objet Graphics2D
+	 * */
 	@Override
 	public void paintComponent(Graphics g) {
 
@@ -242,6 +241,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		}
 	}
 
+
+
 	private void calcSeptre() {
 		for (int i = 0; i < sceptreDep.length; i++) {
 			if (sceptreDep[i] == null){
@@ -256,8 +257,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 			}
 		}
 	}
-
-
+	
+	/**
+	 * Dessine la main de chaque joueur
+	 * @param drawable Objet Graphics2D
+	 * */
 	private void paintMain(Graphics2D drawable){
 		//Joueurs
 		Carte[][] mains = new Carte[2][3];
@@ -266,15 +270,23 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		deb_joueur = centre_largeur + -1 * (largeurCarte + padding) - largeurCarte / 2;
 		carteMain(drawable, mains);
 	}
-	
-	
+
+
+	/**
+	 * Dessine les cartes du Continuum
+	 * @param drawable Objet Graphics2D
+	 * */
 	private void paintContinuum(Graphics2D drawable){
 		Carte[] continuum = j.getContinuumCarte();
 		deb_continuum = centre_largeur + -4 * (largeurCarte + padding);
 		carteContinuum(drawable, continuum);
 	}
-	
-	
+
+	/**
+	 * Dessine les noms et les points de chaque joueur
+	 * @param drawable Objet Graphics2D
+	 * @param g Objet Graphics
+	 * */
 	private void paintTitreJoueurs(Graphics g, Graphics2D drawable){
 		g.setFont(h1);
 		FontMetrics m = g.getFontMetrics();
@@ -334,8 +346,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 //		V2
 		//		tracer(drawable, diamant, largeur - padding - largeurCarte/2, m.getHeight() - largeurCarte/2, largeurCarte/2, largeurCarte/2);
 	}
-	
-	
+
+	/**
+	 * Dessine la position (le sceptre) de chaque joueur
+	 * @param g Objet Graphics2D
+	 * */
 	private void paintPositionJoueurs(Graphics g){
 		tracer((Graphics2D) g, sceptre0,  sceptreDep[0].getActuel().getX(), sceptreDep[0].getActuel().getY(), largeurCarte, largeurCarte);
 		if(joueurCourant == 0)
@@ -356,8 +371,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 //		x = centre_largeur + (j.getInfoJoueurs()[1].getSorcierIndice()-4) * (largeurCarte + padding);
 //		tracer((Graphics2D) g, sceptre1,x, centre_hauteur-hauteurCarte/2 - padding - largeurCarte, largeurCarte, largeurCarte);
 	}
-	
-	
+
+	/**
+	 * Dessine la couleur interdite
+	 * @param drawable Objet Graphics2D
+	 * */
 	private void paintCouleurInterdite(Graphics2D drawable){
 		tracer(drawable, backCodex, largeur/8 - largeurCarte*2, centre_hauteur - largeurCarte*2,largeurCarte*4, largeurCarte*4);
 		switch (j.getCodex().getCouleurInterdite()){
@@ -376,8 +394,12 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		}
 //		tracer(drawable, fleche, largeur/8 - largeurCarte*5/2, centre_hauteur - largeurCarte,largeurCarte*2, largeurCarte*2);
 	}
-	
-	
+
+	/**
+	 * Dessine les cartes de chaque main
+	 * @param g Objet Graphics2D
+	 * @param mains Tableau de cartes de chaque joueur
+	 * */
 	protected void carteMain(Graphics2D g, Carte[][] mains){
 		int y = hauteur - hauteurCarte - padding;
 		for (int j = 0; j<2; j++){
@@ -409,6 +431,11 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		}
 	}
 
+	/**
+	 * Dessine chaque carte du Continuum
+	 * @param g Objet Graphics2D
+	 * @param continuum Tableau de cartes du Continuum
+	 * */
 	protected void carteContinuum(Graphics2D g, Carte[] continuum){
 		int x, i;
 
@@ -444,6 +471,17 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		tracer(g, carteDos, x, centre_hauteur-hauteurCarte / 2, largeurCarte, hauteurCarte);
 	}
 
+	/**
+	 * Dessine une carte
+	 * @param g Objet Graphics2D
+	 * @param x Coordonnée X de la carte
+	 * @param y Coordonnée Y de la carte
+	 * @param l Largeur de la carte
+	 * @param h Hauteur de la carte
+	 * @param couleur Couleur de la carte
+	 * @param symbole Symbole de la carte
+	 * @param numero Numéro de la carte
+	 * */
 	private void dessinerCarte(Graphics2D g, int x, int y, int l, int h, Couleur couleur, Symbole symbole, int numero){
 		tracer(g, carteVide, x, y, l, h);
 		g.setFont(fontCarte);
@@ -482,6 +520,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		}
 	}
 
+	/**
+	 * Met-à-jour l'interface en la redessinant
+	 */
 	@Override
 	public void miseAJour() {
 		repaint();

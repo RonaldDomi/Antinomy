@@ -4,6 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+/**
+	Informations sur le joueur : main, cartes, indices et la direction de son mouvement (où est sa droite selon la
+ perspective)
+ */
 public class InfoJoueur implements Cloneable{
 	private Carte[] main; //3 cartes
 	private int points; //0 à 5
@@ -20,7 +24,11 @@ public class InfoJoueur implements Cloneable{
 		this.directionMouvement = directionMouvement;
 		this.r = r;
 	}
-
+	
+	/**
+	 * Reconstruit une infoJoueur selon sa représentation textuelle.
+	 * @param stringInfo Représentation textuelle de l'infoJoueur
+	 */
 	public InfoJoueur(String stringInfo){
 //		InfoJoueur: carte1,carte2,carte3,points,directionMouvement,sorcierIndice
 		String[] strings = stringInfo.split(",");
@@ -56,6 +64,11 @@ public class InfoJoueur implements Cloneable{
 	// UTILS
 	void addPoint(){this.points += 1;}
 	void remPoint(){this.points -= 1;}
+	/**
+	 * Tente de déplacer le sorcier vers une nouvelle position.
+	 * @param deplacement Nombre de cases à avancer/reculer.
+	 * @return Un booléen si le déplacement a été effectué.
+	 */
 	boolean moveSorcier(int deplacement){
 		int nouvelle_position = this.getSorcierIndice() + (deplacement * this.getDirectionMouvement());
 		if(nouvelle_position >= 0 && nouvelle_position <= 8){
@@ -66,9 +79,13 @@ public class InfoJoueur implements Cloneable{
 		}
 	}
 
+	/**
+	 * Tente d'échanger une carte de la main avec une autre carte.
+	 * @param position Indice de la carte à échanger dans la main
+	 * @param new_carte Nouvelle carte à mettre en main
+	 * @return La carte échangée. Null si l'échange n'est pas valide (mauvaise position).
+	* */
 	Carte changeCarte(int position, Carte new_carte){
-		// Change la carte de this.main.get(position) avec new_carte
-		// il faut tester si position est valide, et il faut retourner la carde qu'on jete de notre main
 		Carte carte = null;
 		if(position >= 0 && position < 3){
 			carte = main[position];
@@ -76,7 +93,12 @@ public class InfoJoueur implements Cloneable{
 		}
 		return carte;
 	}
-
+	
+	/**
+	 * Vérifie s'il existe un Paradox dans la main du joueur.
+	 * @param couleur_interdite La couleur interdite durant ce tour
+	 * @return Un booléen s'il existe un paradox
+	 */
 	public boolean existeParadox(Couleur couleur_interdite){
 		if(main[0].getCouleur() == couleur_interdite || main[1].getCouleur() == couleur_interdite || main[2].getCouleur() == couleur_interdite)
 			return false;
@@ -87,7 +109,12 @@ public class InfoJoueur implements Cloneable{
 		boolean nombre = main[0].getNumero() == main[1].getNumero() && main[1].getNumero() == main[2].getNumero();
 		return couleur || symbole || nombre;
 	}
-
+	
+	/**
+	 * Calcule la somme de la main du joueur. Les cartes de la couleur interdite valent zéro.
+	 * @param couleur_interdite La couleur interdite durant ce tour.
+	 * @return Un entier représentant la somme de la main.
+	 */
 	public int sommeMain(Couleur couleur_interdite){
 		int sum = 0;
 		for (Carte carte:main) {
@@ -97,17 +124,13 @@ public class InfoJoueur implements Cloneable{
 		}
 		return sum;
 	}
-
-	public void melangeMain(){
-		Random rand = new Random();
-		for (int i = 0; i < main.length; i++) {
-			int randomIndexToSwap = rand.nextInt(main.length);
-			Carte temp = main[randomIndexToSwap];
-			main[randomIndexToSwap] = main[i];
-			main[i] = temp;
-		}
-	}
-
+	
+	/**
+	 * Calcule la somme de la main pour une main donnée.
+	 * @param main La main où calculer la somme.
+	 * @param couleurInterdite La couleur interdite.
+	 * @return Un entier représentant la somme de la main.
+	 */
 	public static float getEvaluationSommeMain(Carte[] main, Couleur couleurInterdite){
 		float valeur = 0;
 		for(int carteI = 0; carteI < main.length; carteI++){
@@ -119,6 +142,7 @@ public class InfoJoueur implements Cloneable{
 		return valeur;
 	}
 
+	//TODO: DELETE?
 	public static float getEvaluationDuosMain(Carte[] main, Couleur couleurInterdite){
 		float valeur = 0;
 //		for(int carteI = 0; carteI < main.length; carteI++) {
@@ -128,7 +152,13 @@ public class InfoJoueur implements Cloneable{
 //		}
 		return valeur;
 	}
-
+	
+	/**
+	 * <P> Représentation textuelle de infoJoueur.</P>
+	 * <P> De la forme: main, points, directionMouvement, indice du sorcier.</P>
+	 * <P> Séparés par des ,</P>
+	 * @return Chaîne de caractères représentant l'infoJoueur
+	 */
 	@Override
 	public String toString() {
 		String res = "";
@@ -140,16 +170,13 @@ public class InfoJoueur implements Cloneable{
 		res += sorcierIndice;
 		return res;
 	}
-
-
-	public static Carte[] mockMain(){
-		Carte[] res = new Carte[3];
-		res[0] = new Carte(1, Couleur.ROUGE, Symbole.CLEF);
-		res[1] = new Carte(2, Couleur.VERT, Symbole.PAPIER);
-		res[2] = new Carte(3, Couleur.BLEU, Symbole.PAPIER);
-		return res;
-	}
-
+	
+	/**
+	 * Clone l'infoJoueur.
+	 * @return L'infoJoueur cloné
+	 * @throws CloneNotSupportedException
+	 */
+	@Override
 	public InfoJoueur clone() throws CloneNotSupportedException{
 //		InfoJoueur j = (InfoJoueur) super.clone();
 		InfoJoueur j = new InfoJoueur(this.directionMouvement, this.r);

@@ -1,30 +1,4 @@
 package Controleur;
-/*
- * Sokoban - Encore une nouvelle version (à but pédagogique) du célèbre jeu
- * Copyright (C) 2018 Guillaume Huard
- *
- * Ce programme est libre, vous pouvez le redistribuer et/ou le
- * modifier selon les termes de la Licence Publique Générale GNU publiée par la
- * Free Software Foundation (version 2 ou bien toute autre version ultérieure
- * choisie par vous).
- *
- * Ce programme est distribué car potentiellement utile, mais SANS
- * AUCUNE GARANTIE, ni explicite ni implicite, y compris les garanties de
- * commercialisation ou d'adaptation dans un but spécifique. Reportez-vous à la
- * Licence Publique Générale GNU pour plus de détails.
- *
- * Vous devez avoir reçu une copie de la Licence Publique Générale
- * GNU en même temps que ce programme ; si ce n'est pas le cas, écrivez à la Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
- * États-Unis.
- *
- * Contact:
- *          Guillaume.Huard@imag.fr
- *          Laboratoire LIG
- *          700 avenue centrale
- *          Domaine universitaire
- *          38401 Saint Martin d'Hères
- */
 
 import Global.Configuration;
 import Modele.Historique;
@@ -40,6 +14,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * Contrôleur médiateur pour le jeu.
+ */
 public class ControleurMediateur implements CollecteurEvenements {
 	Jeu jeu;
 
@@ -202,7 +179,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 	public void clicSourisBoutonMenu(int fenetre, int index){
 		//	System.out.println("Fenetre "+fenetre);
 		switch (fenetre){
-			case 1:
+			case 1: //Menu principal
 				switch (index){
 					case -2: //Quitter
 						System.exit(0);
@@ -214,17 +191,23 @@ public class ControleurMediateur implements CollecteurEvenements {
 						break;
 				}
 				break;
-			case 2:
+			case 2: //Local
 				switch (index){
 					case -2: //Quitter
 						vue.setAffichage(0, 1);
 						break;
 				}
 				break;
-			case 3:
+			case 3: //En ligne
 				//System.out.println("index "+fenetre);
 					switch (index){
 						case -2: //Quitter
+							if (enAttenteConnexion){
+								enAttenteConnexion = false;
+								System.out.println("Interupt");
+								vue.getMenu().changerTexteBouton("Lancer");
+								threadServer.interrupt();
+							}
 							vue.setAffichage(0, 1);
 							break;
 					case 0: //Server

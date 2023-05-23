@@ -43,7 +43,8 @@ public class Deck {
 	void melangerDeck(){
 		Collections.shuffle(deck);
 	}
-	
+
+
 	/**
 	 * <P> Renvoie un sous tableau de nbCartes cartes. Les retire du Deck. </P>
 	 *

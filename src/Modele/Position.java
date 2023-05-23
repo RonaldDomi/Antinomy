@@ -1,5 +1,8 @@
 package Modele;
 
+/**
+ * Système de coordonnées pour les animations
+ */
 public class Position {
 	int x;
 	int y;

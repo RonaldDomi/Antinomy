@@ -26,6 +26,9 @@
  */
 package Controleur;
 
+/**
+ * Définit une animation.
+ */
 public abstract class Animation {
 	int lenteur;
 	int decompte;

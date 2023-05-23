@@ -5,6 +5,9 @@ import java.net.Socket;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * Permet d'importer (charger) une partie.
+ */
 public class Import {
     Scanner scanner;
 
@@ -18,6 +21,7 @@ public class Import {
 
     }
     
+    //TODO: DELETE?
     public Import(Socket clientSocket){
         try{
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -32,14 +36,18 @@ public class Import {
         }
     }
     
-    
+    //TODO: DELETE?
     public Import(String importString, boolean isImport){
         this.scanner = new Scanner(importString);
     }
-
+    
+    /**
+     * Lit depuis un fichier, reconstruit un Jeu depuis le fichier.
+     * @return Jeu reconstruit.
+     */
     public Jeu lire_fichier() {
         Jeu jeu = new Jeu();
-        System.out.println("Dans lire fichier");
+        //System.out.println("Dans lire fichier");
         int currentJeuIndex = Integer.parseInt(scanner.nextLine());
         Historique historique = new Historique(scanner.nextLine());
         historique.courrant = currentJeuIndex;
@@ -60,7 +68,7 @@ public class Import {
         return jeu;
     }
     
-    
+    //TODO: DELETE?
     public String scan_fichier(){
         return scanner.nextLine() + "\n" + scanner.nextLine();
     }

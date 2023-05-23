@@ -21,7 +21,7 @@ public class Historique {
         listeJeu = new LinkedList<>();
     }
     
-    //TODO: DELETE
+    //TODO: DELETE?
     Historique(Historique hist){
         this.courrant = hist.courrant;
         this.listeJeu = (LinkedList<Jeu>) hist.listeJeu.clone();
@@ -156,7 +156,7 @@ public class Historique {
     /**
      * Clone l'historique dans un nouvel Objet.
      *
-     * @return L'historique cloné;
+     * @return L'historique cloné.
      */
     public Historique clone(){
         Historique h = new Historique();

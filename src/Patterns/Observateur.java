@@ -2,7 +2,7 @@ package Patterns;
 
 
 /**
- * Interface du Pattern Observateur.
+ * Interface du Pattern {@link Observateur}.
  *
  * @author Guillaume Huard — Projet Sokoban
  */

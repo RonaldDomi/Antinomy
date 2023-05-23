@@ -28,6 +28,9 @@ package Vue;
 
 import java.util.LinkedList;
 
+/**
+ * Classe Interface de l'interface utilisateur
+* */
 public interface InterfaceUtilisateur {
 	void toggleFullscreen();
 	void changeEtape();

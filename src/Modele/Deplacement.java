@@ -2,6 +2,9 @@ package Modele;
 
 import Global.Configuration;
 
+/**
+ * Implémentation d'un déplacement pour les animations.
+ */
 public class Deplacement {
 
 	int indice;

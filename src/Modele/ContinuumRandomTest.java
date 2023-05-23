@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
- * <P> Vérifie le bon fonctionnement de la classe Continuum </P>
+ * <P> Vérifie le bon fonctionnement de la classe {@link Continuum}. </P>
  * <P> Teste le calcul des options et des coups possibles </P>
  */
 class ContinuumRandomTest {

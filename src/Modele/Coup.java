@@ -18,7 +18,6 @@ public class Coup {
      * @param paradox Indique si un Paradox existe et dans quelle direction.
      */
     Coup(int indexMain, int indexContinuum, int paradox){
-
         this.indexContinuum = indexContinuum;
         this.indexMain = indexMain;
         this.paradox = paradox;

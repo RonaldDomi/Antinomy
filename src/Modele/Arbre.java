@@ -8,6 +8,9 @@ import static Modele.InfoJoueur.getEvaluationDuosMain;
 import static Modele.InfoJoueur.getEvaluationSommeMain;
 import static Modele.Jeu.faireCoupClone;
 
+/**
+ * Arbre min-max pour l'IA
+ */
 public class Arbre {
     Jeu jeuCourant;
     List<Arbre> fils;

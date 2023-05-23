@@ -1,30 +1,5 @@
 package Modele;
-/*
- * Sokoban - Encore une nouvelle version (à but pédagogique) du célèbre jeu
- * Copyright (C) 2018 Guillaume Huard
- *
- * Ce programme est libre, vous pouvez le redistribuer et/ou le
- * modifier selon les termes de la Licence Publique Générale GNU publiée par la
- * Free Software Foundation (version 2 ou bien toute autre version ultérieure
- * choisie par vous).
- *
- * Ce programme est distribué car potentiellement utile, mais SANS
- * AUCUNE GARANTIE, ni explicite ni implicite, y compris les garanties de
- * commercialisation ou d'adaptation dindex_coups_possibles un but spécifique. Reportez-vous à la
- * Licence Publique Générale GNU pour plus de détails.
- *
- * Vous devez avoir reçu une copie de la Licence Publique Générale
- * GNU en même temps que ce programme ; si ce n'est pas le cas, écrivez à la Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
- * États-Unis.
- *
- * Contact:
- *          Guillaume.Huard@imag.fr
- *          Laboratoire LIG
- *          700 avenue centrale
- *          Domaine universitaire
- *          38401 Saint Martin d'Hères
- */
+
 
 import Patterns.Observable;
 
@@ -32,7 +7,7 @@ import java.util.*;
 
 
 public class Jeu extends Observable implements Cloneable{
-	///////////
+	
 	Random r;
 
 	int tour; //0 à +inf
@@ -42,9 +17,12 @@ public class Jeu extends Observable implements Cloneable{
 	public Historique historique;
 	int joueurCourant; //0 ou 1
 	int joueurGagnant; //0 ou 1
-	int etape;
+	int etape; //Etape de jeu
 	
 	
+	/**
+	 * Construit un jeu pour une nouvelle partie.
+	 */
 	public Jeu() {
 		r = new Random();
 
@@ -71,7 +49,11 @@ public class Jeu extends Observable implements Cloneable{
 		}
 		historique.ajouterJeu(jeuClone);
 	}
-
+	
+	/**
+	 * Reconstruit un jeu à partir de sa représentation textuelle, permet de charger une partie.
+	 * @param stringJeu Représentation textuelle du jeu à charger.
+	 */
 	public Jeu(String stringJeu){
 //		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant;etape;
 		String[] stringJeuSep = stringJeu.split(";");
@@ -87,7 +69,10 @@ public class Jeu extends Observable implements Cloneable{
 	}
 	
 	
-
+	/**
+	 * Clone un jeu.
+	 * @param j Jeu à cloner
+	 */
 	public Jeu(Jeu j){
 		this.r = j.r;
 		this.joueurCourant = j.joueurCourant;
@@ -106,13 +91,26 @@ public class Jeu extends Observable implements Cloneable{
 		}
 //		this.historique = j.historique;
 	}
-
+	
+	/**
+	 * Échange une carte du Continuum contre la main du joueur.
+	 * @param carteMainIndice Indice de la carte en main
+	 * @param carteContinuumIndice Indice de la carte du Continuum
+	 */
 	void echangerCarteMainContinuum(int carteMainIndice, int carteContinuumIndice){
 		//change la carte de la main donnée par l'utilisateur avec la carte dans le continuum
 		continuum.setCarteContinuum(carteContinuumIndice, infoJoueurs[joueurCourant].changeCarte(carteMainIndice, continuum.getCarteContinuum(carteContinuumIndice)));
 		//renvoie rien
 	}
 
+	/**
+	 * Tente de déplacer le sorcier vers la position de la carte choisie (donnée en argument)
+	 * @param indexCarte Index où déplacer le sorcier
+	 * @return Un booléen si le déplacement à réussi ou non.
+	 * <P> Renvoie false si l'étape de jeu ne permet pas un déplacement de sorcier. </P>
+	 *
+	 * <P> Voir : {@link Continuum#getIndexSorcierPossible(Couleur)} pour les indexes possibles </P>
+	 * */
 	public boolean coupChangerPositionSorcier(int indexCarte){
 
 		if (getEtape() != -1 && getEtape() != -2 )
@@ -131,7 +129,15 @@ public class Jeu extends Observable implements Cloneable{
 
 		return false;
 	}
-
+	
+	/**
+	 * Tente d'échanger la carte en main avec une carte du Continuum.
+	 * @param indexMain Indice de la carte en main.
+	 * @param indexContinuum Indice de la carte du Continuum
+	 * @return Un booléen si l'échange a réussi ou non.
+	 * <P> Renvoie false si l'étape ne permet pas de changer une carte </P>
+	 * <P> Voir : {@link Continuum#getCoupsPossibles(Carte, int, int)} pour les coups possibles pour chaque carte}</P>
+	 */
 	public boolean coupEchangeCarteMainContinuum(int indexMain, int indexContinuum){
 
 		if (getEtape() != 1)
@@ -151,7 +157,16 @@ public class Jeu extends Observable implements Cloneable{
 		}
 		return false;
 	}
-
+	
+	/**
+	 * <P> Réalise un paradox. </P>
+	 * <P> Mélange les cartes en main et les échange avec le Continuum selon la direction choisie par le joueur. </P>
+	 * <P> Ajoute un point au joueur. </P>
+	 * @param direction -1/+1 Gauche/Droite où échanger les cartes
+	 * @return Un booléen si le paradox a été réalisé
+	 * <P> Renvoie false si l'étape, la couleur interdite ou les cartes en main ne permettent pas de faire un Paradox
+	 * </P>
+	 */
 	public boolean coupParadox(int direction){
 
 		if (getEtape() != 2)
@@ -187,7 +202,12 @@ public class Jeu extends Observable implements Cloneable{
 		metAJour();
 		return true;
 	}
-
+	
+	/**
+	 * <P> Résout un clash entre les deux joueurs. Ajoute un point au gagnant </P>
+	 * @return Un booléen si un clash est arrivé dans la bonne étape.
+	 * <P> Renvoie false si l'étape ne permet pas de faire un clash. </P>
+	 */
 	public boolean coupClash(){
 
 		if (getEtape() != 3)
@@ -212,11 +232,18 @@ public class Jeu extends Observable implements Cloneable{
 //		System.out.println("égalité");
 		return true;
 	}
-
+	
+	/**
+	 * Retourne l'index de l'adversaire du joueur.
+	 * @return Index de l'adversaire, 0/+1
+	 */
 	public int adversaire(){
 		return 1-joueurCourant;
 	}
-
+	
+	/**
+	 * Finit un tour, donne la main à l'adversaire et clone le jeu pour le mettre dans l'historique.
+	 */
 	public void finTour(){
 		joueurCourant = adversaire();
 		tour++;
@@ -229,6 +256,10 @@ public class Jeu extends Observable implements Cloneable{
 		historique.ajouterJeu(jeuClone);
 	}
 
+	/**
+	* Finit un tour, donne la main à l'adversaire, clone le jeu, mais ne l'ajoute PAS à l'historique.
+	 * @param hist Booléen si le jeu doit-être ajouté à l'historique ou non.
+	*/
 	public void finTour(boolean hist){
 		joueurCourant = adversaire();
 		tour++;
@@ -241,8 +272,13 @@ public class Jeu extends Observable implements Cloneable{
 		if( hist)
 			historique.ajouterJeu(jeuClone);
 	}
-
-
+	
+	
+	/**
+	 * Change d'étape de jeu en fonction de l'étape actuelle.
+	 * Vérifie s'il existe un Paradox/Clash, les résout en conséquence.
+	 * @return Un booléen TODO: Selon quoi??
+	 */
 	boolean etapeSuivante() {
 		switch (getEtape()) {
 			case (-1):
@@ -298,12 +334,22 @@ public class Jeu extends Observable implements Cloneable{
 				return false;
 		}
 	}
-
+	
+	/**
+	 * <P> Vérifie s'il existe un clash. </P>
+	 * C'est-à-dire que les deux joueurs sont sur le même indice sur le Continuum
+	 * @return Un booléen si les deux joueurs sont sur le même indice
+	 */
 	public boolean existeClash(){
 		return infoJoueurs[0].getSorcierIndice() == infoJoueurs[1].getSorcierIndice();
 	}
-
-	//-1 si égalité sinon index du gagnant
+	
+	/**
+	 * Résout un clash. Compare la somme des mains de chaque joueur.
+	 * @return 0 si le joueur 1 gagne. <BR>
+	 *  1 si le joueur 2 gagne. <BR>
+	 * -1 si égalité.<BR>
+	 */
 	int gagnantClash(){
 		int sommeJ0 = infoJoueurs[0].sommeMain(codex.getCouleurInterdite());
 		int sommeJ1 = infoJoueurs[1].sommeMain(codex.getCouleurInterdite());
@@ -324,35 +370,56 @@ public class Jeu extends Observable implements Cloneable{
 			return 1;
 		}
 	}
-
+	
+	/**
+	 * Vérifie si la somme de main est égale entre les deux joueurs.
+	 * @return Un booléen si la somme est égale.
+	 */
 	public boolean egaliteClash(){
 		return infoJoueurs[0].sommeMain(codex.getCouleurInterdite()) == infoJoueurs[1].sommeMain(codex.getCouleurInterdite());
 	}
-
+	
+	/**
+	 * Vérifie si un des jeux joueurs a gagné la partie.
+	 */
 	void jeuGagnant(){
 		if (infoJoueurs[0].getPoints() >= 5)
 			joueurGagnant = 0;
 		else if (infoJoueurs[1].getPoints() >= 5)
 			joueurGagnant = 1;
 	}
-
+	
+	/**
+	 * Vérifie si les cartes à droite du joueur permettent de faire un Paradox.
+	 * @return Un booléen si les cartes le permettent.
+	 */
 	public boolean existeParadoxSuperieur(){
 		return infoJoueurs[joueurCourant].getSorcierIndice()+3*infoJoueurs[joueurCourant].getDirection() < continuum.getContinuumSize() &&
 				infoJoueurs[joueurCourant].getSorcierIndice()+3*infoJoueurs[joueurCourant].getDirection() >= 0;
 	}
-
+	
+	/**
+	 * Vérifie si les cartes à gauche du joueur permettent de faire un Paradox.
+	 * @return Un booléen si les cartes le permettent.
+	 */
 	public boolean existeParadoxInferieur(){
 		return infoJoueurs[joueurCourant].getSorcierIndice()-3*infoJoueurs[joueurCourant].getDirection() < continuum.getContinuumSize() &&
 				infoJoueurs[joueurCourant].getSorcierIndice()-3*infoJoueurs[joueurCourant].getDirection() >= 0;
 	}
-
+	
+	/**
+	 * Annule un coup, change le jeu en conséquence.
+	 */
 	public void undo(){
 		if(!historique.peutAnnuler()) return;
 		System.out.println("doing undo");
 		charger(historique.annuler(), false);
 //		metAJour();
 	}
-
+	
+	/**
+	 * Refait un coup, change le jeu en conséquence.
+	 */
 	public void redo(){
 		if(!historique.peutRefaire()) return;
 		System.out.println("doing redo");
@@ -401,6 +468,10 @@ public class Jeu extends Observable implements Cloneable{
 		return jClone;
 	}
 	
+	/**
+	 * Modifie le jeu en place, avec la représentation textuelle d'un jeu.
+	 * @param stringJeu Représentation textuelle du jeu
+	*/
 	public void modifierJeu(String stringJeu) {
 		synchronized (this) {
 			Jeu jeuClone = new Jeu(stringJeu);
@@ -422,7 +493,12 @@ public class Jeu extends Observable implements Cloneable{
 			
 		}
 	}
-
+	
+	/**
+	 * Modifie le jeu avec un jeu chargé. Charge aussi l'historique si un chargement a été fait
+	 * @param j Jeu à charger sur le plateau
+	 * @param isImport Booléen si l'historique doit aussi être chargé
+	 */
 	public void charger(Jeu j, boolean isImport){
 		this.r = j.r;
 		this.joueurGagnant = j.joueurGagnant;
@@ -447,6 +523,10 @@ public class Jeu extends Observable implements Cloneable{
 
 	public Codex getCodex(){return codex;}
 
+	/**
+	 * Calcule les coups possibles pour toutes les cartes de la main.
+	 * @return Une liste chaînée de coups possibles
+	 */
 	public List<Coup> getCoupsPossibles(){
 		List<Coup> coupsPossibles = new ArrayList<>();
 		for(int i = 0; i < getInfoJoueurCourant().getMain().length; i++){
@@ -484,7 +564,13 @@ public class Jeu extends Observable implements Cloneable{
 
 		return coupsPossibles;
 	}
-
+	
+	/**
+	 * Fait un coup sans changer le plateau de Jeu. Permet à l'IA d'explorer les possibilitées.
+	 * @param jeu Le jeu actuel.
+	 * @param coup Un coup à effectuer.
+	 * @return Le Jeu avec le coup effectué.
+	 */
 	public static Jeu faireCoupClone(Jeu jeu, Coup coup){
 		int indexMain = coup.indexMain;
 		int indexContinuum = coup.indexContinuum;
@@ -525,10 +611,15 @@ public class Jeu extends Observable implements Cloneable{
 
 		return jeuBase;
 	}
-
+	
+	/**
+	 * <P> Représentation textuelle d'un jeu. </P>
+	 * <P> Sous la forme: Continuum, infoJ1, infoJ2, tour, codex, joueurCourant, joueurGagnant, étape.</P>
+	 * <P> Séparés par des ; </P>
+	 * @return Une chaîne de caractères représentant le Jeu
+	 */
 	@Override
 	public String toString() {
-//		continuum;info[0];info[1];tour;codex;joueurCourant;joueurGagnant;etape
 		return continuum.toString() + ";" +
 				infoJoueurs[0].toString() + ";" +
 				infoJoueurs[1].toString() + ";" +

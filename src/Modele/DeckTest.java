@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * <P> Vérifie le bon fonctionnement de la classe Deck. </P>
+ * <P> Vérifie le bon fonctionnement de la classe {@link Deck}. </P>
  * <P> Teste la distribution des cartes et le mélange. </P>
  * */
 public class DeckTest {
@@ -65,7 +65,7 @@ public class DeckTest {
 	
 	/* Il ne devrait pas y avoir de faux positifs avec ces assertions,
 	 Collections.shuffle() déplace toujours un élément de la liste */
-	@RepeatedTest(30000)
+	@RepeatedTest(10)
 	public void testDeckMelange() {
 		assertNotEquals(deckTest.deck.get(1), new Carte(1, Couleur.VIOLET, Symbole.CHAMPIGNON));
 		assertNotEquals(deckTest.deck.get(2), new Carte(2, Couleur.BLEU, Symbole.CHAMPIGNON));

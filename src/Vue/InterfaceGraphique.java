@@ -1,30 +1,4 @@
 package Vue;
-/*
- * Sokoban - Encore une nouvelle version (à but pédagogique) du célèbre jeu
- * Copyright (C) 2018 Guillaume Huard
- *
- * Ce programme est libre, vous pouvez le redistribuer et/ou le
- * modifier selon les termes de la Licence Publique Générale GNU publiée par la
- * Free Software Foundation (version 2 ou bien toute autre version ultérieure
- * choisie par vous).
- *
- * Ce programme est distribué car potentiellement utile, mais SANS
- * AUCUNE GARANTIE, ni explicite ni implicite, y compris les garanties de
- * commercialisation ou d'adaptation dans un but spécifique. Reportez-vous à la
- * Licence Publique Générale GNU pour plus de détails.
- *
- * Vous devez avoir reçu une copie de la Licence Publique Générale
- * GNU en même temps que ce programme ; si ce n'est pas le cas, écrivez à la Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
- * États-Unis.
- *
- * Contact:
- *          Guillaume.Huard@imag.fr
- *          Laboratoire LIG
- *          700 avenue centrale
- *          Domaine universitaire
- *          38401 Saint Martin d'Hères
- */
 
 import Global.Configuration;
 import Modele.Export;
@@ -72,6 +46,9 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	static Font h2 = new Font("TimesRoman", Font.PLAIN, 15);
 	Font h2MenuJeu;
 
+	/**
+	 * Initialise une interface graphique et charge la Font du jeu. TODO: Adapter pour une archive JAR
+	 */
 	InterfaceGraphique(Jeu jeu, CollecteurEvenements c, Socket clientSocket) {
 		j = jeu;
 		control = c;
@@ -88,6 +65,12 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		}
 	}
 
+	/**
+	 * Démarre l'interface graphique
+	 * @param j Jeu à afficher
+	 * @param c Collecteur d'évènements
+	 * @param clientSocket Socket client
+	 */
 	public static void demarrer(Jeu j, CollecteurEvenements c, Socket clientSocket) {
 		InterfaceGraphique vue = new InterfaceGraphique(j, c, clientSocket);
 		c.ajouteInterfaceUtilisateur(vue);
@@ -95,6 +78,9 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		SwingUtilities.invokeLater(vue);
 	}
 
+	/**
+	 * Met l'interface en plein-écran ou la réduit
+	 */
 	public void toggleFullscreen() {
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice device = env.getDefaultScreenDevice();
@@ -107,6 +93,9 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		}
 	}
 
+	/**
+	 * Methode run() de l'interface graphique
+	 */
 	public void run() {
 
 		menuPrincipale = new JFrame("Antinomy");
@@ -137,6 +126,9 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		courant = menuPrincipale;
 	}
 
+	/**
+		Affiche le menu principal
+	 */
 	void setMenuPrincipal(){
 		menuPrincipale.setSize(1000, 600);
 
@@ -205,6 +197,9 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		control.ajouteTextFieldHostName(textField);
 	}
 
+	/**
+	 * Affiche la fenêtre (distincte) du plateau de jeu
+	 */
 	void setEnJeu(){
 		enJeu.setSize(1000, 600);
 
@@ -248,6 +243,10 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		niv.selectionnerParadox(debParadoxInf, finParadoxInf, debParadoxSup, finParadoxSup);
 	}
 
+	/**
+	 * <P> Sauvegarde la partie en cours dans un nouveau fichier. </P>
+	 * <P> Une fenêtre d'explorateur de fichier s'ouvre où l'utilisateur choisit l'emplacement du fichier à sauvegarder </P>
+	 */
 	@Override
 	public void sauvegarder(){
 		JFileChooser Save = new JFileChooser();
@@ -261,6 +260,11 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 			System.out.println("Sauvegarde annulée");
 		}
 	}
+
+	/**
+	 * <P> Charge la partie en cours depuis un fichier. </P>
+	 * <P> Une fenêtre d'explorateur de fichier s'ouvre où l'utilisateur choisit l'emplacement du fichier à charger </P>
+	 */
 	@Override
 	public boolean charger(){
 		JFileChooser Load = new JFileChooser();

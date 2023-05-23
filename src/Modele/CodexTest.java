@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Teste le bon fonctionnement de la classe Codex.
+/** <P> Teste le bon fonctionnement de la classe {@link Codex}. </P>
  * Teste si le cycle des couleurs est correct.
  */
 class CodexTest {

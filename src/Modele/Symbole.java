@@ -11,7 +11,12 @@ public enum Symbole {
     private static final Symbole[] valeurs = values();
     private static final int taille = valeurs.length;
     private static final Random random = new Random();
-    
+
+    /**
+     * Renvoie un symbole aléatoire.
+     *
+     * @return Un symbole aléatoire symbolisé par une constante.
+     */
     public static Symbole getRandomSymbole(){
         return valeurs[random.nextInt(taille)];
     }

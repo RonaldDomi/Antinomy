@@ -1,6 +1,5 @@
 package Controleur;
 
-import Modele.Import;
 import Modele.Jeu;
 
 import java.io.BufferedReader;
@@ -38,10 +37,14 @@ public class Reception implements Runnable{
 					case "REDO":
 						jeu.redo();
 						break;
-					case "LOAD": //TODO: Fix
+					case "LOAD":
+						/* TO-FIX: Envoyer le jeu chargé à la machine distante : Fonctionnalité abandonnée
+						
 						String jeu_a_import = incoming.readLine();
 						Import import_jeu = new Import(jeu_a_import, true);
 						jeu = import_jeu.lire_fichier();
+						
+						 */
 						break;
 					default:
 						jeu.modifierJeu(jeu_string);

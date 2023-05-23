@@ -1,30 +1,4 @@
 package Vue;
-/*
- * Antinomy - Encore une nouvelle version (à but pédagogique) du célèbre jeu
- * Copyright (C) 2018 Guillaume Huard
- *
- * Ce programme est libre, vous pouvez le redistribuer et/ou le
- * modifier selon les termes de la Licence Publique Générale GNU publiée par la
- * Free Software Foundation (version 2 ou bien toute autre version ultérieure
- * choisie par vous).
- *
- * Ce programme est distribué car potentiellement utile, mais SANS
- * AUCUNE GARANTIE, ni explicite ni implicite, y compris les garanties de
- * commercialisation ou d'adaptation dans un but spécifique. Reportez-vous à la
- * Licence Publique Générale GNU pour plus de détails.
- *
- * Vous devez avoir reçu une copie de la Licence Publique Générale
- * GNU en même temps que ce programme ; si ce n'est pas le cas, écrivez à la Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
- * États-Unis.
- *
- * Contact:
- *          Guillaume.Huard@imag.fr
- *          Laboratoire LIG
- *          700 avenue centrale
- *          Domaine universitaire
- *          38401 Saint Martin d'Hères
- */
 
 import Global.Configuration;
 import Modele.Carte;
@@ -42,6 +16,9 @@ import java.util.LinkedList;
 
 import static java.lang.Math.min;
 
+/**
+ * Implémentation graphique du menu principal
+ */
 public class MenuGraphique extends JComponent implements Observateur {
 	Image bouton, boutonSelected, boutonS, boutonSelectedS,
 	exit, back,
@@ -95,6 +72,12 @@ public class MenuGraphique extends JComponent implements Observateur {
 		choix_type[1] = 0;
 	}
 
+	/**
+	 * Lit une image. TODO: Adapter pour une archive JAR
+	 * ClassLoader.getSystemClassLoader().getResourceAsStream("filename");
+	 * @param nom Nom de l'image
+	 * @return Objet de l'image ouverte
+	 */
 	private Image lisImage(String nom) {
 		InputStream in = Configuration.ouvre("Images/" + nom + ".png");
 		Configuration.info("Chargement de l'image " + nom);
@@ -106,13 +89,24 @@ public class MenuGraphique extends JComponent implements Observateur {
 		}
 		return null;
 	}
-	
-	
+
+	/**
+	 * Affiche une image suivant les coordonnées
+	 * @param x Coordonnée X où afficher l'image
+	 * @param y Coordonnée Y où afficher l'image
+	 * @param l Longueur de l'image
+	 * @param h Hauteur de l'image
+	 * @param i L'image à afficher
+	 * @param g Objet Graphics2D
+	 * */
 	protected void tracer(Graphics2D g, Image i, int x, int y, int l, int h) {
 		g.drawImage(i, x, y, l, h, null);
 	}
-	
-	
+
+	/**
+	 *  <P> Dessine tout le menu principal </P>
+	 * @param g Objet Graphics
+	 * */
 	@Override
 	public void paintComponent(Graphics g) {
 
@@ -155,6 +149,10 @@ public class MenuGraphique extends JComponent implements Observateur {
 			boutonRetour(g);
 	}
 
+	/**
+	 * Dessine le bouton retour
+	 * @param g Objet Graphics
+	 * */
 	private void boutonRetour(Graphics g) {
 			System.out.println("ici");
 		if (affichage == 1){
@@ -166,6 +164,11 @@ public class MenuGraphique extends JComponent implements Observateur {
 			bouton((Graphics2D) g, selectBoutonExit ? boutonSelectedS : boutonS, back, taille_bouton_s/3+taille_bouton_s/2, taille_bouton_s/3+taille_bouton_s/2, taille_bouton_s, taille_bouton_s);
 		}
 	}
+
+	/**
+	 * Dessine le menu nouvelle partie local
+	 * @param g Objet Graphics
+	 * */
 
 	void nouvellePartie(Graphics g){
 
@@ -221,6 +224,10 @@ public class MenuGraphique extends JComponent implements Observateur {
 		}
 	}
 
+	/**
+	 * Dessine le menu nouvelle partie en ligne
+	 * @param g Objet Graphics
+	 * */
 	void enLigne(Graphics g){
 
 		mesureLargeur = min(largeur/(4*5+4), hauteur/10);
@@ -265,6 +272,11 @@ public class MenuGraphique extends JComponent implements Observateur {
 			}
 		}
 	}
+
+	/**
+	 * Dessine le menu principal
+	 * @param g Objet Graphics
+	 * */
 	void menuPrincipale(Graphics g){
 		mesureLargeur = min(largeur/6, hauteur/10);
 		mesureHauteur = min(hauteur/10, largeur/6);
@@ -306,16 +318,39 @@ public class MenuGraphique extends JComponent implements Observateur {
 
 	}
 
+	/**
+	 * Dessine un bouton avec un texte donné en paramètre
+	 * @param drawable Objet Graphics2D
+	 * @param bouton Image en arrière-plan du bouton
+	 * @param string Texte du bouton
+	 * @param x Coordonnée X du bouton
+	 * @param y Coordonnée Y du bouton
+	 * @param taille_bouton_l Largeur du bouton
+	 * @param taille_bouton_h Hauteur du bouton
+	 * */
 	private void bouton(Graphics2D drawable, Image bouton,String string, int x, int y, int taille_bouton_l, int taille_bouton_h){
 		tracer(drawable, bouton, x - taille_bouton_l/2, y - taille_bouton_h/2, taille_bouton_l, taille_bouton_h);
 		drawable.drawString(string, x-m.stringWidth(string)/2, y+m.getHeight() - taille_bouton_h/2);
 	}
 
+	/**
+	 * Dessine un bouton avec une image donné en paramètre
+	 * @param drawable Objet Graphics2D
+	 * @param bouton Image en arrière-plan du bouton
+	 * @param image Image du bouton
+	 * @param x Coordonnée X du bouton
+	 * @param y Coordonnée Y du bouton
+	 * @param taille_bouton_l Largeur du bouton
+	 * @param taille_bouton_h Hauteur du bouton
+	 * */
 	private void bouton(Graphics2D drawable, Image bouton,Image image, int x, int y, int taille_bouton_l, int taille_bouton_h){
 		tracer(drawable, bouton, x - taille_bouton_l/2, y - taille_bouton_h/2, taille_bouton_l, taille_bouton_h);
 		tracer(drawable, image, x - taille_bouton_l/2, y - taille_bouton_h/2, taille_bouton_l, taille_bouton_h);
 	}
 
+	/**
+	 * Met-à-jour l'interface en la redessinant
+	 */
 	@Override
 	public void miseAJour() {
 		repaint();

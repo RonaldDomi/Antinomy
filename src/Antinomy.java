@@ -5,8 +5,7 @@ import Vue.InterfaceGraphique;
 import Vue.CollecteurEvenements;
 
 /**
- * <P> Initialise le jeu en local TODO: Changer en "en ligne" lorsque necéssaire. </P>
- * <P> Initialise une interface graphique sur le menu principal. </P>
+ * <P> Initialise le menu principal et son interface graphique. </P>
  */
 public class Antinomy {
 //	final static String typeInterface = Configuration.typeInterface;

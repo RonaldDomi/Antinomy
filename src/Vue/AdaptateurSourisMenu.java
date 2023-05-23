@@ -1,34 +1,11 @@
 package Vue;
-/*
- * Sokoban - Encore une nouvelle version (à but pédagogique) du célèbre jeu
- * Copyright (C) 2018 Guillaume Huard
- *
- * Ce programme est libre, vous pouvez le redistribuer et/ou le
- * modifier selon les termes de la Licence Publique Générale GNU publiée par la
- * Free Software Foundation (version 2 ou bien toute autre version ultérieure
- * choisie par vous).
- *
- * Ce programme est distribué car potentiellement utile, mais SANS
- * AUCUNE GARANTIE, ni explicite ni implicite, y compris les garanties de
- * commercialisation ou d'adaptation dans un but spécifique. Reportez-vous à la
- * Licence Publique Générale GNU pour plus de détails.
- *
- * Vous devez avoir reçu une copie de la Licence Publique Générale
- * GNU en même temps que ce programme ; si ce n'est pas le cas, écrivez à la Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
- * États-Unis.
- *
- * Contact:
- *          Guillaume.Huard@imag.fr
- *          Laboratoire LIG
- *          700 avenue centrale
- *          Domaine universitaire
- *          38401 Saint Martin d'Hères
- */
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * Adaptateur de souris pour le menu principal
+ */
 public class AdaptateurSourisMenu extends MouseAdapter {
 	MenuGraphique m;
 	CollecteurEvenements control;
@@ -39,6 +16,13 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 	}
 
 
+	/**
+	 * <P> Invoqué lorsqu'un clic de souris a été effectué </P>
+	 * <P> Suivant le menu, vérifie si le clic est sur les coordonnées d'un bouton </P>
+	 * <P> Le cas échant, noircit le bouton</P>
+	 * <P> L'action associée au bouton n'est pas effectuée si le curseur n'est pas sur le bouton au moment de la détente du clic </P>
+	 * @param e Un événement de souris
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e){
 		if (e.getY() >= m.taille_bouton_s/3 && e.getY() <= m.taille_bouton_s/3 + m.taille_bouton_s ) {
@@ -102,6 +86,12 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 		}
 	}
 
+	/**
+	 * <P> Invoqué lorsqu'une détente de clic a été effectuée </P>
+	 * <P> Suivant le menu, vérifie si la détente est sur les coordonnées d'un bouton </P>
+	 * <P> Enlève le noircissement le bouton et effectue l'action associée au bouton</P>
+	 * @param e Un événement de souris
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 
@@ -111,6 +101,7 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 				m.selectBoutonExit(true);
 			}
 		}
+
 		switch (m.affichage){
 			case 1:
 				if (e.getX() >= m.centre_largeur - m.taille_bouton/2 && e.getX() <= m.centre_largeur + m.taille_bouton/2 ){

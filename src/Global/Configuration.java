@@ -1,39 +1,12 @@
 package Global;
-/*
- * Sokoban - Encore une nouvelle version (à but pédagogique) du célèbre jeu
- * Copyright (C) 2018 Guillaume Huard
- *
- * Ce programme est libre, vous pouvez le redistribuer et/ou le
- * modifier selon les termes de la Licence Publique Générale GNU publiée par la
- * Free Software Foundation (version 2 ou bien toute autre version ultérieure
- * choisie par vous).
- *
- * Ce programme est distribué car potentiellement utile, mais SANS
- * AUCUNE GARANTIE, ni explicite ni implicite, y compris les garanties de
- * commercialisation ou d'adaptation dans un but spécifique. Reportez-vous à la
- * Licence Publique Générale GNU pour plus de détails.
- *
- * Vous devez avoir reçu une copie de la Licence Publique Générale
- * GNU en même temps que ce programme ; si ce n'est pas le cas, écrivez à la Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
- * États-Unis.
- *
- * Contact:
- *          Guillaume.Huard@imag.fr
- *          Laboratoire LIG
- *          700 avenue centrale
- *          Domaine universitaire
- *          38401 Saint Martin d'Hères
- */
-
-//import Structures.Sequence;
-//import Structures.SequenceListe;
-//import Structures.SequenceTableau;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+/**
+ * Configuration du jeu, de l'IA des animations
+ */
 public class Configuration {
 	static final int silence = 1;
 	public static final double vitesseAnimations = 0.15;
@@ -47,6 +20,11 @@ public class Configuration {
 	public static int typeJoueur;
 	public static int numeroPort = 6969;
 	
+	/**
+	 * Ouvre un fichier, TODO: Le rendre compatible JAR
+	 * @param s Un nom de fichier à ouvrir.
+	 * @return Un InputStream du fichier ouvert.
+	 */
 	public static InputStream ouvre(String s) {
 		InputStream in = null;
 		try {
@@ -56,7 +34,12 @@ public class Configuration {
 		}
 		return in;
 	}
-
+	
+	
+	/**
+	 * Affiche des messages avec INFO/ALERTE/ERREUR
+	 * @author Guillaume Huard : Projet Sokoban
+	 */
 	public static void affiche(int niveau, String message) {
 		if (niveau > silence)
 			System.err.println(message);
@@ -74,16 +57,5 @@ public class Configuration {
 		affiche(3, "ERREUR : " + s);
 		System.exit(1);
 	}
-
-//	public static <E> Sequence<E> nouvelleSequence() {
-//		switch (typeSequences) {
-//			case "Liste" :
-//				return new SequenceListe<>();
-//			case "Tableau" :
-//				return new SequenceTableau<>();
-//			default:
-//				erreur("Type de séquence invalide : " + typeSequences);
-//				return null;
-//		}
-//	}
+	
 }
