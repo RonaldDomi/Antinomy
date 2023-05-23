@@ -58,7 +58,7 @@ public class MenuGraphique extends JComponent implements Observateur {
 
 	int deb_bouton_x;
 	int deb_bouton_y;
-	int deb_bouton_nouvelle_partie_y;
+	int deb_bouton_nouvelle_partie_y, deb_bouton_nouvelle_partie_x;
 
 	int affichage = 1;
 
@@ -76,7 +76,10 @@ public class MenuGraphique extends JComponent implements Observateur {
 
 	int[] choix_type;
 
-	public MenuGraphique() {
+	InterfaceGraphique parent;
+
+	public MenuGraphique(InterfaceGraphique parent) {
+		this.parent = parent;
 		bouton = lisImage("BoutonL");
 		boutonSelected = lisImage("BoutonSelectedL");
 		boutonS = lisImage("Bouton");
@@ -187,8 +190,17 @@ public class MenuGraphique extends JComponent implements Observateur {
 		}
 
 		g.setFont(h2);
-		deb_bouton_nouvelle_partie_y = hauteur*3/4 - mesureHauteur/2;
-		bouton((Graphics2D) g, selectBouton == 1 ? boutonSelected : bouton, "Nouvelle Partie", centre_largeur, hauteur*3/4, taille_bouton*2, mesureHauteur);
+
+		if (parent.typeMenuSelectionJoueur == 1){
+			deb_bouton_nouvelle_partie_y = hauteur*3/4 - mesureHauteur/2;
+			bouton((Graphics2D) g, selectBouton == 1 ? boutonSelected : bouton, "Continuer", centre_largeur, hauteur*3/4, taille_bouton*2, mesureHauteur);
+		}
+		else {
+			deb_bouton_nouvelle_partie_y = hauteur*3/4 - mesureHauteur/2;
+			deb_bouton_nouvelle_partie_x = centre_largeur - taille_bouton*2 - padding/2;
+			bouton((Graphics2D) g, selectBouton == 1 ? boutonSelected : bouton, "Nouvelle Partie", centre_largeur - taille_bouton - padding/2, hauteur*3/4, taille_bouton*2, mesureHauteur);
+			bouton((Graphics2D) g, selectBouton == 2 ? boutonSelected : bouton, "Charger", centre_largeur + taille_bouton + padding/2, hauteur*3/4, taille_bouton*2, mesureHauteur);
+		}
 	}
 
 	void enLigne(Graphics g){

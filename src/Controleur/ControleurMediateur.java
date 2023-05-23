@@ -162,12 +162,13 @@ public class ControleurMediateur implements CollecteurEvenements {
 				vue.sauvegarder();
 				break;
 			case 1: //charger
-				vue.charger();
-				envoyerCommandeSocket("LOAD");
-				envoyerCommandeSocket(jeu.toString());
-				resetSelection();
-				afficherPreSelection();
-				decompte = lenteurAttente;
+				if (vue.charger()){
+					envoyerCommandeSocket("LOAD");
+					envoyerCommandeSocket(jeu.toString());
+					resetSelection();
+					afficherPreSelection();
+					decompte = lenteurAttente;
+				}
 				break;
 			case 2: //undo
 				jeu.undo();
@@ -189,6 +190,9 @@ public class ControleurMediateur implements CollecteurEvenements {
 				resetSelection();
 				afficherPreSelection();
 				break;
+			case 5: //menu IA
+				vue.afficherMenuIA();
+				break;
 		}
 		jeu.metAJour();
 	}
@@ -208,10 +212,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 					case 1: //En ligne
 						vue.setAffichage(0, 3);
 						break;
-					case 2: //Charger
-						break;
-					case 3: //Tutoriel
-						break;
 				}
 				break;
 			case 2:
@@ -228,9 +228,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 							vue.setAffichage(0, 1);
 							break;
 					case 0: //Server
-						if (enAttenteConnexion)
+						if (enAttenteConnexion) {
 							break;
-						System.out.println("En attente.");
+						}
+						System.out.println("En attente...");
+						vue.getMenu().changerTexteBouton("En attente...");
 						enAttenteConnexion = true;
 						threadServer = new Thread(() -> clientSocket = Server.initServer(jeu, this));
 						threadServer.start();
@@ -316,33 +318,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 	}
 
 	@Override
-//	public void tictac() {
-//		// On sait qu'on supporte les animations si on reçoit des évènements temporels
-//		if (!animationsSupportees) {
-//			animationsSupportees = true;
-//			animationsActives = Configuration.animations;
-//		}
-//		// On traite l'IA séparément pour pouvoir l'activer même si les animations
-//		// "esthétiques" sont désactivées
-//		if (IAActive && (mouvement == null)) {
-//			animationIA.tictac();
-//		}
-//		if (animationsActives) {
-//			Iterateur<Animation> it = animations.iterateur();
-//			while (it.aProchain()) {
-//				Animation a = it.prochain();
-//				a.tictac();
-//				if (a.estTerminee()) {
-//					if (a == mouvement) {
-//						testFin();
-//						mouvement = null;
-//					}
-//					it.supprime();
-//				}
-//			}
-//		}
-//	}
-
 	public void tictac() {
 		if (jeu.getJoueurGagnant() == -1) {
 
@@ -358,6 +333,7 @@ public class ControleurMediateur implements CollecteurEvenements {
 				int type = typeJoueur[jeu.getJoueurCourant()];
 				// Lorsque le temps est écoulé on le transmet au joueur courant.
 				// Si un coup a été joué (IA) on change de joueur.
+//				System.out.println(type);
 				if (joueurs[jeu.getJoueurCourant()][type].tempsEcoule()) {
 					resetSelection();
 					if (!afficherPreSelection())
@@ -448,5 +424,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	public InterfaceUtilisateur getVue() {
 		return vue;
+	}
+
+	public void charger(int typeJ0, int typeJ1){
+		if (vue.charger()){
+			nouvellePartie(typeJ0, typeJ1);
+		}
 	}
 }

@@ -42,4 +42,6 @@ public interface CollecteurEvenements {
 	void setTypeJoueur(int typeJoueur, int i);
 
 	void ajouteTextFieldHostName(JTextField textField);
+
+	void charger(int i, int j);
 }

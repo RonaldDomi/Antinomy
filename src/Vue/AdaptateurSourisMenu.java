@@ -63,13 +63,28 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 				m.unselectBouton();
 				break;
 			case 2:
-				if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() < m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
-					if (e.getX() >= m.centre_largeur - m.taille_bouton && e.getX() <= m.centre_largeur + m.taille_bouton)
-					{
-//						System.out.println("Bouton Nouvelle Partie clicked");
-						control.nouvellePartie(m.choix_type[0], m.choix_type[1]);
+				if (m.parent.typeMenuSelectionJoueur == 1){
+					if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() < m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
+						if (e.getX() >= m.centre_largeur - m.taille_bouton && e.getX() <= m.centre_largeur + m.taille_bouton && m.selectBouton == 1)
+						{
+	//						System.out.println("Bouton Accepter clicked");
+							control.nouvellePartie(m.choix_type[0], m.choix_type[1]);
+						}
 					}
 				}
+				else {
+					if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() < m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
+						if (e.getX() >= m.deb_bouton_nouvelle_partie_x && e.getX() <= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2 && m.selectBouton == 1)
+						{
+//							System.out.println("Bouton Nouvelle Partie clicked");
+							control.nouvellePartie(m.choix_type[0], m.choix_type[1]);
+						} else if (e.getX() >= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2 + m.padding && e.getX() <= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2 + m.padding + m.taille_bouton*2&& m.selectBouton == 2){
+//							System.out.println("Bouton Charger clicked");
+							control.charger(m.choix_type[0], m.choix_type[1]);
+						}
+					}
+				}
+
 				m.unselectBouton();
 				break;
 			case 3:
@@ -109,13 +124,24 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 				}
 				break;
 			case 2:
-				if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() <= m.deb_bouton_nouvelle_partie_y + m.mesureHauteur) {
-					if (e.getX() >= m.centre_largeur - m.taille_bouton && e.getX() <= m.centre_largeur + m.taille_bouton)
-					{
-//						System.out.println("Bouton Nouvelle Partie clicked");
-						m.selectBouton(1);
+				if (m.parent.typeMenuSelectionJoueur == 1){
+					if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() < m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
+						if (e.getX() >= m.centre_largeur - m.taille_bouton && e.getX() <= m.centre_largeur + m.taille_bouton)
+						{
+							//						System.out.println("Bouton Accepter clicked");
+							m.selectBouton(1);
+						}
 					}
-					break;
+				}
+				else {
+					if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() < m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
+						if (e.getX() >= m.deb_bouton_nouvelle_partie_x && e.getX() <= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2)
+						{
+							m.selectBouton(1);
+						} else if (e.getX() >= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2 + m.padding && e.getX() <= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2 + m.padding + m.taille_bouton*2){
+							m.selectBouton(2);
+						}
+					}
 				}
 
 				for (int j = 0; j < 2; j++) {

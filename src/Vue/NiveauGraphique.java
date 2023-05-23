@@ -43,7 +43,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 			diamant, diamantVide,
 			codexBleu, codexVert, codexRouge, codexViolet, backCodex,
 			bouton, boutonBlocked, boutonSelected, carteSelect,
-			load, save, undo, redo, restart,
+			load, save, undo, redo, restart, robot,
 			sceptre0, sceptre1,
 			message;
 
@@ -108,6 +108,7 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		boutonSelected = lisImage("BoutonSelected");
 		carteSelect = lisImage("CarteSelect");
 		load = lisImage("Load");
+		robot = lisImage("Robot");
 		save = lisImage("Save");
 		undo = lisImage("Undo");
 		redo = lisImage("Redo");
@@ -197,14 +198,14 @@ public class NiveauGraphique extends JComponent implements Observateur {
 			 g.setFont(fontMessage);
 			 FontMetrics m = g.getFontMetrics();
 //			 tracer(drawable, message, centre_largeur - , centre_hauteur - , largeurCarte);
-			 String string = "Joueur "+ j.getJoueurGagnant() + " gagne la partie !";
+			 String string = "Joueur "+ (j.getJoueurGagnant()+1) + " gagne la partie !";
 			 g.drawString(string, centre_largeur-m.stringWidth(string)/2, centre_hauteur*3/2+m.getHeight()/2-padding);
 		 }
 
 		//bouton
 		deb_bouton = padding;
 		taille_bouton = largeurCarte*3/4;
-		for (int k = 0; k < 5; k++) {
+		for (int k = 0; k < 6; k++) {
 			switch (k){
 				case 0:
 					tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
@@ -233,6 +234,10 @@ public class NiveauGraphique extends JComponent implements Observateur {
 					tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					tracer(drawable, restart, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
 					break;
+				case 5:
+					tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+					tracer(drawable, robot, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+					break;
 			}
 		}
 	}
@@ -248,12 +253,6 @@ public class NiveauGraphique extends JComponent implements Observateur {
 				if (sceptreDep[i].teste(j.getInfoJoueurs()[i].getSorcierIndice(), centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
 						centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2), j.getInfoJoueurs()[i].getSorcierIndice())) {
 				}
-//				if (sceptreDep[i].est_arrive())
-////					sceptreDep[i] = new Deplacement(new Position(centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
-////						centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2)),
-////							new Position(centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
-////									centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2)),
-////									j.getInfoJoueurs()[i].getSorcierIndice(), true);
 			}
 		}
 	}
@@ -285,9 +284,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		StringJoueur[j.adversaire()] = "  ";
 		
 //		StringJoueur[0] += "Joueur " + 0 + "   " + j.getInfoJoueurs()[0].getPoints() + "/5";
-		StringJoueur[0] += "Joueur " + 0;
+		StringJoueur[0] += "Joueur " + 1;
 //		StringJoueur[1] += "Joueur " + 1 + "   " + j.getInfoJoueurs()[1].getPoints() + "/5";
-		StringJoueur[1] += "Joueur " + 1;
+		StringJoueur[1] += "Joueur " + 2;
 
 		//Texte joueur 0
 //		g.drawString(StringJoueur[0], padding, hauteur-padding);

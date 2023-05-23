@@ -62,6 +62,8 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 
 	String hostName;
 
+	int typeMenuSelectionJoueur = 0;
+
 	JComponent[] afficherEnLigne;
 
 	final Color background_color = new Color(100, 182, 176, 255);
@@ -141,8 +143,10 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		JLayeredPane layeredPane = new JLayeredPane();
 		layeredPane.setSize(menuPrincipale.getSize());
 
-		menu = new MenuGraphique();
+		menu = new MenuGraphique(this);
 		menu.addMouseListener(new AdaptateurSourisMenu(menu, control));
+
+		menuPrincipale.addKeyListener(new AdaptateurClavier(control));
 
 		hostName = "Unknown";
 		try{
@@ -196,11 +200,8 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		label.setVisible(false);
 
 		menuPrincipale.add(layeredPane);
-
 		menuPrincipale.getContentPane().setBackground(background_color);
-
 		menuPrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		control.ajouteTextFieldHostName(textField);
 	}
 
@@ -261,16 +262,18 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		}
 	}
 	@Override
-	public void charger(){
+	public boolean charger(){
 		JFileChooser Load = new JFileChooser();
 		int r = Load.showOpenDialog(null);
 		if (r == JFileChooser.APPROVE_OPTION) {
 			System.out.println("Charger " + Load.getSelectedFile().getAbsolutePath());
 			Import imp = new Import(Load.getSelectedFile().getAbsolutePath());
 			j.charger(imp.lire_fichier(), true);
+			return true;
 		}
 		else
 			System.out.println("Chargement annulée");
+		return false;
 	}
 
 	@Override
@@ -282,7 +285,6 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 						afficherEnLigne) {
 					compond.setVisible(sous_fenetre == 3);
 				}
-
 				if (courant != menuPrincipale){
 					courant = menuPrincipale;
 					enJeu.setVisible(false);
@@ -291,7 +293,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 				break;
 			case 1:
 				if (courant != enJeu){
-					courant = menuPrincipale;
+					courant = enJeu;
 					menuPrincipale.setVisible(false);
 					enJeu.setVisible(true);
 				}
@@ -311,5 +313,12 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	@Override
 	public void typeJoueur(int[] typeJoueur){
 		niv.typeJoueur(typeJoueur);
+	}
+
+	@Override
+	public void afficherMenuIA(){
+		menuPrincipale.setVisible(true);
+		typeMenuSelectionJoueur = 1;
+		menuPrincipale.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 	}
 }

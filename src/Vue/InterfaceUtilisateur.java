@@ -38,7 +38,9 @@ public interface InterfaceUtilisateur {
 	void selectionnerParadox(int debParadoxInf, int finParadoxInf, int debParadoxSup, int finParadoxSup);
 
 	void sauvegarder();
-	void charger();
+	boolean charger();
+
+	void afficherMenuIA();
 
 
 	void setAffichage(int i, int j);
