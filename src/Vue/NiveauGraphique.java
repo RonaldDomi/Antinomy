@@ -245,6 +245,9 @@ public class NiveauGraphique extends JComponent implements Observateur {
 						centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2)), 9, true);
 			}
 			else {
+				if (sceptreDep[i].teste(j.getInfoJoueurs()[i].getSorcierIndice(), centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
+						centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2), j.getInfoJoueurs()[i].getSorcierIndice())) {
+				}
 //				if (sceptreDep[i].est_arrive())
 ////					sceptreDep[i] = new Deplacement(new Position(centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
 ////						centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2)),
@@ -488,10 +491,8 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	public void decale() {
 		for (int i = 0; i < sceptreDep.length; i++) {
 			if (sceptreDep[i] != null){
-				if (sceptreDep[i].teste(j.getInfoJoueurs()[i].getSorcierIndice(), centre_largeur + (j.getInfoJoueurs()[i].getSorcierIndice()-4) * (largeurCarte + padding),
-						centre_hauteur+ (1-i) * (padding+hauteurCarte/2) - (i)*(padding+largeurCarte+hauteurCarte/2), j.getInfoJoueurs()[i].getSorcierIndice())) {
+				if (!sceptreDep[i].est_arrive()){
 					sceptreDep[i].decale();
-					System.out.println(sceptreDep[i]);
 					miseAJour();
 				}
 			}

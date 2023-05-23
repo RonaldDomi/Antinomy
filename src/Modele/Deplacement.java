@@ -76,7 +76,11 @@ public class Deplacement {
 			if (!est_arrive()){
 				return true;
 			}
-			return false;
+			else{
+				apres = new Position(newX, newY);
+				actuel = apres;
+				return true;
+			}
 		}
 	}
 
