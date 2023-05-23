@@ -44,7 +44,7 @@ abstract class Joueur {
     
     // Méthode appelée pour tous les joueurs une fois le temps écoulé
     // Si un joueur n'est pas concerné, il lui suffit de l'ignorer
-    boolean tempsEcoule() {
+    public boolean tempsEcoule() {
         return false;
     }
 

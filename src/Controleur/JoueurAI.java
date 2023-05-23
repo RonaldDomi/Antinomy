@@ -29,7 +29,7 @@ class JoueurAI extends Joueur {
     }
 
     @Override
-    boolean tempsEcoule() {
+    public boolean tempsEcoule() {
         //jouer indice sorcier
         switch (getEtape()) {
             case -2:

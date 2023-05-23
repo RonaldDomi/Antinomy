@@ -279,7 +279,7 @@ public class Jeu extends Observable implements Cloneable{
 	 * Vérifie s'il existe un Paradox/Clash, les résout en conséquence.
 	 * @return Un booléen TODO: Selon quoi??
 	 */
-	boolean etapeSuivante() {
+	public boolean etapeSuivante() {
 		switch (getEtape()) {
 			case (-1):
 				setEtape(-2);
@@ -611,6 +611,10 @@ public class Jeu extends Observable implements Cloneable{
 
 		return jeuBase;
 	}
+
+
+
+
 	
 	/**
 	 * <P> Représentation textuelle d'un jeu. </P>

@@ -386,6 +386,11 @@ public class ControleurMediateur implements CollecteurEvenements {
 		vue.typeJoueur(typeJoueur);
 		vue.setAffichage(1, -1);
 	}
+
+	public void nouvellePartie2(int type_j0, int type_j1){
+		typeJoueur[0] = type_j0;
+		typeJoueur[1] = type_j1;
+	}
 	
 	public void envoyerCommandeSocket(String toSend) {
 		
@@ -413,5 +418,14 @@ public class ControleurMediateur implements CollecteurEvenements {
 		if (vue.charger()){
 			nouvellePartie(typeJ0, typeJ1);
 		}
+	}
+
+	public int jouerPartie(){
+		while (jeu.getJoueurGagnant() == -1){
+			joueurs[jeu.getJoueurCourant()][typeJoueur[jeu.getJoueurCourant()]].tempsEcoule();
+			jeu.etapeSuivante();
+			jeu.finTour();
+		}
+		return jeu.getJoueurGagnant();
 	}
 }
