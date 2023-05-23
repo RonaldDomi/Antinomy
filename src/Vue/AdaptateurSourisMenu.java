@@ -76,11 +76,11 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 					if ( e.getY() >= m.deb_bouton_nouvelle_partie_y && e.getY() < m.deb_bouton_nouvelle_partie_y + m.mesureHauteur){
 						if (e.getX() >= m.deb_bouton_nouvelle_partie_x && e.getX() <= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2 && m.selectBouton == 1)
 						{
-//							System.out.println("Bouton Nouvelle Partie clicked");
-							control.nouvellePartie(m.choix_type[0], m.choix_type[1]);
-						} else if (e.getX() >= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2 + m.padding && e.getX() <= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2 + m.padding + m.taille_bouton*2&& m.selectBouton == 2){
 //							System.out.println("Bouton Charger clicked");
 							control.charger(m.choix_type[0], m.choix_type[1]);
+						} else if (e.getX() >= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2 + m.padding && e.getX() <= m.deb_bouton_nouvelle_partie_x + m.taille_bouton*2 + m.padding + m.taille_bouton*2&& m.selectBouton == 2){
+//							System.out.println("Bouton nouvelle Partie clicked");
+							control.nouvellePartie(m.choix_type[0], m.choix_type[1]);
 						}
 					}
 				}
@@ -107,7 +107,7 @@ public class AdaptateurSourisMenu extends MouseAdapter {
 
 		if (e.getY() >= m.taille_bouton_s/3 && e.getY() <= m.taille_bouton_s/3 + m.taille_bouton_s ) {
 			//bouton
-			if (e.getX() >= m.taille_bouton_s/3 && e.getX() <= m.taille_bouton_s/3 + m.taille_bouton_s ){
+			if (e.getX() >= m.taille_bouton_s/3 && e.getX() <= m.taille_bouton_s/3 + m.taille_bouton_s && m.parent.typeMenuSelectionJoueur == 0){
 				m.selectBoutonExit(true);
 			}
 		}

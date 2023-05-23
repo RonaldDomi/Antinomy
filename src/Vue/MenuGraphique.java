@@ -44,7 +44,8 @@ import static java.lang.Math.min;
 
 public class MenuGraphique extends JComponent implements Observateur {
 	Image bouton, boutonSelected, boutonS, boutonSelectedS,
-	exit, back;
+	exit, back,
+	BG_BG, BG_BD, BG_HD;
 	int mesureLargeur;
 	int mesureHauteur;
 	int padding;
@@ -86,6 +87,9 @@ public class MenuGraphique extends JComponent implements Observateur {
 		boutonSelectedS = lisImage("BoutonSelected");
 		exit = lisImage("Exit");
 		back = lisImage("Back");
+		BG_BG = lisImage("Background_BG");
+		BG_HD = lisImage("Background_HD");
+		BG_BD = lisImage("Background_BD");
 		choix_type = new int[2];
 		choix_type[0] = 0;
 		choix_type[1] = 0;
@@ -123,6 +127,18 @@ public class MenuGraphique extends JComponent implements Observateur {
 
 		taille_bouton_s = min(largeur/17, hauteur/6 * 54 / 84)*3/4;
 
+		int taille_x = min(largeur*1/3, (hauteur*2/5));
+		int taille_y = min(hauteur*2/5, (largeur*1/3));
+		tracer(drawable, BG_BG, 0, hauteur-taille_y, taille_x, taille_y);
+
+		taille_x = min(largeur*1/5, (hauteur*1/5) * 35/24);
+		taille_y = min(hauteur*1/5, (largeur*1/5) * 24/35);
+		tracer(drawable, BG_BD, largeur-taille_x, hauteur-taille_y, taille_x, taille_y);
+
+		taille_x = min(largeur*1/4, (hauteur*1/3) * 5/4);
+		taille_y = min(hauteur*1/3, (largeur*1/4) * 4/5);
+		tracer(drawable, BG_HD, largeur-taille_x, 0, taille_x, taille_y);
+
 		switch (affichage){
 			case 1:
 				menuPrincipale(g);
@@ -135,10 +151,12 @@ public class MenuGraphique extends JComponent implements Observateur {
 				break;
 		}
 
-		boutonRetour(g);
+		if (parent.typeMenuSelectionJoueur == 0)
+			boutonRetour(g);
 	}
 
 	private void boutonRetour(Graphics g) {
+			System.out.println("ici");
 		if (affichage == 1){
 			//quitter
 			bouton((Graphics2D) g, selectBoutonExit ? boutonSelectedS : boutonS, exit, taille_bouton_s/3+taille_bouton_s/2, taille_bouton_s/3+taille_bouton_s/2, taille_bouton_s, taille_bouton_s);
@@ -198,8 +216,8 @@ public class MenuGraphique extends JComponent implements Observateur {
 		else {
 			deb_bouton_nouvelle_partie_y = hauteur*3/4 - mesureHauteur/2;
 			deb_bouton_nouvelle_partie_x = centre_largeur - taille_bouton*2 - padding/2;
-			bouton((Graphics2D) g, selectBouton == 1 ? boutonSelected : bouton, "Nouvelle Partie", centre_largeur - taille_bouton - padding/2, hauteur*3/4, taille_bouton*2, mesureHauteur);
-			bouton((Graphics2D) g, selectBouton == 2 ? boutonSelected : bouton, "Charger", centre_largeur + taille_bouton + padding/2, hauteur*3/4, taille_bouton*2, mesureHauteur);
+			bouton((Graphics2D) g, selectBouton == 1 ? boutonSelected : bouton, "Charger", centre_largeur - taille_bouton - padding/2, hauteur*3/4, taille_bouton*2, mesureHauteur);
+			bouton((Graphics2D) g, selectBouton == 2 ? boutonSelected : bouton, "Nouvelle Partie", centre_largeur + taille_bouton + padding/2, hauteur*3/4, taille_bouton*2, mesureHauteur);
 		}
 	}
 

@@ -37,7 +37,7 @@ import java.io.InputStream;
 public class Configuration {
 	static final int silence = 1;
 	public static final double vitesseAnimations = 0.15;
-	public static int lenteurAttente = 20;
+	public static int lenteurAttente = 40;
 	public static int tempsAnimation = 10;
 	public static int profondeurIAFacile = 1;
 	public static int profondeurIAMedium = 3;
