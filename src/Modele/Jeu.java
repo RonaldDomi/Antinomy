@@ -245,7 +245,8 @@ public class Jeu extends Observable implements Cloneable{
 	 * Finit un tour, donne la main à l'adversaire et clone le jeu pour le mettre dans l'historique.
 	 */
 	public void finTour(){
-		joueurCourant = adversaire();
+		if (joueurGagnant == -1)
+			joueurCourant = adversaire();
 		tour++;
 		Jeu jeuClone = null;
 		try{

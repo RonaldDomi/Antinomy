@@ -214,7 +214,7 @@ public class MenuGraphique extends JComponent implements Observateur {
 
 		if (parent.typeMenuSelectionJoueur == 1){
 			deb_bouton_nouvelle_partie_y = hauteur*3/4 - mesureHauteur/2;
-			bouton((Graphics2D) g, selectBouton == 1 ? boutonSelected : bouton, "Continuer", centre_largeur, hauteur*3/4, taille_bouton*2, mesureHauteur);
+			bouton((Graphics2D) g, selectBouton == 1 ? boutonSelected : bouton, "Confirmer", centre_largeur, hauteur*3/4, taille_bouton*2, mesureHauteur);
 		}
 		else {
 			deb_bouton_nouvelle_partie_y = hauteur*3/4 - mesureHauteur/2;
