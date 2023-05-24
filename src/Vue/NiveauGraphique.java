@@ -106,16 +106,14 @@ public class NiveauGraphique extends JComponent implements Observateur {
 	}
 
 	/**
-	 * Lit une image. TODO: Adapter pour une archive JAR
-	 * ClassLoader.getSystemClassLoader().getResourceAsStream("filename");
+	 * Lit une image.
 	 * @param nom Nom de l'image
 	 * @return Objet de l'image ouverte
 	 */
 	private Image lisImage(String nom) {
-		InputStream in = Configuration.ouvre("Images/" + nom + ".png");
+		InputStream in = Configuration.ouvre( nom);
 		Configuration.info("Chargement de l'image " + nom);
 		try {
-			// Chargement d'une image utilisable dans Swing
 			return ImageIO.read(in);
 		} catch (Exception e) {
 			Configuration.erreur("Impossible de charger l'image " + nom);

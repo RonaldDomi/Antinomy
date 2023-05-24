@@ -5,11 +5,10 @@
 
 ## Description du Jeu
 
-Antinomy est un jeu de cartes a deux joueurs. Le but de chaque joueur est d'arriver
-a 5 points le premier. 
+Antinomy est un jeu de cartes à deux joueurs, au tour par tour. Le but est d'être le premire à gagner 5 points. 
 
-En total il y a 16 cartes:
-- 9 qui sont posse dans le plateau, appelle le **Continuum**
+Au total, il y a 16 cartes:
+- 9 qui sont posées dans le plateau, appelle le **Continuum**
 - 3 pour chaque joueur
 - 1 qui est cache et qui reste cache tout le jeu, appelle le **Codex**
 

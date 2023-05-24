@@ -15,7 +15,6 @@ public class Antinomy {
 		Configuration.typeJoueur = -1;
 		Jeu j = new Jeu();
 		CollecteurEvenements control = new ControleurMediateur(j);
-//		switch (typeInterface) {
 		InterfaceGraphique.demarrer(j, control, null);
 		
 	}

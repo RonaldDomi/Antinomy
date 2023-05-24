@@ -73,7 +73,7 @@ public class MenuGraphique extends JComponent implements Observateur {
 	 * @return Objet de l'image ouverte
 	 */
 	private Image lisImage(String nom) {
-		InputStream in = Configuration.ouvre("Images/" + nom + ".png");
+		InputStream in = Configuration.ouvre(nom);
 		Configuration.info("Chargement de l'image " + nom);
 		try {
 			// Chargement d'une image utilisable dans Swing
