@@ -298,9 +298,9 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 			case 1:
 				if (courant != enJeu){
 					courant = enJeu;
-					menuPrincipale.setVisible(false);
-					enJeu.setVisible(true);
 				}
+				enJeu.setVisible(true);
+				menuPrincipale.setVisible(false);
 		}
 	}
 
