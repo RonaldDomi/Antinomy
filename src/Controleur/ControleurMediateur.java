@@ -120,42 +120,62 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	@Override
 	public void clicSourisBouton(int index){
-		switch (index){
-			case 0: //save
-				vue.sauvegarder();
-				break;
-			case 1: //charger
-				if (vue.charger()){
-					envoyerCommandeSocket("LOAD");
-					envoyerCommandeSocket(jeu.toString());
+		if (typeJoueur[0] == joueurEnLigne || typeJoueur[1] == joueurEnLigne){
+			switch (index){
+				case 0: //save
+					vue.sauvegarder();
+					break;
+				case 1: //undo
+					jeu.undo();
+					envoyerCommandeSocket("UNDO");
 					resetSelection();
 					afficherPreSelection();
 					decompte = lenteurAttente;
-				}
-				break;
-			case 2: //undo
-				jeu.undo();
-				envoyerCommandeSocket("UNDO");
-				resetSelection();
-				afficherPreSelection();
-				decompte = lenteurAttente;
-				break;
-			case 3: //redo
-				jeu.redo();
-				envoyerCommandeSocket("REDO");
-				resetSelection();
-				afficherPreSelection();
-				decompte = lenteurAttente;
-				break;
-			case 4: //restart
-				jeu.charger(new Jeu(), false);
-				jeu.historique = new Historique(jeu);
-				resetSelection();
-				afficherPreSelection();
-				break;
-			case 5: //menu IA
-				vue.afficherMenuIA();
-				break;
+					break;
+				case 2: //redo
+					jeu.redo();
+					envoyerCommandeSocket("REDO");
+					resetSelection();
+					afficherPreSelection();
+					decompte = lenteurAttente;
+					break;
+			}
+		}else{
+			
+		
+			switch (index){
+				case 0: //save
+					vue.sauvegarder();
+					break;
+				case 1: //charger
+					if (vue.charger()){
+						resetSelection();
+						afficherPreSelection();
+						decompte = lenteurAttente;
+					}
+					break;
+				case 2: //undo
+					jeu.undo();
+					resetSelection();
+					afficherPreSelection();
+					decompte = lenteurAttente;
+					break;
+				case 3: //redo
+					jeu.redo();
+					resetSelection();
+					afficherPreSelection();
+					decompte = lenteurAttente;
+					break;
+				case 4: //restart
+					jeu.charger(new Jeu(), false);
+					jeu.historique = new Historique(jeu);
+					resetSelection();
+					afficherPreSelection();
+					break;
+				case 5: //menu IA
+					vue.afficherMenuIA();
+					break;
+			}
 		}
 		jeu.metAJour();
 	}

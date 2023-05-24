@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
  * <P> Flèche Gauche/Droite : Choisit une direction lors d'un paradox </P>
  * <P> I : Importe une partie </P>
  * <P> S : Exporte une partie </P>
- * <P> P : Pause le jeu</P>
+ * <P> P : Pause le jeu </P>
  * <P> Q/A : Quite le jeu </P>
  * <P> Échap : Met le jeu en plein-écran </P>
  */

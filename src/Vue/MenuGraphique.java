@@ -1,18 +1,12 @@
 package Vue;
 
 import Global.Configuration;
-import Modele.Carte;
-import Modele.Couleur;
-import Modele.Jeu;
-import Modele.Symbole;
 import Patterns.Observateur;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.util.LinkedList;
 
 import static java.lang.Math.min;
 

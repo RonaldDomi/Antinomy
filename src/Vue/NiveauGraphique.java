@@ -205,38 +205,65 @@ public class NiveauGraphique extends JComponent implements Observateur {
 		deb_bouton = padding;
 		taille_bouton = largeurCarte*3/4;
 		for (int k = 0; k < 6; k++) {
-			switch (k){
-				case 0:
-					tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					tracer(drawable, save, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					break;
-				case 1:
-					tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					tracer(drawable, load, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					break;
-				case 2:
-					if (j.getHistorique().peutAnnuler())
+			if (typeJoueur[0] == 5 || typeJoueur[1] == 5){
+				switch (k){
+					case 0:
 						tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					else
-						tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-
-					tracer(drawable, undo, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					break;
-				case 3:
-					if (j.getHistorique().peutRefaire())
+						tracer(drawable, save, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						break;
+					case 1:
+						if (j.getHistorique().peutAnnuler())
+							tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						else
+							tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						
+						tracer(drawable, undo, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						break;
+					case 2:
+						if (j.getHistorique().peutRefaire())
+							tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						else
+							tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						tracer(drawable, redo, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						break;
+					default:
+						break;
+				}
+			}
+			else {
+				switch (k){
+					case 0:
 						tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					else
-						tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					tracer(drawable, redo, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					break;
-				case 4:
-					tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					tracer(drawable, restart, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					break;
-				case 5:
-					tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					tracer(drawable, robot, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
-					break;
+						tracer(drawable, save, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						break;
+					case 1:
+						tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						tracer(drawable, load, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						break;
+					case 2:
+						if (j.getHistorique().peutAnnuler())
+							tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						else
+							tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						
+						tracer(drawable, undo, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						break;
+					case 3:
+						if (j.getHistorique().peutRefaire())
+							tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						else
+							tracer(drawable, boutonBlocked, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						tracer(drawable, redo, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						break;
+					case 4:
+						tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						tracer(drawable, restart, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						break;
+					case 5:
+						tracer(drawable, selectBouton == k ? boutonSelected : bouton, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						tracer(drawable, robot, (k+1)*padding + k*taille_bouton, padding, taille_bouton, taille_bouton);
+						break;
+				}
 			}
 		}
 	}
