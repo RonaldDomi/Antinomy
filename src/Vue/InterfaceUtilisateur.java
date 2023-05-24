@@ -34,7 +34,6 @@ import java.util.LinkedList;
 public interface InterfaceUtilisateur {
 	void toggleFullscreen();
 	void changeEtape();
-	void metAJourDirection(int dL, int dC);
 	void decale();
 	void selectionnerCarteMain(int indice);
 	void selectionnerCarteContinuum(LinkedList<Integer> indices);
@@ -44,11 +43,8 @@ public interface InterfaceUtilisateur {
 	boolean charger();
 
 	void afficherMenuIA();
-
-
 	void setAffichage(int i, int j);
 	void selectionnerMain(boolean b);
 	MenuGraphique getMenu();
-
 	void typeJoueur(int[] typeJoueur);
 }

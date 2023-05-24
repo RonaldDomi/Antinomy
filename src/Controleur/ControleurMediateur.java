@@ -26,7 +26,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	public boolean enAttenteConnexion = false;
 
-	Animation mouvement;
 	boolean animationsSupportees, animationsActives;
 	boolean enLigne;
 
@@ -63,8 +62,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 			joueurEnLigne = 5;
 			typeJoueur[i] = 0;
 		}
-
-		mouvement = null;
 		// Tant qu'on ne reçoit pas d'évènement temporel, on n'est pas sur que les
 		// animations soient supportées (ex. interface textuelle)
 		animationsSupportees = false;

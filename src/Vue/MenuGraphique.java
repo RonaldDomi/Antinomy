@@ -148,7 +148,6 @@ public class MenuGraphique extends JComponent implements Observateur {
 	 * @param g Objet Graphics
 	 * */
 	private void boutonRetour(Graphics g) {
-			System.out.println("ici");
 		if (affichage == 1){
 			//quitter
 			bouton((Graphics2D) g, selectBoutonExit ? boutonSelectedS : boutonS, exit, taille_bouton_s/3+taille_bouton_s/2, taille_bouton_s/3+taille_bouton_s/2, taille_bouton_s, taille_bouton_s);
