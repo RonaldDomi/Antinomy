@@ -39,18 +39,4 @@ public abstract class Animation {
 		decompte = l;
 		control = c;
 	}
-
-	public void tictac() {
-		decompte--;
-		if (decompte <= 0) {
-			decompte = lenteur;
-			miseAJour();
-		}
-	}
-
-	public abstract void miseAJour();
-
-	public boolean estTerminee() {
-		return false;
-	}
 }

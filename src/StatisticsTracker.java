@@ -1,6 +1,6 @@
 import Global.Statistics;
 
-import Modele.ArbrePapa;
+//import Modele.ArbreOld2;
 import Modele.Arbre;
 import Modele.Jeu;
 
@@ -13,23 +13,6 @@ public class StatisticsTracker {
             System.out.println("Average number of configs(with alpha/beta) with depth " + depth + " is: " + totalWithAlphaBeta);
             System.out.println("");
         }
-    }
-
-    static double generateDepthAveragePapa(int depth){
-        for(int i = 0; i < 100; i++){
-            Jeu jeu = new Jeu();
-            jeu.getInfoJoueurs()[0].setSorcierIndice(0);
-            jeu.getInfoJoueurs()[1].setSorcierIndice(0);
-            jeu.setEtape(1);
-
-            ArbrePapa arbre = new ArbrePapa(jeu);
-
-            Statistics.setCurrentDepthTotalConfigurations(0);
-            arbre.create(depth);
-            Statistics.addDepth(depth, Statistics.currentDepthTotalConfigurations, false);
-        }
-        double total = Statistics.getAverageForDepth(depth, false);
-        return total;
     }
 
     static double generateDepthAverage(int depth, boolean withAlphaBeta){

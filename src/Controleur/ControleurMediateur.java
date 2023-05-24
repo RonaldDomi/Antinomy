@@ -7,7 +7,6 @@ import Reseau.Client;
 import Reseau.Server;
 import Vue.CollecteurEvenements;
 import Vue.InterfaceUtilisateur;
-import Vue.MenuGraphique;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -25,19 +24,10 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	InterfaceUtilisateur vue;
 
-	MenuGraphique menuGraphique;
-
-//	Sequence<Animation> animations;
-	double vitesseAnimations;
-	int lenteurPas;
-
 	public boolean enAttenteConnexion = false;
 
 	Animation mouvement;
 	boolean animationsSupportees, animationsActives;
-	int lenteurJeuAutomatique;
-	boolean IAActive;
-
 	boolean enLigne;
 
 	public int joueurEnLigne;
@@ -74,8 +64,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 			typeJoueur[i] = 0;
 		}
 
-//		animations = Configuration.nouvelleSequence();
-//		animations.insereTete(new AnimationPousseur(lenteurPas, this));
 		mouvement = null;
 		// Tant qu'on ne reçoit pas d'évènement temporel, on n'est pas sur que les
 		// animations soient supportées (ex. interface textuelle)
@@ -87,8 +75,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 		vue = v;
 		for (Joueur[] joueur : joueurs) {
 			joueur[0].ajouteInterfaceUtilisateur(vue);
-			
-//			joueurs[i][1].ajouteInterfaceUtilisateur(vue);
 		}
 	}
 
@@ -177,7 +163,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	@Override
 	public void clicSourisBoutonMenu(int fenetre, int index){
-		//	System.out.println("Fenetre "+fenetre);
 		switch (fenetre){
 			case 1: //Menu principal
 				switch (index){
@@ -199,7 +184,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 				}
 				break;
 			case 3: //En ligne
-				//System.out.println("index "+fenetre);
 					switch (index){
 						case -2: //Quitter
 							if (enAttenteConnexion){
@@ -246,14 +230,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 		vue.selectionnerCarteContinuum(null);
 		vue.selectionnerCarteMain(-1);
 		vue.selectionnerMain(false);
-	}
-
-	private void testFin() {
-//		if (jeu.niveauTermine()) {
-//			jeu.prochainNiveau();
-//			if (jeu.jeuTermine())
-//				System.exit(0);
-//		}
 	}
 
 
@@ -351,25 +327,6 @@ public class ControleurMediateur implements CollecteurEvenements {
 			vue.decale();
 		}
 	}
-
-	public void basculeAnimations() {
-		if (animationsSupportees && (mouvement == null))
-			animationsActives = !animationsActives;
-	}
-
-	public void basculeIA() {
-//		if (animationsSupportees) {
-//			if (joueurAutomatique == null) {
-//				joueurAutomatique = IA.nouvelle(jeu);
-//				if (joueurAutomatique != null) {
-//					animationIA = new AnimationJeuAutomatique(lenteurJeuAutomatique, joueurAutomatique, this);
-//				}
-//			}
-//			if (joueurAutomatique != null)
-//				IAActive = !IAActive;
-//		}
-	}
-
 
 	public boolean afficherPreSelection(){
 		if (typeJoueur[jeu.getJoueurCourant()] == 0){ //prochain joueur est un humain

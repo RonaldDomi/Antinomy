@@ -4,9 +4,6 @@ package Controleur;
 
 import Modele.Jeu;
 import Vue.InterfaceUtilisateur;
-
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 // Classe commune à tous les joueurs : IA ou humain
