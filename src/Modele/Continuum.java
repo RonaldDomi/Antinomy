@@ -1,6 +1,5 @@
 package Modele;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,7 +48,6 @@ public class Continuum implements Cloneable {
 
 	/**
 	 * Renvoie les déplacements possibles pour toutes les cartes en main.
-	 *
 	 *
 	 * @param cartes Une liste correspondant aux 3 cartes en main
 	 * @param indice_sorcier l'index du sorcier sur le Continuum
@@ -128,7 +126,6 @@ public class Continuum implements Cloneable {
 	 */
 	@Override
 	public Continuum clone() throws CloneNotSupportedException {
-//		Continuum c = (Continuum) super.clone();
 		Continuum c = new Continuum();
 		c.continuum = new Carte[9];
 		for (int i = 0; i < 9; i++) {

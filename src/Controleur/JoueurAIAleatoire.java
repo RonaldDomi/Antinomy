@@ -30,7 +30,7 @@ class JoueurAIAleatoire extends Joueur {
     }
 
     @Override
-    boolean tempsEcoule() {
+    public boolean tempsEcoule() {
         LinkedList<Integer> coup_possible;
         Integer coup_choisi;
         switch (getEtape()){

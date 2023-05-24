@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import Global.Statistics;
 
-import static Modele.InfoJoueur.getEvaluationDuosMain;
 import static Modele.InfoJoueur.getEvaluationSommeMain;
 import static Modele.Jeu.faireCoupClone;
 
@@ -48,14 +47,9 @@ public class Arbre {
                 //faire coup
                 Jeu jeuBase = faireCoupClone(jeuCourant, moves.get(i));
                 // si clash, saute au prochain coup
-                if(jeuBase == null){
-//                    if( Evaluate(jeuCourant, joueur) > bestEval) {
-//                        maxEval = Evaluate(jeuCourant, joueur);
-//                        bestCoup = moves.get(i);
-//                        bestEval = Evaluate(jeuCourant, joueur);
-//                    }
+                if(jeuBase == null)
                     continue;
-                }
+
 
                 Arbre newFils = new Arbre(jeuBase, moves.get(i), false);
 
@@ -81,14 +75,9 @@ public class Arbre {
                 //faire coup
                 Jeu jeuBase = faireCoupClone(jeuCourant, moves.get(i));
                 // si clash, saute au prochain coup
-                if(jeuBase == null){
-//                    if( Evaluate(jeuCourant, joueur) < bestEval) {
-//                        minEval = Evaluate(jeuCourant, joueur);
-//                        bestCoup = moves.get(i);
-//                        bestEval = Evaluate(jeuCourant, joueur);
-//                    }
+                if(jeuBase == null)
                     continue;
-                }
+
 
                 Arbre newFils = new Arbre(jeuBase, moves.get(i), true);
 

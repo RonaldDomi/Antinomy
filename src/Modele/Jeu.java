@@ -216,7 +216,6 @@ public class Jeu extends Observable implements Cloneable{
 
 		int res = gagnantClash();
 		if (res != -1){
-//			System.out.println("joueur " + res + " gagne le clash");
 			if (infoJoueurs[1-res].getPoints() > 0){
 				infoJoueurs[1-res].remPoint();
 				infoJoueurs[res].addPoint();
@@ -226,10 +225,8 @@ public class Jeu extends Observable implements Cloneable{
 				metAJour();
 				return true;
 			}
-//			System.out.println("Pas de point a voler");
 			return true;
 		}
-//		System.out.println("égalité");
 		return true;
 	}
 	
@@ -280,7 +277,7 @@ public class Jeu extends Observable implements Cloneable{
 	 * Vérifie s'il existe un Paradox/Clash, les résout en conséquence.
 	 * @return Un booléen TODO: Selon quoi??
 	 */
-	boolean etapeSuivante() {
+	public boolean etapeSuivante() {
 		switch (getEtape()) {
 			case (-1):
 				setEtape(-2);
@@ -292,43 +289,29 @@ public class Jeu extends Observable implements Cloneable{
 				return true;
 			case (1):
 				if (getInfoJoueurCourant().existeParadox(getCodex().getCouleurInterdite())) {
-//					System.out.println();
-//					System.out.println("Paradox :");
 					setEtape(2);
 					return false;
 				} else if (existeClash()) {
-//					System.out.println();
-//					System.out.println("Clash 1:");
 					setEtape(3);
 					coupClash();
 					setEtape(1);
 					finTour();
-//					System.out.println();
-//					System.out.println("Debut Tour :");
 					return false;
 				} else {
 					setEtape(1);
-//					System.out.println();
-//					System.out.println("Debut Tour :");
 					finTour();
 					return true;
 				}
 			case (2):
 				if (existeClash()) {
-//					System.out.println();
-//					System.out.println("Clash 2:");
 					setEtape(3);
 					coupClash();
 					setEtape(1);
 					finTour();
-//					System.out.println();
-//					System.out.println("Debut Tour :");
 					return true;
 				} else {
 					setEtape(1);
 					finTour();
-//					System.out.println();
-//					System.out.println("Debut Tour :");
 					return true;
 				}
 			default:
@@ -612,6 +595,10 @@ public class Jeu extends Observable implements Cloneable{
 
 		return jeuBase;
 	}
+
+
+
+
 	
 	/**
 	 * <P> Représentation textuelle d'un jeu. </P>

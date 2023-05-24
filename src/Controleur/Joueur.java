@@ -4,9 +4,6 @@ package Controleur;
 
 import Modele.Jeu;
 import Vue.InterfaceUtilisateur;
-
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 // Classe commune à tous les joueurs : IA ou humain
@@ -44,7 +41,7 @@ abstract class Joueur {
     
     // Méthode appelée pour tous les joueurs une fois le temps écoulé
     // Si un joueur n'est pas concerné, il lui suffit de l'ignorer
-    boolean tempsEcoule() {
+    public boolean tempsEcoule() {
         return false;
     }
 

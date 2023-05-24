@@ -87,10 +87,6 @@ public class Historique {
         }
         listeJeu.add(0, jeu);
         courrant = 0;
-
-//        System.out.println("Historique(" + listeJeu.size() + ", " + courrant + ") : ");
-//        System.out.println(listeJeu);
-//        System.out.println();
     }
 
 
@@ -107,8 +103,6 @@ public class Historique {
         }
         courrant++;
         Jeu dernierJoue = listeJeu.get(courrant);
-//        System.out.println("did undo");
-//        System.out.println("Historique(" + listeJeu.size() + ", " + courrant + ")");
         return dernierJoue;
     }
     
@@ -127,8 +121,6 @@ public class Historique {
 
         courrant--;
         Jeu aRefaire = listeJeu.get(courrant);
-//        System.out.println("did redo");
-//        System.out.println("Historique(" + listeJeu.size() + ", " + courrant + ")");
         return aRefaire;
     }
     

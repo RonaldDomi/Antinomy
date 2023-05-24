@@ -9,7 +9,6 @@ import java.io.InputStream;
  */
 public class Configuration {
 	static final int silence = 1;
-	public static final double vitesseAnimations = 0.15;
 	public static int lenteurAttente = 40;
 	public static int tempsAnimation = 10;
 	public static int profondeurIAFacile = 1;
@@ -47,10 +46,6 @@ public class Configuration {
 
 	public static void info(String s) {
 		affiche(1, "INFO : " + s);
-	}
-
-	public static void alerte(String s) {
-		affiche(2, "ALERTE : " + s);
 	}
 
 	public static void erreur(String s) {

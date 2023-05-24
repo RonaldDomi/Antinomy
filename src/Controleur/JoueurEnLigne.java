@@ -43,7 +43,7 @@ class JoueurEnLigne extends Joueur {
     }
     
     @Override
-    boolean tempsEcoule() {
+    public boolean tempsEcoule() {
         return true;
     }
 }
