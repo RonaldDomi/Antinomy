@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import static java.lang.Math.min;
 
@@ -47,7 +48,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 	Font h2MenuJeu;
 
 	/**
-	 * Initialise une interface graphique et charge la Font du jeu. TODO: Adapter pour une archive JAR
+	 * Initialise une interface graphique et charge la Font du jeu.
 	 */
 	InterfaceGraphique(Jeu jeu, CollecteurEvenements c, Socket clientSocket) {
 		j = jeu;
@@ -55,7 +56,8 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		this.clientSocket = clientSocket;
 
 		try {
-			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT, new File("res/Fonts/Medieval-English.ttf"));
+			Font medievalFont = Font.createFont(Font.TRUETYPE_FONT,
+					Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream("Medieval-English.ttf")));
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(medievalFont);
 		} catch (FontFormatException fontFormatException) {
@@ -102,7 +104,7 @@ public class InterfaceGraphique implements Runnable, InterfaceUtilisateur {
 		enJeu = new JFrame("Antinomy");
 
 		Image icon;
-		InputStream in = Configuration.ouvre("Images/Diamant.png");
+		InputStream in = Configuration.ouvre("Diamant");
 		Configuration.info("Chargement de l'image " + "Icon");
 		try {
 			icon = ImageIO.read(in);

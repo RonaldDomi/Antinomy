@@ -3,6 +3,7 @@ package Global;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Objects;
 
 /**
  * Configuration du jeu, de l'IA des animations
@@ -20,18 +21,12 @@ public class Configuration {
 	public static int numeroPort = 6969;
 	
 	/**
-	 * Ouvre un fichier, TODO: Le rendre compatible JAR
+	 * Ouvre un fichier
 	 * @param s Un nom de fichier à ouvrir.
 	 * @return Un InputStream du fichier ouvert.
 	 */
 	public static InputStream ouvre(String s) {
-		InputStream in = null;
-		try {
-			in = new FileInputStream("res/" + s);
-		} catch (FileNotFoundException e) {
-			erreur("impossible de trouver le fichier " + s);
-		}
-		return in;
+		return Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream(s + ".png"));
 	}
 	
 	
