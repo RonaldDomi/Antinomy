@@ -1,5 +1,6 @@
 package Vue;
 
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -74,6 +75,7 @@ public class AdaptateurSouris extends MouseAdapter {
 		}
 		if (e.getY() >= n.padding && e.getY() <= n.padding + n.taille_bouton ){
 			//bouton
+			
 			for (int i = 0; i < 6; i++) {
 				if (e.getX() >= n.deb_bouton + i*n.taille_bouton + i*n.padding && e.getX() < n.deb_bouton + (i+1)*n.taille_bouton + i*n.padding){
 					n.selectBouton(i);
